@@ -12,23 +12,21 @@
   p{margin:0 0 14px;color:var(--muted)}
   label{display:block;margin:8px 0 6px;color:#e5e7eb;font-size:14px}
   input,select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #374151;background:#0b1220;color:#fff}
-  .btn{margin-top:10px;display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid #16a34a;background:#16a34a;color:#0b1220;font-weight:600;cursor:pointer}
-  .btn.secondary{border-color:#374151;background:#111827;color:#e5e7eb}
   .slots{margin-top:10px;display:flex;flex-wrap:wrap;gap:10px}
   .slot{padding:10px 14px;border:1px solid #374151;border-radius:10px;cursor:pointer}
   .slot.sel{background:var(--pri);color:#0b1220;border-color:var(--pri);font-weight:700}
+  .btn{margin-top:10px;display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid #16a34a;background:#16a34a;color:#0b1220;font-weight:600;cursor:pointer}
   .msg{margin-top:10px;font-size:14px}
 </style>
 
 <div class="wrap">
   <div class="card">
     <h1>Lavado a Domicilio 🚗✨</h1>
-    <p>Elegí el día, cargá el horario disponible y el servicio. Te confirmamos por WhatsApp.</p>
+    <p>Elegí el día, se cargarán los horarios disponibles y el servicio. Te confirmamos por WhatsApp.</p>
 
     <label>Día (próximos 14)</label>
     <select id="dia"></select>
 
-    <button class="btn secondary" id="btnCargar">Cargar horarios</button>
     <div id="slots" class="slots"></div>
 
     <label>Nombre y Apellido</label>
@@ -59,57 +57,53 @@ const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzOBoKK8o_vP2X1vQ7WB
 const $ = id => document.getElementById(id);
 let horaElegida = '';
 
-const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const diasCorto = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 const toISO = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-const nice  = d => `${dias[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
+const nice  = d => `${diasCorto[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
 
 async function getSlots(fechaISO){
-  try {
+  try{
     const r = await fetch(`${WEBAPP_URL}?action=slots&fecha=${encodeURIComponent(fechaISO)}`);
     const j = await r.json();
     return (j.ok && Array.isArray(j.slots)) ? j.slots : [];
-  } catch { return []; }
+  }catch{ return []; }
 }
 
-// --- 1) Cargar SIEMPRE los próximos 14 días (sin consultar nada) ---
-function renderDiasBasico(){
+// llena select con 14 días; luego actualiza etiquetas con “X libres”
+async function renderDias(){
   const sel = $('dia'); sel.innerHTML = '';
   const hoy = new Date(); hoy.setHours(0,0,0,0);
-  for (let i=0;i<14;i++){
+
+  // 1) crear opciones básicas de los próximos 14 días
+  const opciones = [];
+  for(let i=0;i<14;i++){
     const d = new Date(hoy); d.setDate(hoy.getDate()+i);
     const iso = toISO(d);
     const opt = document.createElement('option');
     opt.value = iso;
-    opt.textContent = `${nice(d)} — (cargando…)`;
+    opt.textContent = `${nice(d)} — cargando…`;
     sel.appendChild(opt);
+    opciones.push({opt, iso, d});
   }
-  // selecciono el primero
-  sel.value = sel.options[0]?.value || '';
+  sel.value = opciones[0].iso; // seleccionar primera
+
+  // 2) cargar horarios del día seleccionado (auto)
+  await cargarHorariosDelDia(sel.value);
+
+  // 3) actualizar etiquetas con cantidad de libres (no bloqueante)
+  for (const it of opciones){
+    const libres = await getSlots(it.iso);
+    it.opt.textContent = `${nice(it.d)} — ${libres.length} libres`;
+    // si querés deshabilitar días sin turnos, descomentá:
+    // it.opt.disabled = libres.length === 0;
+  }
 }
 
-// --- 2) Opcional: actualizar etiquetas con “(X libres)” en segundo plano ---
-async function actualizarContadores(){
-  const sel = $('dia');
-  for (const opt of Array.from(sel.options)){
-    const slots = await getSlots(opt.value);
-    opt.textContent = `${opt.textContent.split(' — ')[0]} — ${slots.length} libres`;
-    // si querés inhabilitar días sin turnos:
-    // opt.disabled = slots.length === 0;
-  }
-}
-
-// Botón Cargar horarios
-$('btnCargar').onclick = async () => {
+async function cargarHorariosDelDia(iso){
   $('msg').textContent = '';
-  $('slots').innerHTML = '';
-  const fecha = $('dia').value;
-  if (!fecha){ $('msg').textContent='Elegí un día'; $('msg').style.color='salmon'; return; }
-
-  const slots = await getSlots(fecha);
-  if (!slots.length){
-    $('slots').innerHTML = '<span style="color:#9ca3af">No hay horarios para ese día.</span>';
-    return;
-  }
+  $('slots').innerHTML = 'Cargando horarios…';
+  const slots = await getSlots(iso);
+  if(!slots.length){ $('slots').innerHTML = '<span style="color:#9ca3af">No hay horarios para ese día.</span>'; return; }
   horaElegida = '';
   $('slots').innerHTML = slots.map(h => `<span class="slot" data-h="${h}">${h}</span>`).join('');
   document.querySelectorAll('.slot').forEach(el=>{
@@ -121,9 +115,12 @@ $('btnCargar').onclick = async () => {
       $('msg').style.color = '#22c55e';
     };
   });
-};
+}
 
-// Reservar (GET para evitar CORS)
+// al cambiar día ⇒ cargar horarios automáticamente
+$('dia').onchange = () => cargarHorariosDelDia($('dia').value);
+
+// reservar (GET para evitar CORS)
 $('btnSend').onclick = async () => {
   $('msg').textContent = '';
   const fecha    = $('dia').value;
@@ -140,14 +137,15 @@ $('btnSend').onclick = async () => {
 
   const qs = new URLSearchParams({ action:'create', fecha, hora:horaElegida, servicio, nombre, telefono, direccion }).toString();
   try{
-    const res = await fetch(`${WEBAPP_URL}?${qs}`);
+    const res  = await fetch(`${WEBAPP_URL}?${qs}`);
     const data = await res.json();
     if(data.ok){
       $('msg').textContent = '✅ ¡Turno reservado! Te confirmamos por WhatsApp.';
       $('msg').style.color = '#22c55e';
       $('slots').innerHTML = '';
       horaElegida = '';
-      actualizarContadores(); // refresca cantidades
+      // refrescar cantidades
+      renderDias();
     } else {
       $('msg').textContent = data.error || 'No se pudo reservar.'; $('msg').style.color='salmon';
     }
@@ -156,8 +154,7 @@ $('btnSend').onclick = async () => {
   }
 };
 
-// Inicial
-renderDiasBasico();
-actualizarContadores();   // se corre en segundo plano
+// init
+renderDias();
 </script>
 </html>
