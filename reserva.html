@@ -56,21 +56,108 @@
 <script>
 const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzIdrsdl5F0OBXeDj7QbOCInq-vppixmdwevqXC6CnMoQREHHsL8eVz1keR3Lbc8P2yVg/exec';
 
-const $ = (id) => document.getElementById(id);
-let fechaElegida = '';
+const $ = id => document.getElementById(id);
 let horaElegida = '';
 
 const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-function toISO(d){const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const dd=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${dd}`;}
-function nice(d){return `${dias[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;}
+const toISO = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const nice  = d => `${dias[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
 
 async function getSlots(fechaISO){
-  try{
-    const res = await fetch(`${WEBAPP_URL}?action=slots&fecha=${encodeURIComponent(fechaISO)}`);
-    const data = await res.json();
-    return (data.ok && Array.isArray(data.slots)) ? data.slots : [];
-  }catch{ return []; }
+  try {
+    const r = await fetch(`${WEBAPP_URL}?action=slots&fecha=${encodeURIComponent(fechaISO)}`);
+    const j = await r.json();
+    return (j.ok && Array.isArray(j.slots)) ? j.slots : [];
+  } catch { return []; }
 }
 
-// Poblamos el select con los próximos 14 días y mostramos cuántos libres hay
-async function ren
+// --- 1) Cargar SIEMPRE los próximos 14 días (sin consultar nada) ---
+function renderDiasBasico(){
+  const sel = $('dia'); sel.innerHTML = '';
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  for (let i=0;i<14;i++){
+    const d = new Date(hoy); d.setDate(hoy.getDate()+i);
+    const iso = toISO(d);
+    const opt = document.createElement('option');
+    opt.value = iso;
+    opt.textContent = `${nice(d)} — (cargando…)`;
+    sel.appendChild(opt);
+  }
+  // selecciono el primero
+  sel.value = sel.options[0]?.value || '';
+}
+
+// --- 2) Opcional: actualizar etiquetas con “(X libres)” en segundo plano ---
+async function actualizarContadores(){
+  const sel = $('dia');
+  for (const opt of Array.from(sel.options)){
+    const slots = await getSlots(opt.value);
+    opt.textContent = `${opt.textContent.split(' — ')[0]} — ${slots.length} libres`;
+    // si querés inhabilitar días sin turnos:
+    // opt.disabled = slots.length === 0;
+  }
+}
+
+// Botón Cargar horarios
+$('btnCargar').onclick = async () => {
+  $('msg').textContent = '';
+  $('slots').innerHTML = '';
+  const fecha = $('dia').value;
+  if (!fecha){ $('msg').textContent='Elegí un día'; $('msg').style.color='salmon'; return; }
+
+  const slots = await getSlots(fecha);
+  if (!slots.length){
+    $('slots').innerHTML = '<span style="color:#9ca3af">No hay horarios para ese día.</span>';
+    return;
+  }
+  horaElegida = '';
+  $('slots').innerHTML = slots.map(h => `<span class="slot" data-h="${h}">${h}</span>`).join('');
+  document.querySelectorAll('.slot').forEach(el=>{
+    el.onclick = () => {
+      document.querySelectorAll('.slot').forEach(s=>s.classList.remove('sel'));
+      el.classList.add('sel');
+      horaElegida = el.dataset.h;
+      $('msg').textContent = `Horario elegido: ${horaElegida}`;
+      $('msg').style.color = '#22c55e';
+    };
+  });
+};
+
+// Reservar (GET para evitar CORS)
+$('btnSend').onclick = async () => {
+  $('msg').textContent = '';
+  const fecha    = $('dia').value;
+  const nombre   = $('nombre').value.trim();
+  const telefono = $('tel').value.trim();
+  const direccion= $('dir').value.trim();
+  const servicio = $('serv').value.split(' – ')[0];
+
+  if(!fecha || !horaElegida || !nombre || !telefono || !direccion){
+    $('msg').textContent = 'Completá día, horario, nombre, teléfono y dirección.';
+    $('msg').style.color='salmon';
+    return;
+  }
+
+  const qs = new URLSearchParams({ action:'create', fecha, hora:horaElegida, servicio, nombre, telefono, direccion }).toString();
+  try{
+    const res = await fetch(`${WEBAPP_URL}?${qs}`);
+    const data = await res.json();
+    if(data.ok){
+      $('msg').textContent = '✅ ¡Turno reservado! Te confirmamos por WhatsApp.';
+      $('msg').style.color = '#22c55e';
+      $('slots').innerHTML = '';
+      horaElegida = '';
+      actualizarContadores(); // refresca cantidades
+    } else {
+      $('msg').textContent = data.error || 'No se pudo reservar.'; $('msg').style.color='salmon';
+    }
+  }catch{
+    $('msg').textContent = 'Error de red al reservar.'; $('msg').style.color='salmon';
+  }
+};
+
+// Inicial
+renderDiasBasico();
+actualizarContadores();   // se corre en segundo plano
+</script>
+</html>
