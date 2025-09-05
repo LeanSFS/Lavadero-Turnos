@@ -16,11 +16,13 @@
   th{background:#0b1220;text-align:left}
   tr:last-child td{border-bottom:none}
   .chip{padding:6px 10px;border-radius:999px;border:1px solid var(--line);display:inline-block}
-  .actions button{margin:0 6px 6px 0}
-  a.whats{padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#0b1220;color:#e5e7eb;text-decoration:none}
   .muted{color:var(--muted)}
+  .actions button{margin:0 6px 6px 0}
+  .ok{border-color:#22c55e;background:#22c55e;color:#0b1220}
   .danger{border-color:#ef4444;background:#ef4444;color:#0b1220}
+  .warn{border-color:#f59e0b;background:#f59e0b;color:#0b1220}
   .tiny{font-size:11px;color:#9ca3af}
+  .msg{margin:10px 0;color:#9ca3af}
 </style>
 
 <div class="wrap">
@@ -36,9 +38,11 @@
         <option value="cancelado">cancelado</option>
       </select>
     </label>
-    <input id="f-q" placeholder="Buscar (cliente / dir / tel)" style="flex:1 1 300px">
-    <button id="btnReload">Actualizar</button>
+    <input id="f-q" placeholder="Buscar (cliente / dir / tel)" style="flex:1 1 320px">
+    <button id="btnReload" class="ok">Actualizar</button>
   </div>
+
+  <div id="msg" class="msg"></div>
 
   <table id="tbl">
     <thead>
@@ -54,16 +58,39 @@
 </div>
 
 <script>
+// 👇 tu WebApp URL
 const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzIdrsdl5F0OBXeDj7QbOCInq-vppixmdwevqXC6CnMoQREHHsL8eVz1keR3Lbc8P2yVg/exec';
 
 const state = { rows: [] };
 
+// helpers UI
+const pad = n => String(n).padStart(2,'0');
+function niceFecha(iso){ // "2025-09-06" -> "Sáb 06/09/2025"
+  if(!iso) return '';
+  const [y,m,d] = iso.split('-').map(Number);
+  const dt = new Date(y, (m||1)-1, d||1);
+  const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  return `${dias[dt.getDay()]} ${pad(dt.getDate())}/${pad(dt.getMonth()+1)}/${dt.getFullYear()}`;
+}
+
 async function load(){
-  const r = await fetch(`${WEBAPP_URL}?action=list`);
-  const j = await r.json();
-  if (!j.ok){ alert(j.error||'Error'); return; }
-  state.rows = j.rows || [];
-  render();
+  setMsg('Cargando…');
+  try{
+    const r = await fetch(`${WEBAPP_URL}?action=list`);
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error||'Error al listar');
+    state.rows = j.rows || [];
+    render();
+    setMsg('');
+  }catch(e){
+    setMsg('⚠️ ' + e.message, true);
+  }
+}
+
+function setMsg(t, err=false){
+  const el = document.getElementById('msg');
+  el.textContent = t || '';
+  el.style.color = err ? '#fca5a5' : '#9ca3af';
 }
 
 function render(){
@@ -74,7 +101,7 @@ function render(){
 
   const rows = state.rows.filter(r =>
     (!fFecha || r.fecha === fFecha) &&
-    (!fEstado || r.estado.toLowerCase() === fEstado) &&
+    (!fEstado || (r.estado||'').toLowerCase() === fEstado) &&
     (!fQ || (
       (r.nombre||'').toLowerCase().includes(fQ) ||
       (r.direccion||'').toLowerCase().includes(fQ) ||
@@ -88,18 +115,18 @@ function render(){
 
   tbody.innerHTML = rows.map(r => `
     <tr>
-      <td>${r.fecha}<div class="tiny">ID: ${r.id}</div></td>
+      <td>${niceFecha(r.fecha)}<div class="tiny">ID: ${r.id}</div></td>
       <td>${r.hora}</td>
       <td>${r.servicio}</td>
       <td>${r.nombre}</td>
-      <td><a class="whats" href="https://wa.me/${(r.telefono||'').replace(/[^0-9+]/g,'')}" target="_blank">${r.telefono||''}</a></td>
+      <td><a class="warn" style="text-decoration:none;padding:6px 8px;border-radius:8px;border:1px solid #374151;background:#0b1220;color:#e5e7eb" href="https://wa.me/${(r.telefono||'').replace(/[^0-9+]/g,'')}" target="_blank">${r.telefono||''}</a></td>
       <td>${r.direccion}</td>
       <td><span class="chip">${r.estado}</span></td>
       <td class="actions">
-        <button onclick="accionEstado(this,'${encodeURIComponent(r.id)}','confirmado')">Confirmar</button>
-        <button onclick="accionEstado(this,'${encodeURIComponent(r.id)}','hecho')">Hecho</button>
-        <button class="danger" onclick="accionEstado(this,'${encodeURIComponent(r.id)}','cancelado')">Cancelar</button>
-        <button class="danger" onclick="borrar(this,'${encodeURIComponent(r.id)}')">Borrar</button>
+        <button class="ok"    onclick="accionEstado(this,'${encodeURIComponent(r.id)}','confirmado')">Confirmar</button>
+        <button class="ok"    onclick="accionEstado(this,'${encodeURIComponent(r.id)}','hecho')">Hecho</button>
+        <button class="warn"  onclick="accionEstado(this,'${encodeURIComponent(r.id)}','cancelado')">Cancelar</button>
+        <button class="danger"onclick="borrar(this,'${encodeURIComponent(r.id)}')">Borrar</button>
       </td>
     </tr>
   `).join('');
@@ -112,8 +139,10 @@ async function accionEstado(btn, idEnc, estado){
     const qs = new URLSearchParams({ action:'status', id, estado }).toString();
     const r  = await fetch(`${WEBAPP_URL}?${qs}`);
     const j  = await r.json();
-    if (j.ok) load(); else alert(j.error||'Error');
-  } finally { btn.disabled = false; }
+    if (!j.ok) throw new Error(j.error||'Error');
+    await load();
+  }catch(e){ alert(e.message); }
+  finally{ btn.disabled = false; }
 }
 
 async function borrar(btn, idEnc){
@@ -124,8 +153,10 @@ async function borrar(btn, idEnc){
     const qs = new URLSearchParams({ action:'delete', id }).toString();
     const r  = await fetch(`${WEBAPP_URL}?${qs}`);
     const j  = await r.json();
-    if (j.ok) load(); else alert(j.error||'Error al borrar');
-  } finally { btn.disabled = false; }
+    if (!j.ok) throw new Error(j.error||'Error al borrar');
+    await load();
+  }catch(e){ alert(e.message); }
+  finally{ btn.disabled = false; }
 }
 
 document.getElementById('btnReload').onclick = load;
