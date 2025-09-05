@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Lavado a Domicilio – Reservas</title>
 <style>
-  :root{--bg:#0f172a;--card:#111827;--line:#1f2937;--muted:#9ca3af;--ok:#22c55e;--danger:#ef4444}
+  :root{--bg:#0f172a;--card:#111827;--line:#1f2937;--muted:#9ca3af;--ok:#22c55e}
   body{font-family:system-ui,Arial;background:var(--bg);color:#fff;margin:0;padding:24px}
   .box{max-width:720px;margin:0 auto;background:#0b1220;border:1px solid var(--line);border-radius:16px;padding:18px}
   h1{margin:0 0 8px;font-size:22px}
@@ -72,16 +72,16 @@ function niceFecha(iso){
 async function cargarDias(){
   msg.textContent = 'Cargando disponibilidad…';
   try{
-    const r = await fetch(`${WEBAPP_URL}?action=slots14&days=14&t=${Date.now()}`);
+    const url = `${WEBAPP_URL}?action=slots14&days=14&t=${Date.now()}`;
+    const r = await fetch(url);
     const j = await r.json();
-    if (!j.ok) throw new Error(j.error||'No se pudo cargar');
-
-    S.calendario = j.rows || [];
-    S.map = new Map(S.calendario.map(x => [x.fecha, x.slots])); // fecha -> array de slots
+    if (!j.ok || !Array.isArray(j.rows)) throw new Error(j.error||'Respuesta inválida');
+    S.calendario = j.rows;
+    S.map = new Map(S.calendario.map(x => [x.fecha, x.slots]));
     renderDias();
     msg.textContent = '';
   }catch(e){
-    console.error(e); msg.textContent = '⚠️ ' + e.message;
+    msg.textContent = '⚠️ No se pudieron cargar los días. ' + e.message;
   }
 }
 
@@ -95,7 +95,6 @@ function renderDias(){
         <div class="right">${d.fecha}</div>
       </label>`;
   }).join('');
-  // seleccionar el primero por defecto
   const first = diasDiv.querySelector('input[name="dia"]');
   if (first){ first.dispatchEvent(new Event('change')); }
 }
@@ -138,10 +137,8 @@ document.getElementById('btn').onclick = async ()=>{
     const r = await fetch(`${WEBAPP_URL}?${qs.toString()}`);
     const j = await r.json();
     if (!j.ok) throw new Error(j.error||'No se pudo reservar');
-    // éxito
-    location.href = 'ok.html'; // si querés una página de éxito. O:
-    // msg.textContent = '✅ Reserva hecha. Te vamos a confirmar por WhatsApp.';
-    // setTimeout(()=>{ msg.textContent=''; }, 4000);
+    // Página de éxito simple:
+    location.href = 'ok.html';
   }catch(e){
     msg.textContent = '⚠️ ' + e.message;
   }
