@@ -4,51 +4,116 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Agenda – Admin</title>
 <style>
-  body{font-family:sans-serif;max-width:900px;margin:0 auto;padding:20px}
-  table{width:100%;border-collapse:collapse;margin-top:10px}
-  th,td{border:1px solid #ddd;padding:8px;text-align:left}
-  button{padding:6px 10px;border-radius:8px;border:1px solid #111;background:#111;color:#fff;cursor:pointer}
+  :root{--bg:#0f172a;--card:#111827;--muted:#9ca3af;--pri:#22c55e;--line:#1f2937}
+  body{font-family:system-ui,Arial;background:var(--bg);color:#fff;min-height:100vh;margin:0}
+  .wrap{max-width:1100px;margin:0 auto;padding:24px}
+  h1{margin:0 0 14px;font-size:28px}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  input,select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0b1220;color:#fff}
+  button{padding:10px 14px;border-radius:10px;border:1px solid #16a34a;background:#16a34a;color:#0b1220;font-weight:600;cursor:pointer}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  th,td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#0b1220;text-align:left}
+  tr:last-child td{border-bottom:none}
+  .chip{padding:6px 10px;border-radius:999px;border:1px solid var(--line);display:inline-block}
+  .actions button{margin:0 6px 6px 0}
+  a.whats{padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#0b1220;color:#e5e7eb;text-decoration:none}
+  .muted{color:var(--muted)}
 </style>
-<h1>Agenda – Admin</h1>
-<button id="btnReload">Actualizar</button>
-<table id="tbl">
-  <thead><tr><th>Fecha</th><th>Hora</th><th>Servicio</th><th>Cliente</th><th>Teléfono</th><th>Dirección</th><th>Estado</th><th>Acciones</th></tr></thead>
-  <tbody></tbody>
-</table>
+
+<div class="wrap">
+  <h1>Agenda – Admin</h1>
+  <div class="toolbar">
+    <label>Fecha <input type="date" id="f-fecha"></label>
+    <label>Estado
+      <select id="f-estado">
+        <option value="">(todos)</option>
+        <option value="pendiente">pendiente</option>
+        <option value="confirmado">confirmado</option>
+        <option value="hecho">hecho</option>
+        <option value="cancelado">cancelado</option>
+      </select>
+    </label>
+    <input id="f-q" placeholder="Buscar (cliente / dir / tel)" style="flex:1 1 300px">
+    <button id="btnReload">Actualizar</button>
+  </div>
+
+  <table id="tbl">
+    <thead>
+      <tr>
+        <th>Fecha</th><th>Hora</th><th>Servicio</th><th>Cliente</th>
+        <th>Teléfono</th><th>Dirección</th><th>Estado</th><th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="muted" id="count" style="margin-top:8px"></div>
+</div>
 
 <script>
-const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzIdrsdl5F0OBXeDj7QbOCInq-vppixmdwevqXC6CnMoQREHHsL8eVz1keR3Lbc8P2yVg/exec';
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzOBoKK8o_vP2X1vQ7WBMGx-LncMhmbe8ScEJnOZiGKVc1W5X3pnDdk_UAaae6jUZCO2Q/exec';
+
+const state = { rows: [] };
 
 async function load(){
-  const res = await fetch(`${WEBAPP_URL}?action=list`);
-  const data = await res.json();
+  const r = await fetch(`${WEBAPP_URL}?action=list`);
+  const j = await r.json();
+  if (!j.ok){ alert(j.error||'Error'); return; }
+  state.rows = j.rows || [];
+  render();
+}
+
+function render(){
   const tbody = document.querySelector('#tbl tbody');
-  if (!data.ok){ tbody.innerHTML=`<tr><td colspan="8">${data.error}</td></tr>`; return; }
-  if (!data.rows.length){ tbody.innerHTML=`<tr><td colspan="8">Sin turnos</td></tr>`; return; }
-  tbody.innerHTML = data.rows.map(r => `
+  const fFecha  = document.getElementById('f-fecha').value;
+  const fEstado = document.getElementById('f-estado').value.trim().toLowerCase();
+  const fQ      = document.getElementById('f-q').value.trim().toLowerCase();
+
+  const rows = state.rows.filter(r =>
+    (!fFecha || r.fecha === fFecha) &&
+    (!fEstado || r.estado.toLowerCase() === fEstado) &&
+    (!fQ || (
+      (r.nombre||'').toLowerCase().includes(fQ) ||
+      (r.direccion||'').toLowerCase().includes(fQ) ||
+      (r.telefono||'').toLowerCase().includes(fQ)
+    ))
+  );
+
+  document.getElementById('count').textContent = `${rows.length} turno(s) mostrados`;
+
+  if (!rows.length){ tbody.innerHTML = `<tr><td colspan="8" class="muted">Sin datos</td></tr>`; return; }
+
+  tbody.innerHTML = rows.map(r => `
     <tr>
-      <td>${r.fecha}</td><td>${r.hora}</td><td>${r.servicio}</td>
+      <td>${r.fecha}</td>
+      <td>${r.hora}</td>
+      <td>${r.servicio}</td>
       <td>${r.nombre}</td>
-      <td><a href="https://wa.me/${r.telefono.replace(/[^0-9+]/g,'')}" target="_blank">${r.telefono}</a></td>
+      <td><a class="whats" href="https://wa.me/${(r.telefono||'').replace(/[^0-9+]/g,'')}" target="_blank">${r.telefono||''}</a></td>
       <td>${r.direccion}</td>
-      <td>${r.estado}</td>
-      <td>
+      <td><span class="chip">${r.estado}</span></td>
+      <td class="actions">
         <button onclick="setEstado('${r.id}','confirmado')">Confirmar</button>
         <button onclick="setEstado('${r.id}','hecho')">Hecho</button>
         <button onclick="setEstado('${r.id}','cancelado')">Cancelar</button>
       </td>
-    </tr>`).join('');
+    </tr>
+  `).join('');
 }
+
 async function setEstado(id, estado){
-  const res = await fetch(WEBAPP_URL, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ action:'status', id, estado })
-  });
-  const data = await res.json();
-  if (data.ok) load(); else alert(data.error);
+  const qs = new URLSearchParams({ action:'status', id, estado }).toString();
+  const r  = await fetch(`${WEBAPP_URL}?${qs}`);   // GET para simplificar (puede ser POST si querés)
+  const j  = await r.json();
+  if (j.ok) load(); else alert(j.error||'Error');
 }
+
 document.getElementById('btnReload').onclick = load;
+document.getElementById('f-fecha').onchange =
+document.getElementById('f-estado').onchange =
+document.getElementById('f-q').oninput = render;
+
 load();
 </script>
 </html>
