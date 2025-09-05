@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agenda – Admin</title>
+<style>
+  body{font-family:sans-serif;max-width:900px;margin:0 auto;padding:20px}
+  table{width:100%;border-collapse:collapse;margin-top:10px}
+  th,td{border:1px solid #ddd;padding:8px;text-align:left}
+  button{padding:6px 10px;border-radius:8px;border:1px solid #111;background:#111;color:#fff;cursor:pointer}
+</style>
+<h1>Agenda – Admin</h1>
+<button id="btnReload">Actualizar</button>
+<table id="tbl">
+  <thead><tr><th>Fecha</th><th>Hora</th><th>Servicio</th><th>Cliente</th><th>Teléfono</th><th>Dirección</th><th>Estado</th><th>Acciones</th></tr></thead>
+  <tbody></tbody>
+</table>
+
+<script>
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzIdrsdl5F0OBXeDj7QbOCInq-vppixmdwevqXC6CnMoQREHHsL8eVz1keR3Lbc8P2yVg/exec';
+
+async function load(){
+  const res = await fetch(`${WEBAPP_URL}?action=list`);
+  const data = await res.json();
+  const tbody = document.querySelector('#tbl tbody');
+  if (!data.ok){ tbody.innerHTML=`<tr><td colspan="8">${data.error}</td></tr>`; return; }
+  if (!data.rows.length){ tbody.innerHTML=`<tr><td colspan="8">Sin turnos</td></tr>`; return; }
+  tbody.innerHTML = data.rows.map(r => `
+    <tr>
+      <td>${r.fecha}</td><td>${r.hora}</td><td>${r.servicio}</td>
+      <td>${r.nombre}</td>
+      <td><a href="https://wa.me/${r.telefono.replace(/[^0-9+]/g,'')}" target="_blank">${r.telefono}</a></td>
+      <td>${r.direccion}</td>
+      <td>${r.estado}</td>
+      <td>
+        <button onclick="setEstado('${r.id}','confirmado')">Confirmar</button>
+        <button onclick="setEstado('${r.id}','hecho')">Hecho</button>
+        <button onclick="setEstado('${r.id}','cancelado')">Cancelar</button>
+      </td>
+    </tr>`).join('');
+}
+async function setEstado(id, estado){
+  const res = await fetch(WEBAPP_URL, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ action:'status', id, estado })
+  });
+  const data = await res.json();
+  if (data.ok) load(); else alert(data.error);
+}
+document.getElementById('btnReload').onclick = load;
+load();
+</script>
+</html>
