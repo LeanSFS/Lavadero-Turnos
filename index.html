@@ -51,10 +51,8 @@
       linear-gradient(180deg,#0b1220, #0f172a 60%);
     position:relative; overflow:hidden;
   }
-  .hero::after{
-    content:"🚗✨"; position:absolute; right:18px; bottom:14px; font-size:40px; opacity:.9;
-    filter: drop-shadow(0 4px 12px rgba(255,255,255,.08));
-  }
+  /* Quitamos el ::after con los emojis */
+
   footer{margin-top:14px; text-align:center; color:var(--muted); font-size:13px}
 
   /* ====== Responsive móvil ====== */
@@ -77,31 +75,3 @@
   <main class="wrap">
     <section class="card">
       <!-- Texto -->
-      <div>
-        <span class="badge">Lavadero de autos • A domicilio</span>
-        <h1>Brillo que dura, servicio de amigos</h1>
-        <p>Somos <b>dos amigos</b> que arrancamos este proyecto con la idea de hacer las cosas
-           simples, prolijas y con buena onda. Vamos a tu casa o trabajo y
-           dejamos tu auto impecable: <b>Exterior</b>, <b>Interior</b> o <b>Completo</b>.</p>
-        <div class="features">
-          <div class="chip">🧽 Detailing responsable y productos de calidad</div>
-          <div class="chip">⏱️ Turnos puntuales — nos adaptamos a tu agenda</div>
-          <div class="chip">📍 Zona a coordinar por WhatsApp</div>
-          <div class="chip">🚿🔌 Solo necesitamos que tengas canilla y enchufe</div>
-        </div>
-        <a class="cta" href="reserva.html">🗓️ Reservar turno</a>
-        <p class="muted" style="margin-top:10px">Te confirmamos por WhatsApp apenas entra tu solicitud.</p>
-      </div>
-
-      <!-- Imagen/hero minimal -->
-      <div class="hero" aria-hidden="true"></div>
-    </section>
-
-    <footer>© <span id="y"></span> Lavadero de Autos — Hecho con dedicación y mate.</footer>
-  </main>
-
-<script>
-  document.getElementById('y').textContent = new Date().getFullYear();
-</script>
-</body>
-</html>
