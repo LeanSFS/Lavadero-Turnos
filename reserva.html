@@ -6,18 +6,14 @@
 <style>
   :root{--bg:#0f172a;--card:#111827;--muted:#9ca3af;--pri:#22c55e}
   body{font-family:system-ui,Arial;background:var(--bg);color:#fff;min-height:100vh;margin:0;display:flex;align-items:center;justify-content:center}
-  .wrap{width:100%;max-width:700px;padding:20px}
+  .wrap{width:100%;max-width:720px;padding:20px}
   .card{background:var(--card);border:1px solid #1f2937;border-radius:16px;padding:18px}
   h1{margin:0 0 10px;font-size:22px}
   p{margin:0 0 14px;color:var(--muted)}
-  label{display:block;margin:8px 0 4px;color:#e5e7eb;font-size:14px}
+  label{display:block;margin:8px 0 6px;color:#e5e7eb;font-size:14px}
   input,select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #374151;background:#0b1220;color:#fff}
   .btn{margin-top:10px;display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid #16a34a;background:#16a34a;color:#0b1220;font-weight:600;cursor:pointer}
   .btn.secondary{border-color:#374151;background:#111827;color:#e5e7eb}
-  .row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
-  .chip{padding:8px 12px;border:1px solid #374151;border-radius:999px;background:#0b1220;color:#e5e7eb;cursor:pointer}
-  .chip[disabled]{opacity:.35;cursor:not-allowed}
-  .chip.sel{background:var(--pri);color:#0b1220;border-color:var(--pri);font-weight:700}
   .slots{margin-top:10px;display:flex;flex-wrap:wrap;gap:10px}
   .slot{padding:10px 14px;border:1px solid #374151;border-radius:10px;cursor:pointer}
   .slot.sel{background:var(--pri);color:#0b1220;border-color:var(--pri);font-weight:700}
@@ -27,14 +23,12 @@
 <div class="wrap">
   <div class="card">
     <h1>Lavado a Domicilio 🚗✨</h1>
-    <p>Elegí fecha, horario disponible y servicio. Te confirmamos por WhatsApp.</p>
+    <p>Elegí el día, cargá el horario disponible y el servicio. Te confirmamos por WhatsApp.</p>
 
-    <label>Fecha</label>
-    <input type="date" id="fecha">
+    <label>Día (próximos 14)</label>
+    <select id="dia"></select>
 
-    <div class="row" id="quickDays"></div>
-
-    <button class="btn secondary" id="btnSlots">Ver horarios disponibles</button>
+    <button class="btn secondary" id="btnCargar">Cargar horarios</button>
     <div id="slots" class="slots"></div>
 
     <label>Nombre y Apellido</label>
@@ -63,153 +57,20 @@
 const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzIdrsdl5F0OBXeDj7QbOCInq-vppixmdwevqXC6CnMoQREHHsL8eVz1keR3Lbc8P2yVg/exec';
 
 const $ = (id) => document.getElementById(id);
-let horaElegida = '';
 let fechaElegida = '';
+let horaElegida = '';
 
 const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-function toISO(d){ const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const dd=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${dd}`; }
-function labelDia(d){ return `${dias[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`; }
+function toISO(d){const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const dd=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${dd}`;}
+function nice(d){return `${dias[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;}
 
-async function disponibilidad(fechaISO){
+async function getSlots(fechaISO){
   try{
     const res = await fetch(`${WEBAPP_URL}?action=slots&fecha=${encodeURIComponent(fechaISO)}`);
     const data = await res.json();
-    if (data && data.ok) return data.slots || [];
-  }catch(e){}
-  return [];
+    return (data.ok && Array.isArray(data.slots)) ? data.slots : [];
+  }catch{ return []; }
 }
 
-async function renderQuickDays(n=7){
-  const cont = $('quickDays');
-  cont.innerHTML = '';
-
-  const hoy = new Date();
-  hoy.setHours(0,0,0,0);
-  $('fecha').min = toISO(hoy);         // no permite fechas pasadas
-  $('fecha').value = $('fecha').value || toISO(hoy);
-  fechaElegida = $('fecha').value;
-
-  // Botones Hoy / Mañana
-  const manana = new Date(hoy); manana.setDate(hoy.getDate()+1);
-  cont.appendChild(makeChip('Hoy', toISO(hoy)));
-  cont.appendChild(makeChip('Mañana', toISO(manana)));
-
-  // Próximos 7 días con cantidad de turnos libres
-  for (let i=0;i<n;i++){
-    const d = new Date(hoy); d.setDate(hoy.getDate()+i);
-    const iso = toISO(d);
-    const slots = await disponibilidad(iso);
-    const chip = makeChip(`${labelDia(d)} (${slots.length})`, iso, slots.length===0);
-    cont.appendChild(chip);
-  }
-
-  // marcar seleccionado si coincide
-  marcarSeleccionFecha(fechaElegida);
-}
-
-function makeChip(text, iso, disabled=false){
-  const el = document.createElement('button');
-  el.className = 'chip';
-  el.textContent = text;
-  if (disabled) el.setAttribute('disabled','');
-  el.onclick = async () => {
-    if (disabled) return;
-    $('fecha').value = iso;
-    fechaElegida = iso;
-    marcarSeleccionFecha(iso);
-    await cargarSlots(); // carga horarios automáticamente
-  };
-  el.dataset.iso = iso;
-  return el;
-}
-
-function marcarSeleccionFecha(iso){
-  document.querySelectorAll('#quickDays .chip').forEach(c => c.classList.remove('sel'));
-  const match = Array.from(document.querySelectorAll('#quickDays .chip')).find(c => c.dataset.iso === iso);
-  if (match) match.classList.add('sel');
-}
-
-async function cargarSlots(){
-  $('msg').textContent = '';
-  $('slots').innerHTML = '';
-  const fecha = $('fecha').value;
-  if (!fecha) { $('msg').textContent = 'Elegí una fecha'; $('msg').style.color='salmon'; return; }
-
-  try{
-    const res = await fetch(`${WEBAPP_URL}?action=slots&fecha=${encodeURIComponent(fecha)}`);
-    if(!res.ok){ $('msg').textContent = 'Error al cargar horarios'; $('msg').style.color='salmon'; return; }
-    const data = await res.json();
-    if(!data.ok){ $('msg').textContent = data.error || 'Sin horarios'; $('msg').style.color='salmon'; return; }
-    if(!data.slots.length){ $('slots').innerHTML = '<span style="color:#9ca3af">No hay horarios libres para ese día.</span>'; return; }
-
-    horaElegida = '';
-    $('slots').innerHTML = data.slots.map(h => `<span class="slot" data-h="${h}">${h}</span>`).join('');
-    document.querySelectorAll('.slot').forEach(el => {
-      el.onclick = () => {
-        document.querySelectorAll('.slot').forEach(s=>s.classList.remove('sel'));
-        el.classList.add('sel');
-        horaElegida = el.dataset.h;
-        $('msg').textContent = `Horario elegido: ${horaElegida}`;
-        $('msg').style.color = '#22c55e';
-      };
-    });
-  }catch(e){
-    $('msg').textContent = 'Error de red'; $('msg').style.color='salmon';
-  }
-}
-
-// Botón “Ver horarios”
-$('btnSlots').onclick = cargarSlots;
-
-// Reservar
-$('btnSend').onclick = async () => {
-  $('msg').textContent = '';
-  const fecha    = $('fecha').value;
-  const nombre   = $('nombre').value.trim();
-  const telefono = $('tel').value.trim();
-  const direccion= $('dir').value.trim();
-  const servicio = $('serv').value.split(' – ')[0];
-
-  if(!fecha || !horaElegida || !nombre || !telefono || !direccion){
-    $('msg').textContent = 'Completá fecha, horario, nombre, teléfono y dirección.';
-    $('msg').style.color='salmon';
-    return;
-  }
-
-  // POST urlencoded (Apps Script lo toma en e.parameter)
-  const params = new URLSearchParams();
-  params.append('action','create');
-  params.append('fecha', fecha);
-  params.append('hora', horaElegida);
-  params.append('servicio', servicio);
-  params.append('nombre', nombre);
-  params.append('telefono', telefono);
-  params.append('direccion', direccion);
-
-  try{
-    const res  = await fetch(WEBAPP_URL, { method:'POST', body: params });
-    const data = await res.json();
-    if(data.ok){
-      $('msg').textContent = '✅ ¡Turno reservado! Te confirmamos por WhatsApp.';
-      $('msg').style.color = '#22c55e';
-      $('slots').innerHTML = '';
-      horaElegida = '';
-      // Si querés notificación a tu WhatsApp, descomentá y poné tu número:
-      // const texto = `Nuevo turno: ${nombre} (${telefono}) | ${servicio} | ${fecha} ${params.get('hora')} | ${direccion}`;
-      // window.open(`https://wa.me/5492990000000?text=${encodeURIComponent(texto)}`, '_blank');
-      // volver a recalcular chips (por si se agotó ese día)
-      renderQuickDays(7);
-    } else {
-      $('msg').textContent = data.error || 'No se pudo reservar.';
-      $('msg').style.color='salmon';
-    }
-  }catch(e){
-    $('msg').textContent = 'Error de red al reservar.'; 
-    $('msg').style.color='salmon';
-  }
-};
-
-// Inicial: setear hoy, min y dibujar chips
-renderQuickDays(7);
-</script>
-</html>
+// Poblamos el select con los próximos 14 días y mostramos cuántos libres hay
+async function ren
