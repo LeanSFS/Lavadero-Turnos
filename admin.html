@@ -17,7 +17,7 @@
   tr:last-child td{border-bottom:none}
   .chip{padding:6px 10px;border-radius:999px;border:1px solid var(--line);display:inline-block}
   a.whats{padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#0b1220;color:#e5e7eb;text-decoration:none}
-  .muted{color:var(--muted)}
+  .muted{color:#9ca3af}
   .ok{border-color:#22c55e;background:#22c55e;color:#0b1220}
   .warn{border-color:#f59e0b;background:#f59e0b;color:#0b1220}
   .danger{border-color:#ef4444;background:#ef4444;color:#0b1220}
@@ -59,11 +59,9 @@
 </div>
 
 <script>
-// ⚠️ PONÉ TU LINK /exec ACÁ:
 const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzGlBMaIfEvI3j46lhelGCC0kb-RfF6LcXTKpUz_IObLcERxD5pEhcjCqE3BlicJ-Gw8w/exec';
 
 const state = { rows: [] };
-
 const pad = n => String(n).padStart(2,'0');
 function niceFecha(iso){
   if(!iso) return '';
@@ -81,7 +79,7 @@ function setMsg(t, isErr=false){
 async function load(){
   try{
     setMsg('Cargando…');
-    const r = await fetch(`${WEBAPP_URL}?action=list&t=${Date.now()}`); // anti-caché
+    const r = await fetch(`${WEBAPP_URL}?action=list&t=${Date.now()}`); // anti-cache
     const j = await r.json();
     if (!j.ok) throw new Error(j.error||'Error al listar');
     state.rows = j.rows || [];
@@ -123,23 +121,21 @@ function render(){
       <td>${r.direccion}</td>
       <td><span class="chip">${r.estado}</span></td>
       <td class="actions">
-        <button class="ok"    type="button" data-act="status" data-estado="confirmado"
-                data-id="${encodeURIComponent(r.id)}">Confirmar</button>
-        <button class="ok"    type="button" data-act="status" data-estado="hecho"
-                data-id="${encodeURIComponent(r.id)}">Hecho</button>
-        <button class="warn"  type="button" data-act="status" data-estado="cancelado"
-                data-id="${encodeURIComponent(r.id)}">Cancelar</button>
+        <button class="ok"   type="button" data-act="status" data-estado="confirmado" data-id="${encodeURIComponent(r.id)}">Confirmar</button>
+        <button class="ok"   type="button" data-act="status" data-estado="hecho"       data-id="${encodeURIComponent(r.id)}">Hecho</button>
+        <button class="warn" type="button" data-act="status" data-estado="cancelado"   data-id="${encodeURIComponent(r.id)}">Cancelar</button>
         <button class="danger" type="button" data-act="delete"
                 data-id="${encodeURIComponent(r.id)}"
                 data-fecha="${encodeURIComponent(r.fecha)}"
                 data-hora="${encodeURIComponent(r.hora)}"
-                data-telefono="${encodeURIComponent(r.telefono)}">Borrar</button>
+                data-telefono="${encodeURIComponent(r.telefono)}"
+                data-nombre="${encodeURIComponent(r.nombre)}">Borrar</button>
       </td>
     </tr>
   `).join('');
 }
 
-/* Delegación de eventos: UN solo listener para todos los botones */
+/* Delegación de eventos */
 document.getElementById('tbody').addEventListener('click', async (ev) => {
   const btn = ev.target.closest('button');
   if (!btn) return;
@@ -153,8 +149,6 @@ document.getElementById('tbody').addEventListener('click', async (ev) => {
     if (act === 'status') {
       const id = decodeURIComponent(btn.dataset.id||'');
       const estado = btn.dataset.estado || '';
-      if (!id || !estado) { alert('Faltan datos'); return; }
-
       const url = `${WEBAPP_URL}?action=status&id=${encodeURIComponent(id)}&estado=${encodeURIComponent(estado)}&t=${Date.now()}`;
       const res = await fetch(url);
       const data = await res.json();
@@ -170,8 +164,9 @@ document.getElementById('tbody').addEventListener('click', async (ev) => {
       const f   = decodeURIComponent(btn.dataset.fecha||'');
       const h   = decodeURIComponent(btn.dataset.hora||'');
       const tel = decodeURIComponent(btn.dataset.telefono||'');
+      const nom = decodeURIComponent(btn.dataset.nombre||'');
 
-      const url = `${WEBAPP_URL}?action=delete&id=${encodeURIComponent(id)}&fecha=${encodeURIComponent(f)}&hora=${encodeURIComponent(h)}&telefono=${encodeURIComponent(tel)}&t=${Date.now()}`;
+      const url = `${WEBAPP_URL}?action=delete&id=${encodeURIComponent(id)}&fecha=${encodeURIComponent(f)}&hora=${encodeURIComponent(h)}&telefono=${encodeURIComponent(tel)}&nombre=${encodeURIComponent(nom)}&t=${Date.now()}`;
       console.log('DELETE URL ->', url);
       const res = await fetch(url);
       const data = await res.json();
@@ -181,6 +176,7 @@ document.getElementById('tbody').addEventListener('click', async (ev) => {
         alert(data.error || 'No se pudo borrar');
         return;
       }
+      setMsg(`✅ Borrado OK (vía: ${data.via}, fila: ${data.row})`);
       await load();
       return;
     }
