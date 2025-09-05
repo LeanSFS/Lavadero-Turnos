@@ -15,6 +15,7 @@
   .slot{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#111827;color:#e5e7eb;cursor:pointer}
   .slot.sel{outline:2px solid var(--ok)}
   button{padding:12px 14px;border-radius:10px;border:1px solid var(--ok);background:var(--ok);color:#0b1220;font-weight:700;cursor:pointer}
+  button:disabled{opacity:.6;cursor:not-allowed}
   .msg{margin-top:10px;color:var(--muted);white-space:pre-wrap}
 </style>
 
@@ -114,12 +115,16 @@ document.getElementById('btn').onclick = async () => {
   const telefono = document.getElementById('telefono').value.trim();
   const direccion = document.getElementById('direccion').value.trim();
   const servicio = document.getElementById('servicio').value;
+  const btn = document.getElementById('btn');
 
   if (!S.selFecha || !S.selHora || !nombre || !telefono || !direccion){
     $msg.textContent = '⚠️ Completá todos los campos y elegí día y horario.'; return;
   }
 
   try{
+    btn.disabled = true;
+    btn.textContent = "Reservando…";
+
     const qs = new URLSearchParams({
       action:'create',
       fecha:S.selFecha, hora:S.selHora, servicio,
@@ -135,10 +140,11 @@ document.getElementById('btn').onclick = async () => {
     location.href = 'success.html';
   }catch(e){
     $msg.textContent = '⚠️ ' + e.message;
+    btn.disabled = false;
+    btn.textContent = "Reservar";
   }
 };
 
-// Ejecutar cuando el DOM está listo (evita que se “imprima” nada)
 document.addEventListener('DOMContentLoaded', cargarDias);
 </script>
 </html>
