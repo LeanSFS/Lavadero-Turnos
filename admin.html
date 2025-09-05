@@ -2,7 +2,7 @@
 <html lang="es">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Agenda – Admin (debug)</title>
+<title>Agenda – Admin</title>
 <style>
   :root{--bg:#0f172a;--card:#111827;--muted:#9ca3af;--pri:#22c55e;--line:#1f2937}
   body{font-family:system-ui,Arial;background:var(--bg);color:#fff;min-height:100vh;margin:0}
@@ -59,13 +59,13 @@
 </div>
 
 <script>
-// TU /exec:
+// TU WebApp (el que me pasaste)
 const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyDd--FDaQPnqG_LQ4MzLuRmIQc99Y0WK1Axpwh3Tc4GX1DLCHn77XTr2-wBZUVCuVO/exec';
 
 const state = { rows: [] };
 const pad = n => String(n).padStart(2,'0');
-function niceFecha(iso){ if(!iso) return ''; const [y,m,d]=iso.split('-').map(Number); const dt=new Date(y,(m||1)-1,d||1); const dias=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']; return `${dias[dt.getDay()]} ${pad(dt.getDate())}/${pad(dt.getMonth()+1)}/${dt.getFullYear()}`; }
-function setMsg(t, err=false){ const el=document.getElementById('msg'); el.textContent=t||''; el.style.color=err?'#fca5a5':'#9ca3af'; }
+function niceFecha(iso){ if(!iso) return ''; const [y,m,d]=iso.split('-').map(Number); const dt=new Date(y,(m||1)-1,d||1); const dias=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']; return `${dias[dt.getDay()]} ${pad(dt.getDate())}/${pad(dt.getMonth()+1)}/${pad(dt.getFullYear())}`; }
+function setMsg(t, isErr=false){ const el=document.getElementById('msg'); el.textContent=t||''; el.style.color=isErr?'#fca5a5':'#9ca3af'; }
 
 async function load(){
   try{
@@ -114,9 +114,7 @@ function render(){
         <button class="danger" type="button" data-act="delete"
                 data-id="${encodeURIComponent(r.id)}"
                 data-fecha="${encodeURIComponent(r.fecha)}"
-                data-hora="${encodeURIComponent(r.hora)}"
-                data-nombre="${encodeURIComponent(r.nombre)}"
-                data-telefono="${encodeURIComponent(r.telefono)}">Borrar</button>
+                data-hora="${encodeURIComponent(r.hora)}">Borrar</button>
       </td>
     </tr>
   `).join('');
@@ -124,11 +122,8 @@ function render(){
 
 /* Delegación de eventos con debug visible */
 document.getElementById('tbody').addEventListener('click', async (ev) => {
-  const btn = ev.target.closest('button');
-  if (!btn) return;
-
-  const act = btn.dataset.act;
-  if (!act) return;
+  const btn = ev.target.closest('button'); if (!btn) return;
+  const act = btn.dataset.act; if (!act) return;
   btn.disabled = true;
 
   try{
@@ -136,12 +131,9 @@ document.getElementById('tbody').addEventListener('click', async (ev) => {
       const id = decodeURIComponent(btn.dataset.id||'');
       const estado = btn.dataset.estado || '';
       const url = `${WEBAPP_URL}?action=status&id=${encodeURIComponent(id)}&estado=${encodeURIComponent(estado)}&t=${Date.now()}`;
-      const res = await fetch(url);
-      const data = await res.json();
-      alert(`[STATUS]\nURL:\n${url}\n\nRespuesta:\n${JSON.stringify(data,null,2)}`);
-      if (!data.ok) return;
-      await load();
-      return;
+      const res = await fetch(url); const data = await res.json();
+      if (!data.ok) { setMsg(`⚠️ ${data.error||'Error al cambiar estado'}`, true); return; }
+      await load(); return;
     }
 
     if (act === 'delete') {
@@ -149,23 +141,17 @@ document.getElementById('tbody').addEventListener('click', async (ev) => {
       const id  = decodeURIComponent(btn.dataset.id||'');
       const f   = decodeURIComponent(btn.dataset.fecha||'');
       const h   = decodeURIComponent(btn.dataset.hora||'');
-      const tel = decodeURIComponent(btn.dataset.telefono||'');
-      const nom = decodeURIComponent(btn.dataset.nombre||'');
 
-      const url = `${WEBAPP_URL}?action=delete&id=${encodeURIComponent(id)}&fecha=${encodeURIComponent(f)}&hora=${encodeURIComponent(h)}&telefono=${encodeURIComponent(tel)}&nombre=${encodeURIComponent(nom)}&t=${Date.now()}`;
+      const url = `${WEBAPP_URL}?action=delete&id=${encodeURIComponent(id)}&fecha=${encodeURIComponent(f)}&hora=${encodeURIComponent(h)}&t=${Date.now()}`;
+      console.log('DELETE URL ->', url);
       const res = await fetch(url);
       const data = await res.json();
-      alert(`[DELETE]\nURL:\n${url}\n\nRespuesta:\n${JSON.stringify(data,null,2)}`);
-      if (!data.ok) return;
-      await load();
-      return;
+      if (!data.ok) { setMsg(`⚠️ Error al borrar: ${data.error}`, true); return; }
+      setMsg(`✅ Borrado OK (vía ${data.via||'?'}, fila ${data.row||'?'})`);
+      await load(); return;
     }
-  } catch(e){
-    alert('Error JS: ' + e.message);
-    console.error(e);
-  } finally {
-    btn.disabled = false;
-  }
+  }catch(e){ setMsg('⚠️ '+e.message,true); console.error(e); }
+  finally{ btn.disabled = false; }
 });
 
 document.getElementById('btnReload').onclick = load;
