@@ -59,6 +59,7 @@
 </div>
 
 <script>
+// PONÉ TU /exec:
 const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzGlBMaIfEvI3j46lhelGCC0kb-RfF6LcXTKpUz_IObLcERxD5pEhcjCqE3BlicJ-Gw8w/exec';
 
 const state = { rows: [] };
@@ -79,7 +80,7 @@ function setMsg(t, isErr=false){
 async function load(){
   try{
     setMsg('Cargando…');
-    const r = await fetch(`${WEBAPP_URL}?action=list&t=${Date.now()}`); // anti-cache
+    const r = await fetch(`${WEBAPP_URL}?action=list&t=${Date.now()}`); // anti-caché
     const j = await r.json();
     if (!j.ok) throw new Error(j.error||'Error al listar');
     state.rows = j.rows || [];
@@ -127,9 +128,7 @@ function render(){
         <button class="danger" type="button" data-act="delete"
                 data-id="${encodeURIComponent(r.id)}"
                 data-fecha="${encodeURIComponent(r.fecha)}"
-                data-hora="${encodeURIComponent(r.hora)}"
-                data-telefono="${encodeURIComponent(r.telefono)}"
-                data-nombre="${encodeURIComponent(r.nombre)}">Borrar</button>
+                data-hora="${encodeURIComponent(r.hora)}">Borrar</button>
       </td>
     </tr>
   `).join('');
@@ -163,10 +162,8 @@ document.getElementById('tbody').addEventListener('click', async (ev) => {
       const id  = decodeURIComponent(btn.dataset.id||'');
       const f   = decodeURIComponent(btn.dataset.fecha||'');
       const h   = decodeURIComponent(btn.dataset.hora||'');
-      const tel = decodeURIComponent(btn.dataset.telefono||'');
-      const nom = decodeURIComponent(btn.dataset.nombre||'');
 
-      const url = `${WEBAPP_URL}?action=delete&id=${encodeURIComponent(id)}&fecha=${encodeURIComponent(f)}&hora=${encodeURIComponent(h)}&telefono=${encodeURIComponent(tel)}&nombre=${encodeURIComponent(nom)}&t=${Date.now()}`;
+      const url = `${WEBAPP_URL}?action=delete&id=${encodeURIComponent(id)}&fecha=${encodeURIComponent(f)}&hora=${encodeURIComponent(h)}&t=${Date.now()}`;
       console.log('DELETE URL ->', url);
       const res = await fetch(url);
       const data = await res.json();
