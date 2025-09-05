@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reserva realizada</title>
+<style>
+  :root{--bg:#0f172a;--card:#0b1220;--line:#1f2937;--ok:#22c55e;--muted:#9ca3af}
+  body{margin:0;background:var(--bg);color:#fff;font-family:system-ui,Arial;min-height:100vh;display:grid;place-items:center;padding:24px}
+  .card{max-width:920px;width:100%;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+  h1{margin:0 0 10px;font-size:30px}
+  .ok{display:inline-flex;align-items:center;gap:10px;color:#16a34a}
+  .box{border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px}
+  .row{margin:6px 0}
+  .lbl{font-weight:700}
+  .muted{color:var(--muted)}
+  .btn{margin-top:16px;display:inline-block;background:var(--ok);color:#0b1220;
+       border:1px solid #16a34a;padding:12px 16px;border-radius:10px;font-weight:800;text-decoration:none}
+</style>
+<body>
+  <main class="card">
+    <h1 class="ok">✅ ¡Reserva realizada con éxito!</h1>
+    <p class="muted">Te vamos a confirmar por WhatsApp apenas podamos.</p>
+
+    <div class="box" id="datos">
+      <!-- se completa con JS -->
+    </div>
+
+    <a class="btn" href="index.html">Volver al inicio</a>
+  </main>
+
+<script>
+(function(){
+  // 1) Intentar leer desde sessionStorage (lo setea reserva.html)
+  let data = null;
+  try { data = JSON.parse(sessionStorage.getItem('lastBooking')||'null'); } catch(_) {}
+
+  // 2) Fallback: si no hay storage, intentar leer de la URL ?nombre=... etc.
+  if (!data) {
+    const u = new URL(location.href);
+    const q = Object.fromEntries(u.searchParams.entries());
+    if (q.nombre || q.fecha) {
+      data = {
+        id: q.id||'',
+        nombre: q.nombre||'-',
+        telefono: q.telefono||'-',
+        direccion: q.direccion||'-',
+        servicio: q.servicio||'-',
+        fecha: q.fecha||'-',
+        hora: q.hora||'-'
+      };
+    }
+  }
+
+  // 3) Render
+  const cont = document.getElementById('datos');
+  if (!data) {
+    cont.innerHTML = '<p class="muted">No pudimos recuperar los datos de la reserva. Igual quedó registrada correctamente.</p>';
+    return;
+  }
+
+  // Si querés limpiar para que al refrescar no repita
+  sessionStorage.removeItem('lastBooking');
+
+  const filas = [
+    ['Cliente',   data.nombre],
+    ['Teléfono',  data.telefono],
+    ['Servicio',  data.servicio],
+    ['Fecha y hora', `${data.fecha} ${data.hora}`],
+    ['Dirección', data.direccion],
+  ];
+
+  cont.innerHTML = filas.map(([k,v])=>(
+    `<div class="row"><span class="lbl">${k}:</span> ${v||'-'}</div>`
+  )).join('');
+})();
+</script>
+</body>
+</html>
