@@ -85,6 +85,9 @@
       padding-right:max(16px, env(safe-area-inset-right));
     }
   }
+
+  /* ocultar estilo de link secreto */
+  .secret{color:inherit; text-decoration:none; cursor:text}
 </style>
 </head>
 <body>
@@ -100,7 +103,7 @@
         <div class="features">
           <div class="chip">🧽 Detailing responsable y productos de calidad</div>
           <div class="chip">⏱️ Turnos puntuales — nos adaptamos a tu agenda</div>
-          <div class="chip">📍 Vamos a tu domicilio</div> <!-- texto actualizado -->
+          <div class="chip">📍 Vamos a tu domicilio</div>
           <div class="chip">🚿🔌 Solo necesitamos que tengas canilla y enchufe</div>
         </div>
 
@@ -109,11 +112,25 @@
       </div>
     </section>
 
-    <footer>© <span id="y"></span> Lavadero de Autos — Hecho con dedicación y mate.</footer>
+    <footer>
+      © <span id="y"></span> Lavadero de Autos — Hecho con dedicación y 
+      <a href="#" id="secretLink" class="secret">mate</a>.
+    </footer>
   </main>
 
 <script>
   document.getElementById('y').textContent = new Date().getFullYear();
+
+  // Link oculto en "mate"
+  document.getElementById('secretLink').addEventListener('click', function(ev){
+    ev.preventDefault();
+    const pass = prompt("Contraseña:");
+    if(pass === "admin"){
+      window.location.href = "admin.html";
+    } else if(pass !== null){
+      alert("Contraseña incorrecta");
+    }
+  });
 </script>
 </body>
 </html>
