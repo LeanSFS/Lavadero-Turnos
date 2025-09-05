@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Lavadero de Autos</title>
 <meta name="description" content="Lavadero de autos a domicilio. Dos amigos, servicio responsable y detallista. Reservá tu turno.">
 <style>
@@ -12,6 +12,7 @@
     --grad1:#0ea5e9; --grad2:#22c55e;
   }
   *{box-sizing:border-box}
+  html,body{height:100%}
   body{
     margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;
     color:#fff; background:radial-gradient(1200px 700px at 20% -10%, #0b1220 20%, #0f172a 60%, #0a0f1d 100%);
@@ -22,25 +23,25 @@
     background:var(--card); border:1px solid var(--line); border-radius:20px;
     padding:28px; display:grid; grid-template-columns:1.1fr 1fr; gap:24px;
   }
-  @media (max-width:820px){ .card{grid-template-columns:1fr} }
   .badge{
     display:inline-flex; align-items:center; gap:8px; font-weight:600;
     background:linear-gradient(90deg,var(--grad1),var(--grad2));
     color:#06221a; padding:8px 12px; border-radius:999px; border:1px solid #134e4a;
   }
   h1{font-size:42px; line-height:1.1; margin:14px 0 10px; color:var(--title)}
-  p{margin:0 0 14px; color:#d1d5db}
-  .muted{color:var(--muted)}
+  p{margin:0 0 14px; color:#d1d5db; font-size:18px}
+  .muted{color:var(--muted); font-size:14px}
   .cta{
-    display:inline-flex; align-items:center; gap:10px; margin-top:14px;
+    display:inline-flex; align-items:center; justify-content:center; gap:10px; margin-top:14px;
     background:var(--cta); color:var(--cta-ink); border:1px solid #16a34a;
     padding:14px 18px; border-radius:12px; font-weight:800; text-decoration:none;
-    box-shadow:0 8px 30px rgba(34,197,94,.2);
+    box-shadow:0 8px 30px rgba(34,197,94,.2); min-height:48px;
   }
   .cta:hover{transform:translateY(-1px); box-shadow:0 10px 34px rgba(34,197,94,.28)}
-  .features{display:grid; gap:12px; margin-top:10px}
+  .features{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:10px}
   .chip{
-    border:1px solid var(--line); background:#0e1728; padding:10px 12px; border-radius:12px; color:#e5e7eb
+    border:1px solid var(--line); background:#0e1728; padding:12px 14px; border-radius:12px; color:#e5e7eb;
+    line-height:1.3;
   }
   .hero{
     aspect-ratio: 16/11; border-radius:16px; border:1px solid var(--line);
@@ -55,6 +56,21 @@
     filter: drop-shadow(0 4px 12px rgba(255,255,255,.08));
   }
   footer{margin-top:14px; text-align:center; color:var(--muted); font-size:13px}
+
+  /* ====== Responsive móvil ====== */
+  @media (max-width: 820px){
+    body{padding:16px}
+    .card{grid-template-columns:1fr; padding:20px; gap:16px}
+    h1{font-size:32px}
+    p{font-size:16px}
+    .features{grid-template-columns:1fr}
+    .cta{width:100%; font-size:16px}
+    .hero{aspect-ratio: 16/10}
+  }
+  /* iPhone con notch: evita que el botón toque el borde */
+  @supports(padding:max(0px)){
+    body{padding-left:max(16px, env(safe-area-inset-left)); padding-right:max(16px, env(safe-area-inset-right))}
+  }
 </style>
 </head>
 <body>
@@ -66,11 +82,12 @@
         <h1>Brillo que dura, servicio de amigos</h1>
         <p>Somos <b>dos amigos</b> que arrancamos este proyecto con la idea de hacer las cosas
            simples, prolijas y con buena onda. Vamos a tu casa o trabajo y
-           dejamos tu auto impecable: <b>Exterior</b>, <b>Interior</b> o <b>Completo</b> (y más).</p>
+           dejamos tu auto impecable: <b>Exterior</b>, <b>Interior</b> o <b>Completo</b>.</p>
         <div class="features">
           <div class="chip">🧽 Detailing responsable y productos de calidad</div>
           <div class="chip">⏱️ Turnos puntuales — nos adaptamos a tu agenda</div>
           <div class="chip">📍 Zona a coordinar por WhatsApp</div>
+          <div class="chip">🚿🔌 Solo necesitamos que tengas canilla y enchufe</div>
         </div>
         <a class="cta" href="reserva.html">🗓️ Reservar turno</a>
         <p class="muted" style="margin-top:10px">Te confirmamos por WhatsApp apenas entra tu solicitud.</p>
