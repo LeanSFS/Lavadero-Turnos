@@ -2,7 +2,7 @@
 <html lang="es">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Agenda – Admin</title>
+<title>Agenda – Admin (debug)</title>
 <style>
   :root{--bg:#0f172a;--card:#111827;--muted:#9ca3af;--pri:#22c55e;--line:#1f2937}
   body{font-family:system-ui,Arial;background:var(--bg);color:#fff;min-height:100vh;margin:0}
@@ -59,37 +59,24 @@
 </div>
 
 <script>
-// PONÉ TU /exec:
+// TU /exec:
 const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzGlBMaIfEvI3j46lhelGCC0kb-RfF6LcXTKpUz_IObLcERxD5pEhcjCqE3BlicJ-Gw8w/exec';
 
 const state = { rows: [] };
 const pad = n => String(n).padStart(2,'0');
-function niceFecha(iso){
-  if(!iso) return '';
-  const [y,m,d] = iso.split('-').map(Number);
-  const dt = new Date(y, (m||1)-1, d||1);
-  const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-  return `${dias[dt.getDay()]} ${pad(dt.getDate())}/${pad(dt.getMonth()+1)}/${dt.getFullYear()}`;
-}
-function setMsg(t, isErr=false){
-  const el = document.getElementById('msg');
-  el.textContent = t || '';
-  el.style.color = isErr ? '#fca5a5' : '#9ca3af';
-}
+function niceFecha(iso){ if(!iso) return ''; const [y,m,d]=iso.split('-').map(Number); const dt=new Date(y,(m||1)-1,d||1); const dias=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']; return `${dias[dt.getDay()]} ${pad(dt.getDate())}/${pad(dt.getMonth()+1)}/${dt.getFullYear()}`; }
+function setMsg(t, err=false){ const el=document.getElementById('msg'); el.textContent=t||''; el.style.color=err?'#fca5a5':'#9ca3af'; }
 
 async function load(){
   try{
     setMsg('Cargando…');
-    const r = await fetch(`${WEBAPP_URL}?action=list&t=${Date.now()}`); // anti-caché
+    const r = await fetch(`${WEBAPP_URL}?action=list&t=${Date.now()}`);
     const j = await r.json();
     if (!j.ok) throw new Error(j.error||'Error al listar');
     state.rows = j.rows || [];
     render();
     setMsg('');
-  }catch(e){
-    console.error(e);
-    setMsg('⚠️ ' + e.message, true);
-  }
+  }catch(e){ setMsg('⚠️ '+e.message,true); console.error(e); }
 }
 
 function render(){
@@ -109,7 +96,6 @@ function render(){
   );
 
   document.getElementById('count').textContent = `${rows.length} turno(s) mostrados`;
-
   if (!rows.length){ tbody.innerHTML = `<tr><td colspan="8" class="muted">Sin datos</td></tr>`; return; }
 
   tbody.innerHTML = rows.map(r => `
@@ -128,58 +114,55 @@ function render(){
         <button class="danger" type="button" data-act="delete"
                 data-id="${encodeURIComponent(r.id)}"
                 data-fecha="${encodeURIComponent(r.fecha)}"
-                data-hora="${encodeURIComponent(r.hora)}">Borrar</button>
+                data-hora="${encodeURIComponent(r.hora)}"
+                data-nombre="${encodeURIComponent(r.nombre)}"
+                data-telefono="${encodeURIComponent(r.telefono)}">Borrar</button>
       </td>
     </tr>
   `).join('');
 }
 
-/* Delegación de eventos */
+/* Delegación de eventos con debug visible */
 document.getElementById('tbody').addEventListener('click', async (ev) => {
   const btn = ev.target.closest('button');
   if (!btn) return;
 
   const act = btn.dataset.act;
   if (!act) return;
+  btn.disabled = true;
 
   try{
-    btn.disabled = true;
-
     if (act === 'status') {
       const id = decodeURIComponent(btn.dataset.id||'');
       const estado = btn.dataset.estado || '';
       const url = `${WEBAPP_URL}?action=status&id=${encodeURIComponent(id)}&estado=${encodeURIComponent(estado)}&t=${Date.now()}`;
       const res = await fetch(url);
       const data = await res.json();
-      if (!data.ok) throw new Error(data.error||'Error al cambiar estado');
+      alert(`[STATUS]\nURL:\n${url}\n\nRespuesta:\n${JSON.stringify(data,null,2)}`);
+      if (!data.ok) return;
       await load();
       return;
     }
 
     if (act === 'delete') {
       if (!confirm('¿Borrar definitivamente este turno?')) return;
-
       const id  = decodeURIComponent(btn.dataset.id||'');
       const f   = decodeURIComponent(btn.dataset.fecha||'');
       const h   = decodeURIComponent(btn.dataset.hora||'');
+      const tel = decodeURIComponent(btn.dataset.telefono||'');
+      const nom = decodeURIComponent(btn.dataset.nombre||'');
 
-      const url = `${WEBAPP_URL}?action=delete&id=${encodeURIComponent(id)}&fecha=${encodeURIComponent(f)}&hora=${encodeURIComponent(h)}&t=${Date.now()}`;
-      console.log('DELETE URL ->', url);
+      const url = `${WEBAPP_URL}?action=delete&id=${encodeURIComponent(id)}&fecha=${encodeURIComponent(f)}&hora=${encodeURIComponent(h)}&telefono=${encodeURIComponent(tel)}&nombre=${encodeURIComponent(nom)}&t=${Date.now()}`;
       const res = await fetch(url);
       const data = await res.json();
-      if (!data.ok) {
-        console.error('DELETE ERROR:', data);
-        setMsg(`⚠️ Error al borrar: ${data.error}\nURL: ${url}`, true);
-        alert(data.error || 'No se pudo borrar');
-        return;
-      }
-      setMsg(`✅ Borrado OK (vía: ${data.via}, fila: ${data.row})`);
+      alert(`[DELETE]\nURL:\n${url}\n\nRespuesta:\n${JSON.stringify(data,null,2)}`);
+      if (!data.ok) return;
       await load();
       return;
     }
   } catch(e){
+    alert('Error JS: ' + e.message);
     console.error(e);
-    alert(e.message);
   } finally {
     btn.disabled = false;
   }
