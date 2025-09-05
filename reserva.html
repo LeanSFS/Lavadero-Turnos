@@ -6,7 +6,7 @@
 <style>
   :root{--bg:#0f172a;--card:#111827;--muted:#9ca3af;--pri:#22c55e}
   body{font-family:system-ui,Arial;background:var(--bg);color:#fff;min-height:100vh;margin:0;display:flex;align-items:center;justify-content:center}
-  .wrap{width:100%;max-width:640px;padding:20px}
+  .wrap{width:100%;max-width:700px;padding:20px}
   .card{background:var(--card);border:1px solid #1f2937;border-radius:16px;padding:18px}
   h1{margin:0 0 10px;font-size:22px}
   p{margin:0 0 14px;color:var(--muted)}
@@ -14,6 +14,10 @@
   input,select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #374151;background:#0b1220;color:#fff}
   .btn{margin-top:10px;display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid #16a34a;background:#16a34a;color:#0b1220;font-weight:600;cursor:pointer}
   .btn.secondary{border-color:#374151;background:#111827;color:#e5e7eb}
+  .row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+  .chip{padding:8px 12px;border:1px solid #374151;border-radius:999px;background:#0b1220;color:#e5e7eb;cursor:pointer}
+  .chip[disabled]{opacity:.35;cursor:not-allowed}
+  .chip.sel{background:var(--pri);color:#0b1220;border-color:var(--pri);font-weight:700}
   .slots{margin-top:10px;display:flex;flex-wrap:wrap;gap:10px}
   .slot{padding:10px 14px;border:1px solid #374151;border-radius:10px;cursor:pointer}
   .slot.sel{background:var(--pri);color:#0b1220;border-color:var(--pri);font-weight:700}
@@ -27,6 +31,8 @@
 
     <label>Fecha</label>
     <input type="date" id="fecha">
+
+    <div class="row" id="quickDays"></div>
 
     <button class="btn secondary" id="btnSlots">Ver horarios disponibles</button>
     <div id="slots" class="slots"></div>
@@ -54,12 +60,76 @@
 </div>
 
 <script>
-const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyaoRHNzdHc3qq8pctz-TN9nCavlcGDTefvAl6UiND980Hh-SJ5XTKKfgzi5uEk3wlLPQ/exec';
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzIdrsdl5F0OBXeDj7QbOCInq-vppixmdwevqXC6CnMoQREHHsL8eVz1keR3Lbc8P2yVg/exec';
 
 const $ = (id) => document.getElementById(id);
 let horaElegida = '';
+let fechaElegida = '';
 
-$('btnSlots').onclick = async () => {
+const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+function toISO(d){ const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const dd=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${dd}`; }
+function labelDia(d){ return `${dias[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`; }
+
+async function disponibilidad(fechaISO){
+  try{
+    const res = await fetch(`${WEBAPP_URL}?action=slots&fecha=${encodeURIComponent(fechaISO)}`);
+    const data = await res.json();
+    if (data && data.ok) return data.slots || [];
+  }catch(e){}
+  return [];
+}
+
+async function renderQuickDays(n=7){
+  const cont = $('quickDays');
+  cont.innerHTML = '';
+
+  const hoy = new Date();
+  hoy.setHours(0,0,0,0);
+  $('fecha').min = toISO(hoy);         // no permite fechas pasadas
+  $('fecha').value = $('fecha').value || toISO(hoy);
+  fechaElegida = $('fecha').value;
+
+  // Botones Hoy / Mañana
+  const manana = new Date(hoy); manana.setDate(hoy.getDate()+1);
+  cont.appendChild(makeChip('Hoy', toISO(hoy)));
+  cont.appendChild(makeChip('Mañana', toISO(manana)));
+
+  // Próximos 7 días con cantidad de turnos libres
+  for (let i=0;i<n;i++){
+    const d = new Date(hoy); d.setDate(hoy.getDate()+i);
+    const iso = toISO(d);
+    const slots = await disponibilidad(iso);
+    const chip = makeChip(`${labelDia(d)} (${slots.length})`, iso, slots.length===0);
+    cont.appendChild(chip);
+  }
+
+  // marcar seleccionado si coincide
+  marcarSeleccionFecha(fechaElegida);
+}
+
+function makeChip(text, iso, disabled=false){
+  const el = document.createElement('button');
+  el.className = 'chip';
+  el.textContent = text;
+  if (disabled) el.setAttribute('disabled','');
+  el.onclick = async () => {
+    if (disabled) return;
+    $('fecha').value = iso;
+    fechaElegida = iso;
+    marcarSeleccionFecha(iso);
+    await cargarSlots(); // carga horarios automáticamente
+  };
+  el.dataset.iso = iso;
+  return el;
+}
+
+function marcarSeleccionFecha(iso){
+  document.querySelectorAll('#quickDays .chip').forEach(c => c.classList.remove('sel'));
+  const match = Array.from(document.querySelectorAll('#quickDays .chip')).find(c => c.dataset.iso === iso);
+  if (match) match.classList.add('sel');
+}
+
+async function cargarSlots(){
   $('msg').textContent = '';
   $('slots').innerHTML = '';
   const fecha = $('fecha').value;
@@ -86,8 +156,12 @@ $('btnSlots').onclick = async () => {
   }catch(e){
     $('msg').textContent = 'Error de red'; $('msg').style.color='salmon';
   }
-};
+}
 
+// Botón “Ver horarios”
+$('btnSlots').onclick = cargarSlots;
+
+// Reservar
 $('btnSend').onclick = async () => {
   $('msg').textContent = '';
   const fecha    = $('fecha').value;
@@ -123,6 +197,8 @@ $('btnSend').onclick = async () => {
       // Si querés notificación a tu WhatsApp, descomentá y poné tu número:
       // const texto = `Nuevo turno: ${nombre} (${telefono}) | ${servicio} | ${fecha} ${params.get('hora')} | ${direccion}`;
       // window.open(`https://wa.me/5492990000000?text=${encodeURIComponent(texto)}`, '_blank');
+      // volver a recalcular chips (por si se agotó ese día)
+      renderQuickDays(7);
     } else {
       $('msg').textContent = data.error || 'No se pudo reservar.';
       $('msg').style.color='salmon';
@@ -132,6 +208,8 @@ $('btnSend').onclick = async () => {
     $('msg').style.color='salmon';
   }
 };
+
+// Inicial: setear hoy, min y dibujar chips
+renderQuickDays(7);
 </script>
 </html>
-
