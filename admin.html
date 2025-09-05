@@ -20,6 +20,7 @@
   a.whats{padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#0b1220;color:#e5e7eb;text-decoration:none}
   .muted{color:var(--muted)}
   .danger{border-color:#ef4444;background:#ef4444;color:#0b1220}
+  .tiny{font-size:11px;color:#9ca3af}
 </style>
 
 <div class="wrap">
@@ -53,7 +54,7 @@
 </div>
 
 <script>
-const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzGlBMaIfEvI3j46lhelGCC0kb-RfF6LcXTKpUz_IObLcERxD5pEhcjCqE3BlicJ-Gw8w/exec';
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzIdrsdl5F0OBXeDj7QbOCInq-vppixmdwevqXC6CnMoQREHHsL8eVz1keR3Lbc8P2yVg/exec';
 
 const state = { rows: [] };
 
@@ -87,7 +88,7 @@ function render(){
 
   tbody.innerHTML = rows.map(r => `
     <tr>
-      <td>${r.fecha}</td>
+      <td>${r.fecha}<div class="tiny">ID: ${r.id}</div></td>
       <td>${r.hora}</td>
       <td>${r.servicio}</td>
       <td>${r.nombre}</td>
@@ -95,39 +96,36 @@ function render(){
       <td>${r.direccion}</td>
       <td><span class="chip">${r.estado}</span></td>
       <td class="actions">
-        <button onclick="setEstado('${r.id}','confirmado')">Confirmar</button>
-        <button onclick="setEstado('${r.id}','hecho')">Hecho</button>
-        <!-- CANCELAR (BORRA) -->
-        <button class="danger" onclick="cancelarYBorrar('${r.id}')">Cancelar</button>
-        <!-- BORRAR directo -->
-        <button class="danger" onclick="borrar('${r.id}')">Borrar</button>
+        <button onclick="accionEstado(this,'${encodeURIComponent(r.id)}','confirmado')">Confirmar</button>
+        <button onclick="accionEstado(this,'${encodeURIComponent(r.id)}','hecho')">Hecho</button>
+        <button class="danger" onclick="accionEstado(this,'${encodeURIComponent(r.id)}','cancelado')">Cancelar</button>
+        <button class="danger" onclick="borrar(this,'${encodeURIComponent(r.id)}')">Borrar</button>
       </td>
     </tr>
   `).join('');
 }
 
-async function setEstado(id, estado){
-  const qs = new URLSearchParams({ action:'status', id, estado }).toString();
-  const r  = await fetch(`${WEBAPP_URL}?${qs}`);
-  const j  = await r.json();
-  if (j.ok) load(); else alert(j.error||'Error');
+async function accionEstado(btn, idEnc, estado){
+  try{
+    btn.disabled = true;
+    const id = decodeURIComponent(idEnc);
+    const qs = new URLSearchParams({ action:'status', id, estado }).toString();
+    const r  = await fetch(`${WEBAPP_URL}?${qs}`);
+    const j  = await r.json();
+    if (j.ok) load(); else alert(j.error||'Error');
+  } finally { btn.disabled = false; }
 }
 
-// “Cancelar” que **borra** el turno (como pediste)
-async function cancelarYBorrar(id){
-  if (!confirm('¿Cancelar y BORRAR este turno? Esta acción no se puede deshacer.')) return;
-  const j1 = await (await fetch(`${WEBAPP_URL}?` + new URLSearchParams({action:'status', id, estado:'cancelado'}))).json();
-  if (!j1.ok){ alert(j1.error||'Error al cancelar'); return; }
-  await borrar(id); // luego borramos
-}
-
-// Borrar directo
-async function borrar(id){
+async function borrar(btn, idEnc){
+  const id = decodeURIComponent(idEnc);
   if (!confirm('¿Borrar definitivamente este turno?')) return;
-  const qs = new URLSearchParams({ action:'delete', id }).toString();
-  const r  = await fetch(`${WEBAPP_URL}?${qs}`);
-  const j  = await r.json();
-  if (j.ok) load(); else alert(j.error||'Error al borrar');
+  try{
+    btn.disabled = true;
+    const qs = new URLSearchParams({ action:'delete', id }).toString();
+    const r  = await fetch(`${WEBAPP_URL}?${qs}`);
+    const j  = await r.json();
+    if (j.ok) load(); else alert(j.error||'Error al borrar');
+  } finally { btn.disabled = false; }
 }
 
 document.getElementById('btnReload').onclick = load;
