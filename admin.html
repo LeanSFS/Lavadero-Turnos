@@ -16,7 +16,6 @@
   th{background:#0b1220;text-align:left}
   tr:last-child td{border-bottom:none}
   .chip{padding:6px 10px;border-radius:999px;border:1px solid var(--line);display:inline-block}
-  .actions button{margin:0 6px 6px 0}
   a.whats{padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#0b1220;color:#e5e7eb;text-decoration:none}
   .muted{color:var(--muted)}
   .ok{border-color:#22c55e;background:#22c55e;color:#0b1220}
@@ -24,6 +23,7 @@
   .danger{border-color:#ef4444;background:#ef4444;color:#0b1220}
   .tiny{font-size:11px;color:#9ca3af}
   #msg{margin:10px 0;color:#9ca3af;white-space:pre-wrap}
+  .actions{display:flex;flex-wrap:wrap;gap:6px}
 </style>
 
 <div class="wrap">
@@ -40,7 +40,7 @@
       </select>
     </label>
     <input id="f-q" placeholder="Buscar (cliente / dir / tel)" style="flex:1 1 320px">
-    <button id="btnReload" class="ok">Actualizar</button>
+    <button id="btnReload" class="ok" type="button">Actualizar</button>
   </div>
 
   <div id="msg"></div>
@@ -52,17 +52,18 @@
         <th>Teléfono</th><th>Dirección</th><th>Estado</th><th>Acciones</th>
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody id="tbody"></tbody>
   </table>
 
   <div class="muted" id="count" style="margin-top:8px"></div>
 </div>
 
 <script>
-// TU WebApp URL (termina en /exec)
+// ⚠️ PONÉ TU LINK /exec ACÁ:
 const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzGlBMaIfEvI3j46lhelGCC0kb-RfF6LcXTKpUz_IObLcERxD5pEhcjCqE3BlicJ-Gw8w/exec';
 
 const state = { rows: [] };
+
 const pad = n => String(n).padStart(2,'0');
 function niceFecha(iso){
   if(!iso) return '';
@@ -80,19 +81,20 @@ function setMsg(t, isErr=false){
 async function load(){
   try{
     setMsg('Cargando…');
-    const r = await fetch(`${WEBAPP_URL}?action=list&t=${Date.now()}`); // evita caché
+    const r = await fetch(`${WEBAPP_URL}?action=list&t=${Date.now()}`); // anti-caché
     const j = await r.json();
     if (!j.ok) throw new Error(j.error||'Error al listar');
     state.rows = j.rows || [];
     render();
     setMsg('');
   }catch(e){
+    console.error(e);
     setMsg('⚠️ ' + e.message, true);
   }
 }
 
 function render(){
-  const tbody = document.querySelector('#tbl tbody');
+  const tbody = document.getElementById('tbody');
   const fFecha  = document.getElementById('f-fecha').value;
   const fEstado = document.getElementById('f-estado').value.trim().toLowerCase();
   const fQ      = document.getElementById('f-q').value.trim().toLowerCase();
@@ -121,48 +123,74 @@ function render(){
       <td>${r.direccion}</td>
       <td><span class="chip">${r.estado}</span></td>
       <td class="actions">
-        <button class="ok"   onclick="setEstado(this,'${encodeURIComponent(r.id)}','confirmado')">Confirmar</button>
-        <button class="ok"   onclick="setEstado(this,'${encodeURIComponent(r.id)}','hecho')">Hecho</button>
-        <button class="warn" onclick="setEstado(this,'${encodeURIComponent(r.id)}','cancelado')">Cancelar</button>
-        <button class="danger" onclick="borrar(this, '${encodeURIComponent(r.id)}', '${encodeURIComponent(r.fecha)}', '${encodeURIComponent(r.hora)}', '${encodeURIComponent(r.telefono)}')">Borrar</button>
+        <button class="ok"    type="button" data-act="status" data-estado="confirmado"
+                data-id="${encodeURIComponent(r.id)}">Confirmar</button>
+        <button class="ok"    type="button" data-act="status" data-estado="hecho"
+                data-id="${encodeURIComponent(r.id)}">Hecho</button>
+        <button class="warn"  type="button" data-act="status" data-estado="cancelado"
+                data-id="${encodeURIComponent(r.id)}">Cancelar</button>
+        <button class="danger" type="button" data-act="delete"
+                data-id="${encodeURIComponent(r.id)}"
+                data-fecha="${encodeURIComponent(r.fecha)}"
+                data-hora="${encodeURIComponent(r.hora)}"
+                data-telefono="${encodeURIComponent(r.telefono)}">Borrar</button>
       </td>
     </tr>
   `).join('');
 }
 
-async function setEstado(btn, idEnc, estado){
-  btn.disabled = true;
-  try{
-    const id = decodeURIComponent(idEnc);
-    const url = `${WEBAPP_URL}?action=status&id=${encodeURIComponent(id)}&estado=${encodeURIComponent(estado)}&t=${Date.now()}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if(!data.ok) throw new Error(data.error||'Error al cambiar estado');
-    await load();
-  }catch(e){ alert(e.message); }
-  finally{ btn.disabled = false; }
-}
+/* Delegación de eventos: UN solo listener para todos los botones */
+document.getElementById('tbody').addEventListener('click', async (ev) => {
+  const btn = ev.target.closest('button');
+  if (!btn) return;
 
-async function borrar(btn, idEnc, fechaEnc, horaEnc, telEnc){
-  if (!confirm('¿Borrar definitivamente este turno?')) return;
-  btn.disabled = true;
-  try{
-    const id    = decodeURIComponent(idEnc);
-    const fecha = decodeURIComponent(fechaEnc);
-    const hora  = decodeURIComponent(horaEnc);
-    const tel   = decodeURIComponent(telEnc);
+  const act = btn.dataset.act;
+  if (!act) return;
 
-    const url = `${WEBAPP_URL}?action=delete&id=${encodeURIComponent(id)}&fecha=${encodeURIComponent(fecha)}&hora=${encodeURIComponent(hora)}&telefono=${encodeURIComponent(tel)}&t=${Date.now()}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if(!data.ok){
-      setMsg(`⚠️ Error al borrar: ${data.error}\nURL: ${url}`, true);
-      throw new Error(data.error||'No se pudo borrar');
+  try{
+    btn.disabled = true;
+
+    if (act === 'status') {
+      const id = decodeURIComponent(btn.dataset.id||'');
+      const estado = btn.dataset.estado || '';
+      if (!id || !estado) { alert('Faltan datos'); return; }
+
+      const url = `${WEBAPP_URL}?action=status&id=${encodeURIComponent(id)}&estado=${encodeURIComponent(estado)}&t=${Date.now()}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error||'Error al cambiar estado');
+      await load();
+      return;
     }
-    await load();
-  }catch(e){ alert(e.message); }
-  finally{ btn.disabled = false; }
-}
+
+    if (act === 'delete') {
+      if (!confirm('¿Borrar definitivamente este turno?')) return;
+
+      const id  = decodeURIComponent(btn.dataset.id||'');
+      const f   = decodeURIComponent(btn.dataset.fecha||'');
+      const h   = decodeURIComponent(btn.dataset.hora||'');
+      const tel = decodeURIComponent(btn.dataset.telefono||'');
+
+      const url = `${WEBAPP_URL}?action=delete&id=${encodeURIComponent(id)}&fecha=${encodeURIComponent(f)}&hora=${encodeURIComponent(h)}&telefono=${encodeURIComponent(tel)}&t=${Date.now()}`;
+      console.log('DELETE URL ->', url);
+      const res = await fetch(url);
+      const data = await res.json();
+      if (!data.ok) {
+        console.error('DELETE ERROR:', data);
+        setMsg(`⚠️ Error al borrar: ${data.error}\nURL: ${url}`, true);
+        alert(data.error || 'No se pudo borrar');
+        return;
+      }
+      await load();
+      return;
+    }
+  } catch(e){
+    console.error(e);
+    alert(e.message);
+  } finally {
+    btn.disabled = false;
+  }
+});
 
 document.getElementById('btnReload').onclick = load;
 document.getElementById('f-fecha').onchange =
