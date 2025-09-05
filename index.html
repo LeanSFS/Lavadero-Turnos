@@ -16,15 +16,11 @@
   *{ box-sizing:border-box }
   html,body{ height:100% }
   body{
-    margin:0;
-    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;
-    color:#fff;
+    margin:0; font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif; color:#fff;
     background:
       radial-gradient(1200px 700px at 20% -10%, #0b1220 20%, #0f172a 60%, #0a0f1d 100%),
       linear-gradient(180deg, rgba(14,165,233,.08), rgba(34,197,94,.05));
-    min-height:100vh;
-    display:flex; align-items:center; justify-content:center;
-    padding:24px;
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;
   }
   .wrap{ max-width:960px; width:100% }
   .card{
@@ -66,24 +62,22 @@
   .cta:active{ transform:translateY(0) scale(.99) }
   .cta:focus-visible{ outline:none; box-shadow:var(--ring) }
 
-  /* ====== Servicios (acordeón) ====== */
-  .services{ margin-top:8px; display:grid; gap:10px }
-  details{
-    border:1px solid var(--line); border-radius:14px; background:#0c1526; padding:10px 12px;
-    transition:border-color .12s ease;
+  /* ====== Servicios (tarjetas siempre visibles) ====== */
+  .services{ margin-top:12px; display:grid; gap:12px }
+  .svc{
+    border:1px solid var(--line); background:#0c1526; border-radius:14px; padding:14px 16px;
   }
-  details[open]{ border-color:#2a3a52 }
-  summary{
-    list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between;
-    gap:12px; font-weight:700; color:#e5e7eb; padding:4px;
+  .svc-head{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px;
   }
-  summary::-webkit-details-marker{ display:none }
-  .pill{ font-size:12px; color:#0b1220; background:#22c55e; border:1px solid #16a34a;
-    font-weight:800; padding:5px 8px; border-radius:999px; }
-  .svc-body{ color:#cbd5e1; font-size:15px; padding:6px 2px 4px 2px }
-  .svc-list{ margin:6px 0 0 0; padding-left:18px }
-  .svc-list li{ margin:4px 0 }
-  .note{ color:#9ca3af; font-size:12px; margin-top:6px }
+  .svc-title{ font-weight:800; color:#e5e7eb; font-size:18px }
+  .pill{
+    font-size:12px; color:#0b1220; background:#22c55e; border:1px solid #16a34a;
+    font-weight:800; padding:6px 10px; border-radius:999px; white-space:nowrap;
+  }
+  .svc-list{ margin:0; padding-left:18px; color:#cbd5e1; font-size:15px }
+  .svc-list li{ margin:6px 0 }
+  .note{ color:#9ca3af; font-size:12px; margin-top:8px }
 
   footer{ margin-top:18px; text-align:center; color:var(--muted); font-size:13px }
 
@@ -93,7 +87,8 @@
     .features{ grid-template-columns:1fr } .cta{ width:100%; font-size:16px }
   }
   @supports(padding:max(0px)){
-    body{ padding-left:max(16px, env(safe-area-inset-left)); padding-right:max(16px, env(safe-area-inset-right)) }
+    body{ padding-left:max(16px, env(safe-area-inset-left));
+          padding-right:max(16px, env(safe-area-inset-right)) }
   }
 
   /* link secreto disimulado */
@@ -124,60 +119,64 @@
         <a class="cta" href="reserva.html">🗓️ Reservar turno</a>
         <p class="muted" style="margin-top:10px">Te confirmamos por WhatsApp apenas entra tu solicitud.</p>
 
-        <!-- ==== QUÉ INCLUYE CADA LAVADO ==== -->
+        <!-- ==== QUÉ INCLUYE CADA LAVADO (SIEMPRE VISIBLE) ==== -->
         <div class="services">
           <p class="muted" style="margin-top:10px">Qué incluye cada lavado</p>
 
-          <details>
-            <summary>Exterior <span class="pill">$15.000</span></summary>
-            <div class="svc-body">
-              <ul class="svc-list">
-                <li>Prelavado con snow foam (elimina tierra suelta).</li>
-                <li>Lavado de carrocería con guante de microfibra.</li>
-                <li>Limpieza de llantas y cubiertas; negro de cubiertas.</li>
-                <li>Enjuague y secado con microfibra de alto gramaje.</li>
-                <li>Repaso de vidrios exteriores.</li>
-              </ul>
-              <div class="note">Tiempo aprox.: 30 min. Ideal para mantenimiento semanal/quincenal.</div>
+          <div class="svc">
+            <div class="svc-head">
+              <div class="svc-title">Exterior</div>
+              <span class="pill">$15.000</span>
             </div>
-          </details>
+            <ul class="svc-list">
+              <li>Prelavado con snow foam (elimina tierra suelta).</li>
+              <li>Lavado de carrocería con técnica de 2 baldes y guante de microfibra.</li>
+              <li>Limpieza de llantas y cubiertas; negro de cubiertas.</li>
+              <li>Enjuague y secado con microfibra de alto gramaje.</li>
+              <li>Repaso de vidrios exteriores.</li>
+            </ul>
+            <div class="note">Tiempo aprox.: 40–60 min. Ideal para mantenimiento semanal/quincenal.</div>
+          </div>
 
-          <details>
-            <summary>Interior <span class="pill">$15.000</span></summary>
-            <div class="svc-body">
-              <ul class="svc-list">
-                <li>Aspirado completo (alfombras, asientos, baúl).</li>
-                <li>Limpieza de plásticos/tablero con APC neutro.</li>
-                 <li>Aplicación de acondicionador de plásticos.</li>
-                <li>Limpieza de vidrios interiores sin vetas.</li>
-            
-              </ul>
-              <div class="note">Tiempo aprox.: 40 min.</div>
+          <div class="svc">
+            <div class="svc-head">
+              <div class="svc-title">Interior</div>
+              <span class="pill">$15.000</span>
             </div>
-          </details>
+            <ul class="svc-list">
+              <li>Aspirado completo (alfombras, asientos, baúl).</li>
+              <li>Limpieza de plásticos/tablero con APC neutro (sin dejar grasoso).</li>
+              <li>Repaso de tapizados y cinturones (manchas leves).</li>
+              <li>Limpieza de vidrios interiores sin vetas.</li>
+              <li>Perfume suave (opcional).</li>
+            </ul>
+            <div class="note">Tiempo aprox.: 45–60 min. Manchas profundas se cotizan aparte.</div>
+          </div>
 
-          <details open>
-            <summary>Completo (Exterior + Interior) <span class="pill">$20.000</span></summary>
-            <div class="svc-body">
-              <ul class="svc-list">
-                <li>Todo lo del Exterior + todo lo del Interior.</li>
-                <li>Sellador rápido de acabado para sumar brillo y repelencia.</li>
-              </ul>
-              <div class="note">Tiempo aprox.: 1 h 30 min. Excelente para dejar el auto “como nuevo”.</div>
+          <div class="svc">
+            <div class="svc-head">
+              <div class="svc-title">Completo (Exterior + Interior)</div>
+              <span class="pill">$20.000</span>
             </div>
-          </details>
+            <ul class="svc-list">
+              <li>Todo lo del Exterior + todo lo del Interior.</li>
+              <li>Sellador rápido de acabado para sumar brillo y repelencia.</li>
+            </ul>
+            <div class="note">Tiempo aprox.: 1 h 30 min. Excelente para dejar el auto “como nuevo”.</div>
+          </div>
 
-          <details>
-            <summary>Full (detallado ligero) <span class="pill">$30.000</span></summary>
-            <div class="svc-body">
-              <ul class="svc-list">
-                <li>Completo + Limpieza detallada de interior.</li>
-                <li>Aplicación de cera líquida.</li>
-                <li>Detalle de emblemas, juntas y burletes.</li>
-              </ul>
-              <div class="note">Tiempo aprox.: 2 h. </div>
+          <div class="svc">
+            <div class="svc-head">
+              <div class="svc-title">Full (detallado ligero)</div>
+              <span class="pill">$30.000</span>
             </div>
-          </details>
+            <ul class="svc-list">
+              <li>Completo + descontaminación rápida de carrocería (film ferroso/barro leve).</li>
+              <li>Aplicación de cera líquida/sellador de mayor duración.</li>
+              <li>Detalle de emblemas, juntas y burletes.</li>
+            </ul>
+            <div class="note">Tiempo aprox.: 2 h. Para ocasión especial o primera puesta a punto.</div>
+          </div>
 
           <p class="note">Los valores son para auto chico/mediano en condición normal. SUV/4x4, barro extremo o pelos de mascota muy impregnados pueden requerir ajuste.</p>
         </div>
