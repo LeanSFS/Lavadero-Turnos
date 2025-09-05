@@ -16,13 +16,14 @@
   th{background:#0b1220;text-align:left}
   tr:last-child td{border-bottom:none}
   .chip{padding:6px 10px;border-radius:999px;border:1px solid var(--line);display:inline-block}
-  .muted{color:var(--muted)}
   .actions button{margin:0 6px 6px 0}
+  a.whats{padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#0b1220;color:#e5e7eb;text-decoration:none}
+  .muted{color:var(--muted)}
   .ok{border-color:#22c55e;background:#22c55e;color:#0b1220}
-  .danger{border-color:#ef4444;background:#ef4444;color:#0b1220}
   .warn{border-color:#f59e0b;background:#f59e0b;color:#0b1220}
+  .danger{border-color:#ef4444;background:#ef4444;color:#0b1220}
   .tiny{font-size:11px;color:#9ca3af}
-  .msg{margin:10px 0;color:#9ca3af}
+  #msg{margin:10px 0;color:#9ca3af;white-space:pre-wrap}
 </style>
 
 <div class="wrap">
@@ -42,7 +43,7 @@
     <button id="btnReload" class="ok">Actualizar</button>
   </div>
 
-  <div id="msg" class="msg"></div>
+  <div id="msg"></div>
 
   <table id="tbl">
     <thead>
@@ -58,25 +59,28 @@
 </div>
 
 <script>
-// 👇 tu WebApp URL
+// TU WebApp URL (termina en /exec)
 const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzGlBMaIfEvI3j46lhelGCC0kb-RfF6LcXTKpUz_IObLcERxD5pEhcjCqE3BlicJ-Gw8w/exec';
 
 const state = { rows: [] };
-
-// helpers UI
 const pad = n => String(n).padStart(2,'0');
-function niceFecha(iso){ // "2025-09-06" -> "Sáb 06/09/2025"
+function niceFecha(iso){
   if(!iso) return '';
   const [y,m,d] = iso.split('-').map(Number);
   const dt = new Date(y, (m||1)-1, d||1);
   const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
   return `${dias[dt.getDay()]} ${pad(dt.getDate())}/${pad(dt.getMonth()+1)}/${dt.getFullYear()}`;
 }
+function setMsg(t, isErr=false){
+  const el = document.getElementById('msg');
+  el.textContent = t || '';
+  el.style.color = isErr ? '#fca5a5' : '#9ca3af';
+}
 
 async function load(){
-  setMsg('Cargando…');
   try{
-    const r = await fetch(`${WEBAPP_URL}?action=list`);
+    setMsg('Cargando…');
+    const r = await fetch(`${WEBAPP_URL}?action=list&t=${Date.now()}`); // evita caché
     const j = await r.json();
     if (!j.ok) throw new Error(j.error||'Error al listar');
     state.rows = j.rows || [];
@@ -85,12 +89,6 @@ async function load(){
   }catch(e){
     setMsg('⚠️ ' + e.message, true);
   }
-}
-
-function setMsg(t, err=false){
-  const el = document.getElementById('msg');
-  el.textContent = t || '';
-  el.style.color = err ? '#fca5a5' : '#9ca3af';
 }
 
 function render(){
@@ -119,48 +117,49 @@ function render(){
       <td>${r.hora}</td>
       <td>${r.servicio}</td>
       <td>${r.nombre}</td>
-      <td><a class="warn" style="text-decoration:none;padding:6px 8px;border-radius:8px;border:1px solid #374151;background:#0b1220;color:#e5e7eb" href="https://wa.me/${(r.telefono||'').replace(/[^0-9+]/g,'')}" target="_blank">${r.telefono||''}</a></td>
+      <td><a class="whats" href="https://wa.me/${(r.telefono||'').replace(/[^0-9+]/g,'')}" target="_blank">${r.telefono||''}</a></td>
       <td>${r.direccion}</td>
       <td><span class="chip">${r.estado}</span></td>
       <td class="actions">
-        <button class="ok"    onclick="accionEstado(this,'${encodeURIComponent(r.id)}','confirmado')">Confirmar</button>
-        <button class="ok"    onclick="accionEstado(this,'${encodeURIComponent(r.id)}','hecho')">Hecho</button>
-        <button class="warn"  onclick="accionEstado(this,'${encodeURIComponent(r.id)}','cancelado')">Cancelar</button>
-        <button class="danger"onclick="borrar(this,'${encodeURIComponent(r.id)}')">Borrar</button>
+        <button class="ok"   onclick="setEstado(this,'${encodeURIComponent(r.id)}','confirmado')">Confirmar</button>
+        <button class="ok"   onclick="setEstado(this,'${encodeURIComponent(r.id)}','hecho')">Hecho</button>
+        <button class="warn" onclick="setEstado(this,'${encodeURIComponent(r.id)}','cancelado')">Cancelar</button>
+        <button class="danger" onclick="borrar(this, '${encodeURIComponent(r.id)}', '${encodeURIComponent(r.fecha)}', '${encodeURIComponent(r.hora)}', '${encodeURIComponent(r.telefono)}')">Borrar</button>
       </td>
     </tr>
   `).join('');
 }
 
-async function accionEstado(btn, idEnc, estado){
+async function setEstado(btn, idEnc, estado){
+  btn.disabled = true;
   try{
-    btn.disabled = true;
     const id = decodeURIComponent(idEnc);
-    const qs = new URLSearchParams({ action:'status', id, estado }).toString();
-    const r  = await fetch(`${WEBAPP_URL}?${qs}`);
-    const j  = await r.json();
-    if (!j.ok) throw new Error(j.error||'Error');
+    const url = `${WEBAPP_URL}?action=status&id=${encodeURIComponent(id)}&estado=${encodeURIComponent(estado)}&t=${Date.now()}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if(!data.ok) throw new Error(data.error||'Error al cambiar estado');
     await load();
   }catch(e){ alert(e.message); }
   finally{ btn.disabled = false; }
 }
 
-async function borrar(btn, rEnc){
-  const r = JSON.parse(decodeURIComponent(rEnc));
+async function borrar(btn, idEnc, fechaEnc, horaEnc, telEnc){
   if (!confirm('¿Borrar definitivamente este turno?')) return;
   btn.disabled = true;
   try{
-    const qs = new URLSearchParams({
-      action:'delete',
-      id:r.id,
-      fecha:r.fecha,
-      hora:r.hora,
-      telefono:r.telefono
-    }).toString();
-    const res  = await fetch(`${WEBAPP_URL}?${qs}`);
+    const id    = decodeURIComponent(idEnc);
+    const fecha = decodeURIComponent(fechaEnc);
+    const hora  = decodeURIComponent(horaEnc);
+    const tel   = decodeURIComponent(telEnc);
+
+    const url = `${WEBAPP_URL}?action=delete&id=${encodeURIComponent(id)}&fecha=${encodeURIComponent(fecha)}&hora=${encodeURIComponent(hora)}&telefono=${encodeURIComponent(tel)}&t=${Date.now()}`;
+    const res = await fetch(url);
     const data = await res.json();
-    if(!data.ok) throw new Error(data.error||'No se pudo borrar');
-    await load();   // 👈 recarga la tabla
+    if(!data.ok){
+      setMsg(`⚠️ Error al borrar: ${data.error}\nURL: ${url}`, true);
+      throw new Error(data.error||'No se pudo borrar');
+    }
+    await load();
   }catch(e){ alert(e.message); }
   finally{ btn.disabled = false; }
 }
