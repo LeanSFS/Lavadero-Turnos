@@ -29,4 +29,109 @@
     <input type="date" id="fecha">
 
     <button class="btn secondary" id="btnSlots">Ver horarios disponibles</button>
-    <div id="slots
+    <div id="slots" class="slots"></div>
+
+    <label>Nombre y Apellido</label>
+    <input id="nombre" placeholder="Juan Pérez">
+
+    <label>Teléfono</label>
+    <input id="tel" placeholder="2994...">
+
+    <label>Dirección</label>
+    <input id="dir" placeholder="Calle y número, barrio">
+
+    <label>Servicio</label>
+    <select id="serv">
+      <option>Exterior – $15.000</option>
+      <option>Interior – $15.000</option>
+      <option>Completo – $20.000</option>
+      <option>Encerado – $12.000</option>
+    </select>
+
+    <button class="btn" id="btnSend">Reservar</button>
+    <div id="msg" class="msg"></div>
+  </div>
+</div>
+
+<script>
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyaoRHNzdHc3qq8pctz-TN9nCavlcGDTefvAl6UiND980Hh-SJ5XTKKfgzi5uEk3wlLPQ/exec';
+
+const $ = (id) => document.getElementById(id);
+let horaElegida = '';
+
+$('btnSlots').onclick = async () => {
+  $('msg').textContent = '';
+  $('slots').innerHTML = '';
+  const fecha = $('fecha').value;
+  if (!fecha) { $('msg').textContent = 'Elegí una fecha'; $('msg').style.color='salmon'; return; }
+
+  try{
+    const res = await fetch(`${WEBAPP_URL}?action=slots&fecha=${encodeURIComponent(fecha)}`);
+    if(!res.ok){ $('msg').textContent = 'Error al cargar horarios'; $('msg').style.color='salmon'; return; }
+    const data = await res.json();
+    if(!data.ok){ $('msg').textContent = data.error || 'Sin horarios'; $('msg').style.color='salmon'; return; }
+    if(!data.slots.length){ $('slots').innerHTML = '<span style="color:#9ca3af">No hay horarios libres para ese día.</span>'; return; }
+
+    horaElegida = '';
+    $('slots').innerHTML = data.slots.map(h => `<span class="slot" data-h="${h}">${h}</span>`).join('');
+    document.querySelectorAll('.slot').forEach(el => {
+      el.onclick = () => {
+        document.querySelectorAll('.slot').forEach(s=>s.classList.remove('sel'));
+        el.classList.add('sel');
+        horaElegida = el.dataset.h;
+        $('msg').textContent = `Horario elegido: ${horaElegida}`;
+        $('msg').style.color = '#22c55e';
+      };
+    });
+  }catch(e){
+    $('msg').textContent = 'Error de red'; $('msg').style.color='salmon';
+  }
+};
+
+$('btnSend').onclick = async () => {
+  $('msg').textContent = '';
+  const fecha    = $('fecha').value;
+  const nombre   = $('nombre').value.trim();
+  const telefono = $('tel').value.trim();
+  const direccion= $('dir').value.trim();
+  const servicio = $('serv').value.split(' – ')[0];
+
+  if(!fecha || !horaElegida || !nombre || !telefono || !direccion){
+    $('msg').textContent = 'Completá fecha, horario, nombre, teléfono y dirección.';
+    $('msg').style.color='salmon';
+    return;
+  }
+
+  // POST urlencoded (Apps Script lo toma en e.parameter)
+  const params = new URLSearchParams();
+  params.append('action','create');
+  params.append('fecha', fecha);
+  params.append('hora', horaElegida);
+  params.append('servicio', servicio);
+  params.append('nombre', nombre);
+  params.append('telefono', telefono);
+  params.append('direccion', direccion);
+
+  try{
+    const res  = await fetch(WEBAPP_URL, { method:'POST', body: params });
+    const data = await res.json();
+    if(data.ok){
+      $('msg').textContent = '✅ ¡Turno reservado! Te confirmamos por WhatsApp.';
+      $('msg').style.color = '#22c55e';
+      $('slots').innerHTML = '';
+      horaElegida = '';
+      // Si querés notificación a tu WhatsApp, descomentá y poné tu número:
+      // const texto = `Nuevo turno: ${nombre} (${telefono}) | ${servicio} | ${fecha} ${params.get('hora')} | ${direccion}`;
+      // window.open(`https://wa.me/5492990000000?text=${encodeURIComponent(texto)}`, '_blank');
+    } else {
+      $('msg').textContent = data.error || 'No se pudo reservar.';
+      $('msg').style.color='salmon';
+    }
+  }catch(e){
+    $('msg').textContent = 'Error de red al reservar.'; 
+    $('msg').style.color='salmon';
+  }
+};
+</script>
+</html>
+
