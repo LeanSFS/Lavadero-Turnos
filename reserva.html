@@ -1,68 +1,135 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reservá tu turno – Lavado a Domicilio</title>
+<style>
+  :root{--bg:#0f172a;--card:#111827;--muted:#9ca3af;--pri:#22c55e}
+  body{font-family:system-ui,Arial;background:var(--bg);color:#fff;min-height:100vh;margin:0;display:flex;align-items:center;justify-content:center}
+  .wrap{width:100%;max-width:560px;padding:20px}
+  .card{background:var(--card);border:1px solid #1f2937;border-radius:16px;padding:18px}
+  h1{margin:0 0 10px;font-size:22px}
+  p{margin:0 0 14px;color:var(--muted)}
+  label{display:block;margin:8px 0 4px;color:#e5e7eb;font-size:14px}
+  input,select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #374151;background:#0b1220;color:#fff}
+  .btn{margin-top:10px;display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid #16a34a;background:#16a34a;color:#0b1220;font-weight:600;cursor:pointer}
+  .btn.secondary{border-color:#374151;background:#111827;color:#e5e7eb}
+  .slots{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
+  .slot{padding:8px 12px;border:1px solid #374151;border-radius:10px;cursor:pointer}
+  .slot.sel{background:var(--pri);color:#0b1220;border-color:var(--pri);font-weight:700}
+  .msg{margin-top:10px;font-size:14px}
+</style>
+
+<div class="wrap">
+  <div class="card">
+    <h1>Lavado a Domicilio 🚗✨</h1>
+    <p>Elegí fecha, horario disponible y servicio. Te confirmamos por WhatsApp.</p>
+
+    <label>Fecha</label>
+    <input type="date" id="fecha">
+
+    <button class="btn secondary" id="btnSlots">Ver horarios disponibles</button>
+    <div id="slots" class="slots"></div>
+
+    <label>Nombre y Apellido</label>
+    <input id="nombre" placeholder="Juan Pérez">
+
+    <label>Teléfono</label>
+    <input id="tel" placeholder="2994...">
+
+    <label>Dirección</label>
+    <input id="dir" placeholder="Calle y número, barrio">
+
+    <label>Servicio</label>
+    <select id="serv">
+      <option>Exterior – $15.000</option>
+      <option>Interior – $15.000</option>
+      <option>Completo – $20.000</option>
+      <option>Encerado – $12.000</option>
+    </select>
+
+    <button class="btn" id="btnSend">Reservar</button>
+    <div id="msg" class="msg"></div>
+  </div>
+</div>
+
 <script>
 const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzIdrsdl5F0OBXeDj7QbOCInq-vppixmdwevqXC6CnMoQREHHsL8eVz1keR3Lbc8P2yVg/exec';
-let horaElegida = '';
 
 const $ = (id) => document.getElementById(id);
-const show = (msg, ok=false) => { const el = $('msg'); el.textContent = msg; el.style.color = ok ? 'green' : 'crimson'; };
+let horaElegida = '';
 
 $('btnSlots').onclick = async () => {
-  show('');
+  $('msg').textContent = '';
+  $('slots').innerHTML = '';
   const fecha = $('fecha').value;
-  if (!fecha) { show('Elegí una fecha'); return; }
+  if (!fecha) { $('msg').textContent = 'Elegí una fecha'; $('msg').style.color='salmon'; return; }
 
-  try {
+  try{
     const res = await fetch(`${WEBAPP_URL}?action=slots&fecha=${encodeURIComponent(fecha)}`);
-    if (!res.ok) { show(`Error slots: ${res.status} ${res.statusText}`); return; }
+    if(!res.ok){ $('msg').textContent = 'Error al cargar horarios'; $('msg').style.color='salmon'; return; }
     const data = await res.json();
-    if (!data.ok) { show(data.error || 'No se pudieron cargar los horarios'); return; }
-    if (!data.slots.length) { $('slots').innerHTML = 'No hay horarios libres'; return; }
+    if(!data.ok){ $('msg').textContent = data.error || 'Sin horarios'; $('msg').style.color='salmon'; return; }
+    if(!data.slots.length){ $('slots').innerHTML = '<span style="color:#9ca3af">No hay horarios libres para ese día.</span>'; return; }
 
-    $('slots').innerHTML = data.slots.map(h =>
-      `<label style="display:inline-block;margin:6px 10px 0 0">
-        <input type="radio" name="hora" value="${h}"> ${h}
-      </label>`
-    ).join('');
-
-    document.querySelectorAll('input[name="hora"]').forEach(r => {
-      r.onchange = () => { horaElegida = r.value; show('Horario elegido: ' + horaElegida, true); };
+    horaElegida = '';
+    $('slots').innerHTML = data.slots.map(h => `<span class="slot" data-h="${h}">${h}</span>`).join('');
+    document.querySelectorAll('.slot').forEach(el => {
+      el.onclick = () => {
+        document.querySelectorAll('.slot').forEach(s=>s.classList.remove('sel'));
+        el.classList.add('sel');
+        horaElegida = el.dataset.h;
+        $('msg').textContent = `Horario elegido: ${horaElegida}`;
+        $('msg').style.color = '#22c55e';
+      };
     });
-  } catch (e) {
-    show('Error de red al cargar horarios'); 
+  }catch(e){
+    $('msg').textContent = 'Error de red'; $('msg').style.color='salmon';
   }
 };
 
 $('btnSend').onclick = async () => {
-  show('');
-  const fecha = $('fecha').value.trim();
+  $('msg').textContent = '';
+  const fecha = $('fecha').value;
   const nombre = $('nombre').value.trim();
   const telefono = $('tel').value.trim();
   const direccion = $('dir').value.trim();
   const servicio = $('serv').value.split(' – ')[0];
 
-  if (!fecha || !horaElegida || !nombre || !telefono || !direccion) {
-    show('Completá fecha, horario, nombre, teléfono y dirección');
+  if(!fecha || !horaElegida || !nombre || !telefono || !direccion){
+    $('msg').textContent = 'Completá fecha, horario, nombre, teléfono y dirección.';
+    $('msg').style.color='salmon';
     return;
   }
 
-  try {
-    const res = await fetch(WEBAPP_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ action:'create', fecha, hora:horaElegida, servicio, nombre, telefono, direccion })
-    });
-    if (!res.ok) { show(`Error al reservar: ${res.status} ${res.statusText}`); return; }
+  // Enviar como FormData para evitar CORS preflight
+  const fd = new FormData();
+  fd.append('action','create');
+  fd.append('fecha', fecha);
+  fd.append('hora', horaElegida);
+  fd.append('servicio', servicio);
+  fd.append('nombre', nombre);
+  fd.append('telefono', telefono);
+  fd.append('direccion', direccion);
+
+  try{
+    const res = await fetch(WEBAPP_URL, { method:'POST', body: fd });
     const data = await res.json();
-    if (data.ok) {
-      show('✅ ¡Turno reservado! Te confirmamos por WhatsApp.', true);
-      // Limpio selección de hora
-      document.querySelectorAll('input[name="hora"]').forEach(r => r.checked = false);
+    if(data.ok){
+      $('msg').textContent = '✅ ¡Turno reservado! Te confirmamos por WhatsApp.';
+      $('msg').style.color = '#22c55e';
+      $('slots').innerHTML = '';
       horaElegida = '';
+      // si querés notificación por WhatsApp a tu número, descomentá y poné tu número:
+      // const texto = `Nuevo turno: ${nombre} (${telefono}) | ${servicio} | ${fecha} ${horaElegida} | ${direccion}`;
+      // window.open(`https://wa.me/5492990000000?text=${encodeURIComponent(texto)}`, '_blank');
     } else {
-      show(data.error || 'No se pudo reservar');
+      $('msg').textContent = data.error || 'No se pudo reservar.';
+      $('msg').style.color='salmon';
     }
-  } catch (e) {
-    show('Error de red al reservar');
+  }catch(e){
+    $('msg').textContent = 'Error de red al reservar.'; $('msg').style.color='salmon';
   }
 };
 </script>
-
+</html>
