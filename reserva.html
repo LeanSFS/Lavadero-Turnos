@@ -1,84 +1,68 @@
-<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Reservá tu turno</title>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<style>body{font-family:system-ui,Arial;max-width:720px;margin:0 auto;padding:16px} .box{border:1px solid #ddd;border-radius:12px;padding:16px;margin-top:12px} button{padding:10px 14px;border-radius:10px;border:1px solid #111;background:#111;color:#fff;cursor:pointer} input,select{padding:10px;border:1px solid #ccc;border-radius:10px;width:100%} label{font-size:14px;opacity:.8;margin:6px 0} .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}</style>
-<h1>Lavado a Domicilio – Reservá tu turno</h1>
-<p>Elegí fecha, horario disponible y el servicio. Nos contactamos por WhatsApp para confirmar.</p>
-
-<div class="box">
-  <label>Fecha
-    <input type="date" id="fecha">
-  </label>
-  <div style="margin-top:8px"><button id="btnSlots">Ver horarios disponibles</button></div>
-  <div id="slots" style="margin-top:10px"></div>
-</div>
-
-<div class="box">
-  <div class="row">
-    <div><label>Nombre y Apellido<input id="nombre" placeholder="Juan Pérez"></label></div>
-    <div><label>Teléfono<input id="tel" placeholder="2994..."></label></div>
-  </div>
-  <label>Dirección<input id="dir" placeholder="Calle y número"></label>
-  <label>Servicio
-    <select id="serv">
-      <option>Exterior – $15.000</option>
-      <option>Interior – $15.000</option>
-      <option>Completo – $20.000</option>
-      <option>Encerado – $12.000</option>
-    </select>
-  </label>
-  <div style="margin-top:8px"><button id="btnSend">Reservar</button></div>
-  <div id="msg" style="margin-top:10px"></div>
-</div>
-
 <script>
 const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzIdrsdl5F0OBXeDj7QbOCInq-vppixmdwevqXC6CnMoQREHHsL8eVz1keR3Lbc8P2yVg/exec';
 let horaElegida = '';
 
-document.getElementById('btnSlots').onclick = async () => {
-  const fecha = document.getElementById('fecha').value;
-  if (!fecha) { alert('Elegí una fecha'); return; }
-  const res = await fetch(`${WEBAPP_URL}?action=slots&fecha=${fecha}`);
-  const data = await res.json();
-  const cont = document.getElementById('slots');
-  if (!data.ok) { cont.textContent = data.error || 'Error'; return; }
-  if (!data.slots.length) { cont.textContent = 'No hay horarios libres para ese día.'; return; }
-  cont.innerHTML = data.slots.map(h => `
-    <label style="margin-right:10px;">
-      <input type="radio" name="hora" value="${h}"> ${h}
-    </label>`).join('');
-  cont.querySelectorAll('input[name="hora"]').forEach(r => {
-    r.onchange = () => horaElegida = r.value;
-  });
+const $ = (id) => document.getElementById(id);
+const show = (msg, ok=false) => { const el = $('msg'); el.textContent = msg; el.style.color = ok ? 'green' : 'crimson'; };
+
+$('btnSlots').onclick = async () => {
+  show('');
+  const fecha = $('fecha').value;
+  if (!fecha) { show('Elegí una fecha'); return; }
+
+  try {
+    const res = await fetch(`${WEBAPP_URL}?action=slots&fecha=${encodeURIComponent(fecha)}`);
+    if (!res.ok) { show(`Error slots: ${res.status} ${res.statusText}`); return; }
+    const data = await res.json();
+    if (!data.ok) { show(data.error || 'No se pudieron cargar los horarios'); return; }
+    if (!data.slots.length) { $('slots').innerHTML = 'No hay horarios libres'; return; }
+
+    $('slots').innerHTML = data.slots.map(h =>
+      `<label style="display:inline-block;margin:6px 10px 0 0">
+        <input type="radio" name="hora" value="${h}"> ${h}
+      </label>`
+    ).join('');
+
+    document.querySelectorAll('input[name="hora"]').forEach(r => {
+      r.onchange = () => { horaElegida = r.value; show('Horario elegido: ' + horaElegida, true); };
+    });
+  } catch (e) {
+    show('Error de red al cargar horarios'); 
+  }
 };
 
-document.getElementById('btnSend').onclick = async () => {
-  const fecha = document.getElementById('fecha').value;
-  const nombre = document.getElementById('nombre').value.trim();
-  const telefono = document.getElementById('tel').value.trim();
-  const direccion = document.getElementById('dir').value.trim();
-  const servicio = document.getElementById('serv').value.split(' – ')[0]; // toma el texto antes del precio
+$('btnSend').onclick = async () => {
+  show('');
+  const fecha = $('fecha').value.trim();
+  const nombre = $('nombre').value.trim();
+  const telefono = $('tel').value.trim();
+  const direccion = $('dir').value.trim();
+  const servicio = $('serv').value.split(' – ')[0];
 
   if (!fecha || !horaElegida || !nombre || !telefono || !direccion) {
-    alert('Completá fecha, horario, nombre, teléfono y dirección.');
+    show('Completá fecha, horario, nombre, teléfono y dirección');
     return;
   }
-  const res = await fetch(WEBAPP_URL, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ action:'create', fecha, hora:horaElegida, servicio, nombre, telefono, direccion })
-  });
-  const data = await res.json();
-  const msg = document.getElementById('msg');
-  if (data.ok) {
-    msg.textContent = '¡Listo! Te vamos a confirmar por WhatsApp ✅';
-    // Opcional: notificarte por WhatsApp
-    const texto = `Nuevo turno: ${nombre} (${telefono}) | ${servicio} | ${fecha} ${horaElegida} | ${direccion}`;
-    // Reemplazá 2990000000 por tu número:
-    // window.open(`https://wa.me/5492990000000?text=${encodeURIComponent(texto)}`, '_blank');
-  } else {
-    msg.textContent = data.error || 'No se pudo reservar. Probá otro horario.';
+
+  try {
+    const res = await fetch(WEBAPP_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ action:'create', fecha, hora:horaElegida, servicio, nombre, telefono, direccion })
+    });
+    if (!res.ok) { show(`Error al reservar: ${res.status} ${res.statusText}`); return; }
+    const data = await res.json();
+    if (data.ok) {
+      show('✅ ¡Turno reservado! Te confirmamos por WhatsApp.', true);
+      // Limpio selección de hora
+      document.querySelectorAll('input[name="hora"]').forEach(r => r.checked = false);
+      horaElegida = '';
+    } else {
+      show(data.error || 'No se pudo reservar');
+    }
+  } catch (e) {
+    show('Error de red al reservar');
   }
 };
 </script>
-</html>
+
