@@ -145,16 +145,22 @@ async function accionEstado(btn, idEnc, estado){
   finally{ btn.disabled = false; }
 }
 
-async function borrar(btn, idEnc){
-  const id = decodeURIComponent(idEnc);
+async function borrar(btn, rEnc){
+  const r = JSON.parse(decodeURIComponent(rEnc));
   if (!confirm('¿Borrar definitivamente este turno?')) return;
+  btn.disabled = true;
   try{
-    btn.disabled = true;
-    const qs = new URLSearchParams({ action:'delete', id }).toString();
-    const r  = await fetch(`${WEBAPP_URL}?${qs}`);
-    const j  = await r.json();
-    if (!j.ok) throw new Error(j.error||'Error al borrar');
-    await load();
+    const qs = new URLSearchParams({
+      action:'delete',
+      id:r.id,
+      fecha:r.fecha,
+      hora:r.hora,
+      telefono:r.telefono
+    }).toString();
+    const res  = await fetch(`${WEBAPP_URL}?${qs}`);
+    const data = await res.json();
+    if(!data.ok) throw new Error(data.error||'No se pudo borrar');
+    await load();   // 👈 recarga la tabla
   }catch(e){ alert(e.message); }
   finally{ btn.disabled = false; }
 }
