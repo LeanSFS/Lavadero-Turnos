@@ -69,12 +69,11 @@ async function getSlots(fechaISO){
   }catch{ return []; }
 }
 
-// llena select con 14 días; luego actualiza etiquetas con “X libres”
+// llena select con 14 días y auto carga horarios del primero
 async function renderDias(){
   const sel = $('dia'); sel.innerHTML = '';
   const hoy = new Date(); hoy.setHours(0,0,0,0);
 
-  // 1) crear opciones básicas de los próximos 14 días
   const opciones = [];
   for(let i=0;i<14;i++){
     const d = new Date(hoy); d.setDate(hoy.getDate()+i);
@@ -87,15 +86,11 @@ async function renderDias(){
   }
   sel.value = opciones[0].iso; // seleccionar primera
 
-  // 2) cargar horarios del día seleccionado (auto)
   await cargarHorariosDelDia(sel.value);
 
-  // 3) actualizar etiquetas con cantidad de libres (no bloqueante)
   for (const it of opciones){
     const libres = await getSlots(it.iso);
     it.opt.textContent = `${nice(it.d)} — ${libres.length} libres`;
-    // si querés deshabilitar días sin turnos, descomentá:
-    // it.opt.disabled = libres.length === 0;
   }
 }
 
@@ -117,11 +112,11 @@ async function cargarHorariosDelDia(iso){
   });
 }
 
-// al cambiar día ⇒ cargar horarios automáticamente
 $('dia').onchange = () => cargarHorariosDelDia($('dia').value);
 
-// reservar (GET para evitar CORS)
+// reservar (redirige a success.html)
 $('btnSend').onclick = async () => {
+  const btn = $('btnSend');
   $('msg').textContent = '';
   const fecha    = $('dia').value;
   const nombre   = $('nombre').value.trim();
@@ -135,22 +130,31 @@ $('btnSend').onclick = async () => {
     return;
   }
 
-  const qs = new URLSearchParams({ action:'create', fecha, hora:horaElegida, servicio, nombre, telefono, direccion }).toString();
+  btn.disabled = true; btn.textContent = 'Enviando…';
+
+  const qs = new URLSearchParams({
+    action:'create',
+    fecha, hora:horaElegida, servicio,
+    nombre, telefono, direccion
+  }).toString();
+
   try{
     const res  = await fetch(`${WEBAPP_URL}?${qs}`);
     const data = await res.json();
     if(data.ok){
-      $('msg').textContent = '✅ ¡Turno reservado! Te confirmamos por WhatsApp.';
-      $('msg').style.color = '#22c55e';
-      $('slots').innerHTML = '';
-      horaElegida = '';
-      // refrescar cantidades
-      renderDias();
+      const done = new URLSearchParams({
+        fecha, hora:horaElegida, servicio,
+        nombre, tel:telefono, dir:direccion
+      }).toString();
+      location.href = `success.html?${done}`;
+      return;
     } else {
       $('msg').textContent = data.error || 'No se pudo reservar.'; $('msg').style.color='salmon';
     }
   }catch{
     $('msg').textContent = 'Error de red al reservar.'; $('msg').style.color='salmon';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Reservar';
   }
 };
 
