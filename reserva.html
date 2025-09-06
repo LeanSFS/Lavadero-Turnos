@@ -1,55 +1,85 @@
 <!doctype html>
 <html lang="es">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lavado a Domicilio – Reservas</title>
+<title>LyS Lavados – Reservas</title>
 <style>
   :root{--bg:#0f172a;--card:#0b1220;--line:#1f2937;--muted:#9ca3af;--ok:#22c55e}
-  body{font-family:system-ui,Arial;background:var(--bg);color:#fff;margin:0;padding:24px}
-  .box{max-width:720px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
-  h1{margin:0 0 8px;font-size:22px}
-  .muted{color:var(--muted);margin:0 0 16px}
+  body{
+    font-family:system-ui,Arial;background:var(--bg);color:#fff;margin:0;padding:24px
+  }
+  .wrap{ max-width:720px; margin:0 auto }
+  .box{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:16px;padding:18px
+  }
+  .brand__logo{
+    height:72px;width:auto;display:block;margin:0 auto 12px auto;
+    image-rendering:-webkit-optimize-contrast;
+  }
+  h1{margin:0 0 8px;font-size:22px;text-align:center}
+  .muted{color:var(--muted);margin:0 0 16px;text-align:center}
   label{display:block;margin:12px 0 6px}
-  select,input{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0f172a;color:#fff}
+  select,input{
+    width:100%;padding:12px;border-radius:10px;
+    border:1px solid var(--line);background:#0f172a;color:#fff
+  }
   .slots{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 16px}
-  .slot{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#111827;color:#e5e7eb;cursor:pointer}
+  .slot{
+    padding:10px 12px;border-radius:10px;
+    border:1px solid var(--line);background:#111827;
+    color:#e5e7eb;cursor:pointer
+  }
   .slot.sel{outline:2px solid var(--ok)}
-  button{padding:12px 14px;border-radius:10px;border:1px solid var(--ok);background:var(--ok);color:#0b1220;font-weight:700;cursor:pointer}
-  button:disabled{opacity:.6;cursor:not-allowed;pointer-events:none}
-  .msg{margin-top:10px;color:var(--muted);white-space:pre-wrap}
+  button{
+    padding:12px 14px;border-radius:10px;border:1px solid var(--ok);
+    background:var(--ok);color:#0b1220;font-weight:700;cursor:pointer;width:100%
+  }
+  button:disabled{opacity:.6;cursor:not-allowed}
+  .msg{margin-top:10px;color:var(--muted);white-space:pre-wrap;text-align:center}
+
+  @media(max-width:600px){
+    .brand__logo{height:56px;margin-bottom:10px}
+  }
 </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="box">
+      <!-- Logo + encabezado -->
+      <h1 class="sr-only">LyS Lavados – Reservá tu turno</h1>
+      <img src="logo-lys.png" alt="LyS Lavados" class="brand__logo">
+      <p class="muted">Elegí el día, el horario disponible y el servicio. Te confirmamos por WhatsApp.</p>
 
-<div class="box">
-  <h1>Lavado a Domicilio 🚗✨</h1>
-  <p class="muted">Elegí el día, el horario disponible y el servicio. Te confirmamos por WhatsApp.</p>
+      <label for="dia">Día (próximos 14)</label>
+      <select id="dia"><option value="">Cargando días…</option></select>
 
-  <label for="dia">Día (próximos 14)</label>
-  <select id="dia"><option value="">Cargando días…</option></select>
+      <div id="bloque-slots" style="display:none">
+        <div class="muted" id="subfecha"></div>
+        <div id="slots" class="slots"></div>
+      </div>
 
-  <div id="bloque-slots" style="display:none">
-    <div class="muted" id="subfecha"></div>
-    <div id="slots" class="slots"></div>
-  </div>
+      <label>Nombre y Apellido</label>
+      <input id="nombre" placeholder="Juan Pérez">
+      <label>Teléfono</label>
+      <input id="telefono" placeholder="2994...">
+      <label>Dirección</label>
+      <input id="direccion" placeholder="Calle y número, barrio">
+      <label>Servicio</label>
+      <select id="servicio">
+        <option value="Exterior">Exterior – $15.000</option>
+        <option value="Interior">Interior – $15.000</option>
+        <option value="Completo">Completo – $20.000</option>
+        <option value="Full">Full – $30.000</option>
+      </select>
 
-  <label>Nombre y Apellido</label>
-  <input id="nombre" placeholder="Juan Pérez">
-  <label>Teléfono</label>
-  <input id="telefono" placeholder="2994...">
-  <label>Dirección</label>
-  <input id="direccion" placeholder="Calle y número, barrio">
-  <label>Servicio</label>
-  <select id="servicio">
-    <option value="Exterior">Exterior – $15.000</option>
-    <option value="Interior">Interior – $15.000</option>
-    <option value="Completo">Completo – $20.000</option>
-    <option value="Full">Full – $30.000</option>
-  </select>
-
-  <div style="margin-top:14px">
-    <button id="btn" type="button">Reservar</button>
-  </div>
-  <div id="msg" class="msg"></div>
-</div>
+      <div style="margin-top:14px">
+        <button id="btn">Reservar</button>
+      </div>
+      <div id="msg" class="msg"></div>
+    </div>
+  </main>
 
 <script>
 const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyDd--FDaQPnqG_LQ4MzLuRmIQc99Y0WK1Axpwh3Tc4GX1DLCHn77XTr2-wBZUVCuVO/exec';
@@ -98,7 +128,7 @@ $dia.addEventListener('change', () => {
   const libres = S.map.get(S.selFecha) || [];
   $sub.textContent = `Horarios disponibles para ${S.selFecha}`;
   $slots.innerHTML = libres.length
-    ? libres.map(h => `<button class="slot" data-h="${h}">${h}</button>`).join('')
+    ? libres.map(h => `<button type="button" class="slot" data-h="${h}">${h}</button>`).join('')
     : '<span class="muted">No hay horarios libres en este día.</span>';
   $bloque.style.display = 'block';
 });
@@ -109,11 +139,8 @@ $slots.addEventListener('click', (ev) => {
   [...$slots.querySelectorAll('.slot')].forEach(el => el.classList.toggle('sel', el===b));
 });
 
-let busy = false;
-document.getElementById('btn').addEventListener('click', async () => {
-  if (busy) return;
+document.getElementById('btn').onclick = async () => {
   $msg.textContent = '';
-
   const nombre = document.getElementById('nombre').value.trim();
   const telefono = document.getElementById('telefono').value.trim();
   const direccion = document.getElementById('direccion').value.trim();
@@ -121,22 +148,18 @@ document.getElementById('btn').addEventListener('click', async () => {
   const btn = document.getElementById('btn');
 
   if (!S.selFecha || !S.selHora || !nombre || !telefono || !direccion){
-    $msg.textContent = '⚠️ Completá todos los campos y elegí día y horario.'; 
-    return;
+    $msg.textContent = '⚠️ Completá todos los campos y elegí día y horario.'; return;
   }
 
   try{
-    busy = true;
     btn.disabled = true;
-    btn.textContent = 'Reservando…';
-    await new Promise(requestAnimationFrame); // fuerza repintado
+    btn.textContent = "Reservando…";
 
     const qs = new URLSearchParams({
       action:'create',
       fecha:S.selFecha, hora:S.selHora, servicio,
       nombre, telefono, direccion
     });
-
     const res = await fetch(`${WEBAPP_URL}?${qs.toString()}`);
     const j = await res.json();
     if (!j.ok) throw new Error(j.error||'No se pudo reservar');
@@ -144,16 +167,15 @@ document.getElementById('btn').addEventListener('click', async () => {
     const booking = { id:j.id, nombre, telefono, direccion, servicio,
                       fecha:S.selFecha, hora:S.selHora };
     sessionStorage.setItem('lastBooking', JSON.stringify(booking));
-
     location.href = 'success.html';
   }catch(e){
     $msg.textContent = '⚠️ ' + e.message;
-    busy = false;
     btn.disabled = false;
-    btn.textContent = 'Reservar';
+    btn.textContent = "Reservar";
   }
-});
+};
 
 document.addEventListener('DOMContentLoaded', cargarDias);
 </script>
+</body>
 </html>
