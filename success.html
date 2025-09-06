@@ -13,21 +13,21 @@
   .wrap{ max-width:720px; margin:0 auto }
   .box{
     background:var(--card); border:1px solid var(--line);
-    border-radius:16px; padding:20px
+    border-radius:16px; padding:20px; text-align:center;
   }
 
-  /* LOGO igual que en index/reserva */
+  /* LOGO MUY GRANDE */
   .brand__logo{
-    height:120px; width:auto; display:block; margin:0 auto 16px auto;
+    height:360px; width:auto; display:block; margin:0 auto 20px auto;
     image-rendering:-webkit-optimize-contrast;
   }
 
-  h1{ margin:6px 0 6px; font-size:22px; text-align:center }
+  h1{ margin:6px 0 6px; font-size:28px; text-align:center }
   p.muted{ color:var(--muted); margin:0 0 16px; text-align:center }
 
   .card{
     border:1px solid var(--line); background:#0c1526;
-    border-radius:12px; padding:14px 16px; margin-top:10px
+    border-radius:12px; padding:14px 16px; margin-top:10px; text-align:left;
   }
   .row{ display:flex; gap:10px; margin:6px 0; align-items:baseline }
   .lbl{ color:#9ca3af; min-width:92px; font-size:14px }
@@ -44,7 +44,7 @@
   }
 
   @media(max-width:600px){
-    .brand__logo{ height:90px; margin-bottom:12px }
+    .brand__logo{ height:270px; margin-bottom:16px }
     .actions{ flex-direction:column }
   }
 </style>
