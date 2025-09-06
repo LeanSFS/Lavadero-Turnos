@@ -7,19 +7,26 @@
 <style>
   :root{--bg:#0f172a;--card:#0b1220;--line:#1f2937;--muted:#9ca3af;--ok:#22c55e}
   body{
-    font-family:system-ui,Arial;background:var(--bg);color:#fff;margin:0;padding:24px
+    font-family:system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
+    background:var(--bg); color:#fff; margin:0; padding:24px
   }
   .wrap{ max-width:720px; margin:0 auto }
   .box{
-    background:var(--card);border:1px solid var(--line);
-    border-radius:16px;padding:18px
+    background:var(--card); border:1px solid var(--line);
+    border-radius:16px; padding:20px
   }
+
+  /* LOGO GRANDE DENTRO DE LA CAJA */
   .brand__logo{
-    height:72px;width:auto;display:block;margin:0 auto 12px auto;
+    height:120px;           /* tamaño desktop */
+    width:auto;
+    display:block;
+    margin:0 auto 16px auto;
     image-rendering:-webkit-optimize-contrast;
   }
   h1{margin:0 0 8px;font-size:22px;text-align:center}
   .muted{color:var(--muted);margin:0 0 16px;text-align:center}
+
   label{display:block;margin:12px 0 6px}
   select,input{
     width:100%;padding:12px;border-radius:10px;
@@ -33,14 +40,14 @@
   }
   .slot.sel{outline:2px solid var(--ok)}
   button{
-    padding:12px 14px;border-radius:10px;border:1px solid var(--ok);
-    background:var(--ok);color:#0b1220;font-weight:700;cursor:pointer;width:100%
+    width:100%; padding:12px 14px;border-radius:10px;border:1px solid var(--ok);
+    background:var(--ok);color:#0b1220;font-weight:800;cursor:pointer
   }
   button:disabled{opacity:.6;cursor:not-allowed}
   .msg{margin-top:10px;color:var(--muted);white-space:pre-wrap;text-align:center}
 
   @media(max-width:600px){
-    .brand__logo{height:56px;margin-bottom:10px}
+    .brand__logo{height:90px; margin-bottom:12px}
   }
 </style>
 </head>
