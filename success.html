@@ -1,78 +1,118 @@
 <!doctype html>
 <html lang="es">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Reserva realizada</title>
+<title>LyS Lavados – ¡Reserva hecha!</title>
 <style>
-  :root{--bg:#0f172a;--card:#0b1220;--line:#1f2937;--ok:#22c55e;--muted:#9ca3af}
-  body{margin:0;background:var(--bg);color:#fff;font-family:system-ui,Arial;min-height:100vh;display:grid;place-items:center;padding:24px}
-  .card{max-width:920px;width:100%;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
-  h1{margin:0 0 10px;font-size:30px}
-  .ok{display:inline-flex;align-items:center;gap:10px;color:#16a34a}
-  .box{border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px}
-  .row{margin:6px 0}
-  .lbl{font-weight:700}
-  .muted{color:var(--muted)}
-  .btn{margin-top:16px;display:inline-block;background:var(--ok);color:#0b1220;
-       border:1px solid #16a34a;padding:12px 16px;border-radius:10px;font-weight:800;text-decoration:none}
+  :root{--bg:#0f172a;--card:#0b1220;--line:#1f2937;--muted:#9ca3af;--ok:#22c55e;--ok-ink:#0b1220}
+  body{
+    font-family:system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
+    background:var(--bg); color:#fff; margin:0; padding:24px
+  }
+  .wrap{ max-width:720px; margin:0 auto }
+  .box{
+    background:var(--card); border:1px solid var(--line);
+    border-radius:16px; padding:20px
+  }
+  .brand__logo{
+    height:72px; width:auto; display:block; margin:0 auto 10px auto;
+    image-rendering:-webkit-optimize-contrast;
+  }
+  h1{ margin:6px 0 6px; font-size:22px; text-align:center }
+  p.muted{ color:var(--muted); margin:0 0 16px; text-align:center }
+
+  .card{
+    border:1px solid var(--line); background:#0c1526;
+    border-radius:12px; padding:14px 16px; margin-top:10px
+  }
+  .row{ display:flex; gap:10px; margin:6px 0; align-items:baseline }
+  .lbl{ color:#9ca3af; min-width:92px; font-size:14px }
+  .val{ color:#e5e7eb; font-weight:600 }
+
+  .actions{ display:flex; gap:10px; margin-top:16px }
+  .btn{
+    flex:1; padding:12px 14px; border-radius:10px; border:1px solid var(--ok);
+    background:var(--ok); color:var(--ok-ink); font-weight:800; cursor:pointer; text-align:center;
+    text-decoration:none;
+  }
+  .btn.sec{
+    background:transparent; color:#e5e7eb; border-color:#2a3a52
+  }
+
+  @media(max-width:600px){
+    .brand__logo{ height:56px }
+    .actions{ flex-direction:column }
+  }
 </style>
+</head>
 <body>
-  <main class="card">
-    <h1 class="ok">✅ ¡Reserva realizada con éxito!</h1>
-    <p class="muted">Te vamos a confirmar por WhatsApp apenas podamos.</p>
+  <main class="wrap">
+    <div class="box">
+      <img src="logo-lys.png" alt="LyS Lavados" class="brand__logo">
+      <h1>¡Reserva realizada!</h1>
+      <p class="muted">Te vamos a escribir por WhatsApp para confirmar el turno. 👌</p>
 
-    <div class="box" id="datos">
-      <!-- se completa con JS -->
+      <div id="detalles" class="card" style="display:none">
+        <div class="row"><div class="lbl">Fecha</div><div class="val" id="v-fecha">—</div></div>
+        <div class="row"><div class="lbl">Hora</div><div class="val" id="v-hora">—</div></div>
+        <div class="row"><div class="lbl">Servicio</div><div class="val" id="v-servicio">—</div></div>
+        <div class="row"><div class="lbl">Nombre</div><div class="val" id="v-nombre">—</div></div>
+        <div class="row"><div class="lbl">Dirección</div><div class="val" id="v-direccion">—</div></div>
+      </div>
+
+      <div id="sinDatos" class="card" style="display:none">
+        <p class="muted" style="margin:0;text-align:left">
+          No encontramos los datos de la reserva en este dispositivo. Si llegaste aquí por error,
+          volvé a la página de reservas para generar un turno.
+        </p>
+      </div>
+
+      <div class="actions">
+        <a class="btn" href="reserva.html">Hacer otra reserva</a>
+        <a class="btn sec" href="index.html">Volver al inicio</a>
+      </div>
     </div>
-
-    <a class="btn" href="index.html">Volver al inicio</a>
   </main>
 
 <script>
-(function(){
-  // 1) Intentar leer desde sessionStorage (lo setea reserva.html)
-  let data = null;
-  try { data = JSON.parse(sessionStorage.getItem('lastBooking')||'null'); } catch(_) {}
+  // Formateo de fecha "YYYY-MM-DD" -> "Lun 05/09"
+  const pad = n => String(n).padStart(2,'0');
+  function niceFecha(iso){
+    const [y,m,d] = iso.split('-').map(Number);
+    const dt = new Date(y,(m||1)-1,d||1);
+    const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+    return `${dias[dt.getDay()]} ${pad(d)}/${pad(m)}`;
+  }
 
-  // 2) Fallback: si no hay storage, intentar leer de la URL ?nombre=... etc.
-  if (!data) {
-    const u = new URL(location.href);
-    const q = Object.fromEntries(u.searchParams.entries());
-    if (q.nombre || q.fecha) {
-      data = {
-        id: q.id||'',
-        nombre: q.nombre||'-',
-        telefono: q.telefono||'-',
-        direccion: q.direccion||'-',
-        servicio: q.servicio||'-',
-        fecha: q.fecha||'-',
-        hora: q.hora||'-'
-      };
+  (function init(){
+    try{
+      const raw = sessionStorage.getItem('lastBooking');
+      const bloqueDatos = document.getElementById('detalles');
+      const bloqueSin = document.getElementById('sinDatos');
+
+      if(!raw){
+        bloqueSin.style.display = 'block';
+        return;
+      }
+      const b = JSON.parse(raw || '{}');
+      if(!b || !b.fecha || !b.hora){
+        bloqueSin.style.display = 'block';
+        return;
+      }
+
+      document.getElementById('v-fecha').textContent = niceFecha(b.fecha);
+      document.getElementById('v-hora').textContent = b.hora;
+      document.getElementById('v-servicio').textContent = b.servicio || '—';
+      document.getElementById('v-nombre').textContent = b.nombre || '—';
+      document.getElementById('v-direccion').textContent = b.direccion || '—';
+
+      bloqueDatos.style.display = 'block';
+    }catch(e){
+      console.error(e);
+      document.getElementById('sinDatos').style.display = 'block';
     }
-  }
-
-  // 3) Render
-  const cont = document.getElementById('datos');
-  if (!data) {
-    cont.innerHTML = '<p class="muted">No pudimos recuperar los datos de la reserva. Igual quedó registrada correctamente.</p>';
-    return;
-  }
-
-  // Si querés limpiar para que al refrescar no repita
-  sessionStorage.removeItem('lastBooking');
-
-  const filas = [
-    ['Cliente',   data.nombre],
-    ['Teléfono',  data.telefono],
-    ['Servicio',  data.servicio],
-    ['Fecha y hora', `${data.fecha} ${data.hora}`],
-    ['Dirección', data.direccion],
-  ];
-
-  cont.innerHTML = filas.map(([k,v])=>(
-    `<div class="row"><span class="lbl">${k}:</span> ${v||'-'}</div>`
-  )).join('');
-})();
+  })();
 </script>
 </body>
 </html>
