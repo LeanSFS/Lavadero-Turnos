@@ -15,10 +15,13 @@
     background:var(--card); border:1px solid var(--line);
     border-radius:16px; padding:20px
   }
+
+  /* LOGO igual que en index/reserva */
   .brand__logo{
-    height:72px; width:auto; display:block; margin:0 auto 10px auto;
+    height:120px; width:auto; display:block; margin:0 auto 16px auto;
     image-rendering:-webkit-optimize-contrast;
   }
+
   h1{ margin:6px 0 6px; font-size:22px; text-align:center }
   p.muted{ color:var(--muted); margin:0 0 16px; text-align:center }
 
@@ -41,7 +44,7 @@
   }
 
   @media(max-width:600px){
-    .brand__logo{ height:56px }
+    .brand__logo{ height:90px; margin-bottom:12px }
     .actions{ flex-direction:column }
   }
 </style>
@@ -76,7 +79,7 @@
   </main>
 
 <script>
-  // Formateo de fecha "YYYY-MM-DD" -> "Lun 05/09"
+  // Formatea "YYYY-MM-DD" -> "Lun 05/09"
   const pad = n => String(n).padStart(2,'0');
   function niceFecha(iso){
     const [y,m,d] = iso.split('-').map(Number);
