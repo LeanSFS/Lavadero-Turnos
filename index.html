@@ -14,25 +14,32 @@
     --grad1:#0ea5e9; --grad2:#22c55e; --ring:0 0 0 4px rgba(34,197,94,.22);
   }
   *{ box-sizing:border-box }
-  html,body{ height:100% }
+  /* sacamos height:100% para permitir scroll natural */
+  html,body{ margin:0; padding:0 }
+
   body{
-    margin:0; font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif; color:#fff;
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif; color:#fff;
     background:
       radial-gradient(1200px 700px at 20% -10%, #0b1220 20%, #0f172a 60%, #0a0f1d 100%),
       linear-gradient(180deg, rgba(14,165,233,.08), rgba(34,197,94,.05));
-    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;
+    /* IMPORTANTE: no centramos verticalmente */
+    display:block;
+    padding:24px 24px 32px;
   }
-  .wrap{ max-width:960px; width:100% }
+
+  .wrap{ max-width:960px; width:100%; margin:0 auto }
+
   .card{
     position:relative; background:color-mix(in oklab, var(--card) 94%, black 6%);
     border:1px solid color-mix(in oklab, var(--line) 80%, white 0%);
-    border-radius:20px; padding:32px; display:grid; gap:20px;
+    border-radius:20px; padding:28px; display:grid; gap:18px;
     box-shadow:0 1px 0 rgba(255,255,255,.02) inset, 0 30px 60px rgba(0,0,0,.45);
   }
   .card::before{ content:""; position:absolute; inset:-1px; border-radius:22px;
     background:linear-gradient(120deg, rgba(14,165,233,.18), rgba(34,197,94,.18), transparent 40%);
     filter:blur(18px); opacity:.35; pointer-events:none;
   }
+
   .badge{
     display:inline-flex; align-items:center; gap:8px; font-weight:600;
     background:linear-gradient(90deg,var(--grad1),var(--grad2));
@@ -68,139 +75,3 @@
     border:1px solid var(--line); background:#0c1526; border-radius:14px; padding:14px 16px;
   }
   .svc-head{
-    display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px;
-  }
-  .svc-title{ font-weight:800; color:#e5e7eb; font-size:18px }
-  .pill{
-    font-size:12px; color:#0b1220; background:#22c55e; border:1px solid #16a34a;
-    font-weight:800; padding:6px 10px; border-radius:999px; white-space:nowrap;
-  }
-  .svc-list{ margin:0; padding-left:18px; color:#cbd5e1; font-size:15px }
-  .svc-list li{ margin:6px 0 }
-  .note{ color:#9ca3af; font-size:12px; margin-top:8px }
-
-  footer{ margin-top:18px; text-align:center; color:var(--muted); font-size:13px }
-
-  /* Responsive */
-  @media (max-width:820px){
-    body{ padding:16px } .card{ padding:22px; gap:14px } h1{ font-size:32px } p{ font-size:16px }
-    .features{ grid-template-columns:1fr } .cta{ width:100%; font-size:16px }
-  }
-  @supports(padding:max(0px)){
-    body{ padding-left:max(16px, env(safe-area-inset-left));
-          padding-right:max(16px, env(safe-area-inset-right)) }
-  }
-
-  /* link secreto disimulado */
-  .secret{ color:inherit; text-decoration:none; cursor:default }
-
-  @media (prefers-reduced-motion: reduce){
-    .cta, .chip{ transition:none }
-  }
-</style>
-</head>
-<body>
-  <main class="wrap">
-    <section class="card">
-      <div>
-        <span class="badge">Lavadero de autos • A domicilio</span>
-        <h1>Tu auto como nuevo, sin moverte de casa</h1>
-        <p>Somos <b>dos amigos</b> que arrancamos este proyecto con la idea de hacer las cosas
-           simples, prolijas y con buena onda. Vamos a tu casa y
-           en un pique dejamos tu auto impecable: <b>Exterior</b>, <b>Interior</b> o <b>Completo</b>.</p>
-
-        <div class="features">
-          <div class="chip">🧽 Detailing responsable y productos de calidad</div>
-          <div class="chip">⏱️ Turnos puntuales — nos adaptamos a tu agenda</div>
-          <div class="chip">📍 Vamos a tu domicilio</div>
-          <div class="chip">🚿🔌 Solo necesitamos que tengas canilla y enchufe</div>
-        </div>
-
-        <a class="cta" href="reserva.html">🗓️ Reservar turno</a>
-        <p class="muted" style="margin-top:10px">Te confirmamos por WhatsApp apenas entra tu solicitud.</p>
-
-        <!-- ==== QUÉ INCLUYE CADA LAVADO (SIEMPRE VISIBLE) ==== -->
-        <div class="services">
-          <p class="muted" style="margin-top:10px">Qué incluye cada lavado</p>
-
-          <div class="svc">
-            <div class="svc-head">
-              <div class="svc-title">Exterior</div>
-              <span class="pill">$15.000</span>
-            </div>
-            <ul class="svc-list">
-              <li>Prelavado con snow foam (elimina tierra suelta).</li>
-              <li>Lavado de carrocería con guantes de microfibra.</li>
-              <li>Limpieza de llantas y cubiertas; negro de cubiertas.</li>
-              <li>Enjuague y secado con microfibra de alto gramaje.</li>
-              <li>Repaso de vidrios exteriores.</li>
-            </ul>
-            <div class="note">Tiempo aprox.: 40–60 min. Ideal para mantenimiento.</div>
-          </div>
-
-          <div class="svc">
-            <div class="svc-head">
-              <div class="svc-title">Interior</div>
-              <span class="pill">$15.000</span>
-            </div>
-            <ul class="svc-list">
-              <li>Aspirado completo (alfombras, asientos, baúl).</li>
-              <li>Limpieza de plásticos/tablero con APC neutro.</li>
-              <li>Limpieza de vidrios interiores sin vetas.</li>
-            </ul>
-            <div class="note">Tiempo aprox.: 40–60 min.</div>
-          </div>
-
-          <div class="svc">
-            <div class="svc-head">
-              <div class="svc-title">Completo (Exterior + Interior)</div>
-              <span class="pill">$20.000</span>
-            </div>
-            <ul class="svc-list">
-              <li>Combo = Todo lo del Exterior + todo lo del Interior.</li>
-            </ul>
-            <div class="note">Tiempo aprox.: 1 h 30 min. Excelente para dejar el auto “como nuevo”.</div>
-          </div>
-
-          <div class="svc">
-            <div class="svc-head">
-              <div class="svc-title">Full (detallado ligero)</div>
-              <span class="pill">$30.000</span>
-            </div>
-            <ul class="svc-list">
-              <li>Completo + Limpieza detallada de interior.</li>
-              <li>Aplicación de cera líquida/sellador de mayor duración.</li>
-              <li>Detalle de emblemas, juntas y burletes.</li>
-            </ul>
-            <div class="note">Tiempo aprox.: 2 h. Para ocasión especial o primera puesta a punto.</div>
-          </div>
-
-          <p class="note">Los valores son para auto chico/mediano en condición normal. SUV/4x4, barro extremo o pelos de mascota muy impregnados pueden requerir ajuste.</p>
-        </div>
-        <!-- ==== /SERVICIOS ==== -->
-
-      </div>
-    </section>
-
-    <footer>
-      © <span id="y"></span> Lavadero de Autos — Hecho con dedicación y 
-      <a href="#" id="secretLink" class="secret">mate</a>.
-    </footer>
-  </main>
-
-<script>
-  document.getElementById('y').textContent = new Date().getFullYear();
-
-  // Link oculto en "mate" (contraseña simple)
-  document.getElementById('secretLink').addEventListener('click', function(ev){
-    ev.preventDefault();
-    const pass = prompt("Contraseña:");
-    if(pass === "admin"){
-      window.location.href = "admin.html";
-    } else if(pass !== null){
-      alert("Contraseña incorrecta");
-    }
-  });
-</script>
-</body>
-</html>
