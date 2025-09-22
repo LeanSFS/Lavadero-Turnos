@@ -1,113 +1,267 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>LyS Lavados</title>
-  <meta name="description" content="Lavado de autos a domicilio en Cipolletti. Servicios Exterior, Interior, Completo y Full.">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#0f172a; --card:#0b1220; --line:#1f2937; --muted:#9ca3af;
-      --title:#e5e7eb; --cta:#22c55e; --cta-ink:#0b1220;
-    }
-    *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
-    body{background:var(--bg);color:var(--title);line-height:1.6}
-    main{max-width:800px;margin:auto;padding:2rem}
-    h1{font-size:2rem;font-weight:800;margin-bottom:1rem}
-    .services{margin-top:2rem;display:grid;gap:1rem}
-    .card{
-      background:var(--card);padding:1rem;border-radius:1rem;
-      border:1px solid var(--line);
-    }
-    .price{float:right;background:var(--cta);color:var(--cta-ink);
-      padding:.25rem .75rem;border-radius:1rem;font-weight:600}
-    footer{margin-top:3rem;padding:2rem 0;text-align:center;font-size:.9rem;color:var(--muted)}
+  <meta name="description" content="LyS Lavados a domicilio en Cipolletti. Servicios de lavado Exterior, Interior, Completo y Full. Tu auto como nuevo, sin moverte de casa.">
+  <meta name="description" content="LyS Lavado de autos a domicilio en Cipolletti. Servicios de lavado Exterior, Interior, Completo y Full. Tu auto como nuevo, sin moverte de casa.">
+<meta property="og:title" content="LyS Lavados • Lavado de autos a domicilio">
+<meta property="og:description" content="Exterior, Interior, Completo y Full. Tu auto como nuevo, sin moverte de casa.">
+<meta property="og:url" content="https://lyslavados.com">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://lyslavados.com/logo-lys.png"> <!-- poné un logo que tengas subido -->
 
-    /* --- Botón flotante reservar --- */
-    .floating-reserve{
-      position:fixed;bottom:90px;right:20px;
-      background:var(--cta);color:var(--cta-ink);
-      padding:12px 18px;border-radius:12px;
-      font-weight:600;text-decoration:none;
-      box-shadow:0 4px 12px rgba(0,0,0,.4);
-      transition:.2s transform;
-      z-index:999;
-    }
-    .floating-reserve:hover{transform:translateY(-2px)}
+<link rel="icon" type="image/png" href="favicon.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>LyS Lavados</title>
+<meta name="description" content="Lavado de autos a domicilio. Dos amigos, servicio responsable y detallista. Reservá tu turno.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#0f172a; --card:#0b1220; --line:#1f2937; --muted:#9ca3af;
+--title:#e5e7eb; --cta:#22c55e; --cta-ink:#0b1220;
+--grad1:#0ea5e9; --grad2:#22c55e; --ring:0 0 0 4px rgba(34,197,94,.22);
+}
+*{ box-sizing:border-box }
+html,body{ margin:0; padding:0 }
 
-    /* --- Botones sociales flotantes --- */
-    .floating-socials{
-      position:fixed;bottom:20px;right:20px;
-      display:flex;flex-direction:column;gap:10px;
-      z-index:998;
-    }
-    .floating-socials a{
-      width:45px;height:45px;display:flex;
-      align-items:center;justify-content:center;
-      border-radius:50%;background:#0e1728;
-      border:1px solid var(--line);
-      color:#e5e7eb;text-decoration:none;
-      box-shadow:0 3px 8px rgba(0,0,0,.3);
-      transition:.2s transform,.2s background;
-    }
-    .floating-socials a:hover{
-      transform:translateY(-2px);
-      background:#1e293b;
-    }
-    .floating-socials svg{width:22px;height:22px}
-  </style>
+body{
+font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif; color:#fff;
+background:
+radial-gradient(1200px 700px at 20% -10%, #0b1220 20%, #0f172a 60%, #0a0f1d 100%),
+linear-gradient(180deg, rgba(14,165,233,.08), rgba(34,197,94,.05));
+display:block; padding:24px 24px 32px;
+}
+
+.wrap{ max-width:960px; width:100%; margin:0 auto }
+
+.card{
+position:relative; background:color-mix(in oklab, var(--card) 94%, black 6%);
+border:1px solid color-mix(in oklab, var(--line) 80%, white 0%);
+border-radius:20px; padding:28px; display:grid; gap:18px;
+box-shadow:0 1px 0 rgba(255,255,255,.02) inset, 0 30px 60px rgba(0,0,0,.45);
+}
+.card::before{ content:""; position:absolute; inset:-1px; border-radius:22px;
+background:linear-gradient(120deg, rgba(14,165,233,.18), rgba(34,197,94,.18), transparent 40%);
+filter:blur(18px); opacity:.35; pointer-events:none;
+}
+
+.sr-only{
+position:absolute!important; width:1px; height:1px; padding:0; margin:-1px;
+overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+
+.brand__logo{
+height:360px; width:auto; display:block; margin:0 auto 20px auto;
+image-rendering:-webkit-optimize-contrast;
+}
+
+p{ margin:0 0 14px; color:#d1d5db; font-size:18px }
+.muted{ color:var(--muted); font-size:14px }
+
+.features{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:6px }
+.chip{
+border:1px solid var(--line); background:linear-gradient(180deg,#0e1728,#0b1322);
+padding:12px 14px; border-radius:12px; color:#e5e7eb; line-height:1.35; display:flex; gap:8px;
+transition: transform .12s ease, border-color .12s ease;
+}
+.chip:hover{ transform:translateY(-1px); border-color:#2a3a52 }
+
+.services{ margin-top:12px; display:grid; gap:12px }
+.svc{
+border:1px solid var(--line); background:#0c1526; border-radius:14px; padding:14px 16px;
+}
+.svc-head{
+display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px;
+}
+.svc-title{ font-weight:800; color:#e5e7eb; font-size:18px }
+.pill{
+font-size:12px; color:#0b1220; background:#22c55e; border:1px solid #16a34a;
+font-weight:800; padding:6px 10px; border-radius:999px; white-space:nowrap;
+}
+.svc-list{ margin:0; padding-left:18px; color:#cbd5e1; font-size:15px }
+.svc-list li{ margin:6px 0 }
+.note{ color:#9ca3af; font-size:12px; margin-top:8px }
+
+.cta{
+display:flex; align-items:center; justify-content:center; gap:10px;
+width:100%;
+background:var(--cta); color:var(--cta-ink); border:1px solid #16a34a;
+padding:16px 22px;
+border-radius:12px; font-weight:800; font-size:18px; text-decoration:none;
+box-shadow:0 10px 34px rgba(34,197,94,.25); min-height:56px;
+transition: transform .12s ease, box-shadow .15s ease;
+}
+.cta:hover{ transform:translateY(-1px); box-shadow:0 14px 40px rgba(34,197,94,.32) }
+.cta:active{ transform:translateY(0) scale(.99) }
+.cta:focus-visible{ outline:none; box-shadow:var(--ring) }
+
+.sticky-cta{
+position:sticky;
+bottom:12px;
+z-index:50;
+margin-top:16px;
+background:rgba(11,18,32,.85);
+border:1px solid #1f2937;
+border-radius:16px;
+padding:12px;
+backdrop-filter: blur(8px);
+box-shadow: 0 10px 30px rgba(0,0,0,.45);
+}
+.sticky-cta .help{
+text-align:center; color:var(--muted); font-size:13px; margin-top:8px;
+}
+
+/* Botones sociales */
+.socials{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px }
+.social-btn{
+flex:1;
+display:flex; align-items:center; justify-content:center;
+background:#1d283a; border:1px solid #2a3a52;
+color:#e5e7eb; font-weight:600; font-size:15px;
+padding:10px 14px; border-radius:10px; text-decoration:none;
+transition: transform .12s ease, border-color .12s ease;
+}
+.social-btn:hover{ transform:translateY(-1px); border-color:#3d4f6a }
+
+footer{ margin-top:18px; text-align:center; color:var(--muted); font-size:13px }
+
+@media (max-width:820px){
+body{ padding:16px }
+.card{ padding:20px; gap:14px }
+.brand__logo{ height:270px; margin-bottom:16px }
+p{ font-size:16px }
+.features{ grid-template-columns:1fr }
+.sticky-cta{ bottom: max(12px, env(safe-area-inset-bottom)); padding:12px }
+.cta{ font-size:16px; min-height:52px; padding:14px 18px }
+}
+@media (max-height:800px){
+.card{ padding:20px; gap:14px }
+.brand__logo{ height:300px }
+.svc{ padding:12px 14px }
+.svc-title{ font-size:17px }
+.svc-list{ font-size:14.5px }
+}
+
+@supports(padding:max(0px)){
+body{
+padding-left:max(16px, env(safe-area-inset-left));
+padding-right:max(16px, env(safe-area-inset-right));
+}
+}
+
+.secret{ color:inherit; text-decoration:none; cursor:default }
+
+@media (prefers-reduced-motion: reduce){
+.cta, .chip, .social-btn{ transition:none }
+}
+</style>
 </head>
 <body>
-  <main>
-    <h1>LyS Lavados – Lavado de autos a domicilio</h1>
-    <p>Exterior, Interior, Completo y Full. Vamos hasta tu domicilio en Cipolletti 🚗✨.<br>
-    Solo necesitamos que tengas canilla y enchufe 🚿🔌.</p>
+<main class="wrap">
+<section class="card">
+<div>
+<h1 class="sr-only">LyS Lavados — Tu auto como nuevo, sin moverte de casa</h1>
+<img src="logo-lys.png" alt="LyS Lavados" class="brand__logo">
 
-    <section class="services">
-      <div class="card">
-        <b>Exterior</b> <span class="price">$15.000</span>
-        <p>Prelavado con snow foam, lavado con guantes de microfibra, limpieza de llantas, cubiertas y vidrios exteriores.</p>
-      </div>
-      <div class="card">
-        <b>Interior</b> <span class="price">$15.000</span>
-        <p>Aspirado completo, limpieza de plásticos/tablero con APC neutro y vidrios interiores sin vetas.</p>
-      </div>
-      <div class="card">
-        <b>Completo (Exterior + Interior)</b> <span class="price">$25.000</span>
-        <p>Todo lo del Exterior + Interior en un solo servicio.</p>
-      </div>
-      <div class="card">
-        <b>Full (detallado ligero)</b> <span class="price">$35.000</span>
-        <p>Completo + limpieza detallada de interior, aplicación de cera líquida/sellador y detalle de juntas y emblemas.</p>
-      </div>
-    </section>
+<p>Somos <b>dos amigos</b> que arrancamos este proyecto con la idea de hacer las cosas
+simples, prolijas y con buena onda. Vamos a tu casa y
+en un pique dejamos tu auto impecable: <b>Exterior</b>, <b>Interior</b>, <b>Completo</b> o <b>Full</b>.</p>
 
-    <footer>
-      <p>© 2025 LyS Lavados — Hecho con dedicación y mate.</p>
-    </footer>
-  </main>
+<div class="features">
+<div class="chip">🧽 Detailing responsable y productos de calidad</div>
+<div class="chip">⏱️ Turnos puntuales — nos adaptamos a tu agenda</div>
+<div class="chip">📍 Vamos a tu domicilio</div>
+<div class="chip">🚿🔌 Solo necesitamos que tengas canilla y enchufe</div>
+</div>
 
-  <!-- Botón flotante Reservar -->
-  <a class="floating-reserve" href="https://wa.me/5492995760611" target="_blank">
-    📅 Reservar turno
-  </a>
+<div class="services">
+<p class="muted" style="margin-top:10px">Qué incluye cada lavado</p>
 
-  <!-- Botones sociales flotantes -->
-  <div class="floating-socials">
-    <a href="https://wa.me/5492995760611" target="_blank" title="WhatsApp">
-      <!-- WhatsApp -->
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 3.9A11 11 0 0 0 3.2 19.4L2 22l2.7-.7a11 11 0 0 0 5.1 1.3h.1A11 11 0 0 0 20 3.9zm-8 17.1c-1.6 0-3.2-.4-4.6-1.2l-.3-.1-2.8.7.8-2.7-.2-.3a9 9 0 1 1 7.1 3.6zm4.9-6.8c-.3-.2-1.7-.9-1.9-1s-.4-.2-.6.2-.7 1-1 1.2-.5.2-.9 0-1.7-.6-3.2-2-2-2.9-2.2-3.3c-.2-.4 0-.6.2-.8l.5-.6c.2-.2.3-.4.4-.6s0-.5 0-.7-.6-1.6-.8-2.1c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.6.1-1 .5s-1.3 1.2-1.3 2.9 1.3 3.4 1.5 3.7c.2.2 2.5 3.9 6 5.4.8.4 1.5.7 2 .9a5 5 0 0 0 2.3.1c.7-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4s-.3-.5-.6-.7z"/></svg>
-    </a>
-    <a href="https://instagram.com/lys.lavados" target="_blank" title="Instagram">
-      <!-- Instagram -->
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm6.5-.9a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0z"/></svg>
-    </a>
-    <a href="https://facebook.com/lyslavados" target="_blank" title="Facebook">
-      <!-- Facebook -->
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7h-2.4v-2.9h2.4V9.3c0-2.4 1.4-3.7 3.6-3.7 1 0 2 .1 3 .3v2.6h-1.7c-1.3 0-1.7.8-1.7 1.6v1.9h3.1L15.9 15h-2.7v6.9A10 10 0 0 0 22 12z"/></svg>
-    </a>
-  </div>
+<div class="svc">
+<div class="svc-head">
+<div class="svc-title">Exterior</div>
+<span class="pill">$15.000</span>
+</div>
+<ul class="svc-list">
+<li>Prelavado con snow foam (elimina tierra suelta).</li>
+<li>Lavado de carrocería con guantes de microfibra.</li>
+<li>Limpieza de llantas y cubiertas; negro de cubiertas.</li>
+<li>Enjuague y secado con microfibra de alto gramaje.</li>
+<li>Limpieza de vidrios exteriores.</li>
+</ul>
+<div class="note">Tiempo aprox.: 40–60 min. Ideal para mantenimiento.</div>
+</div>
+
+<div class="svc">
+<div class="svc-head">
+<div class="svc-title">Interior</div>
+<span class="pill">$15.000</span>
+</div>
+<ul class="svc-list">
+<li>Aspirado completo (alfombras, asientos, baúl).</li>
+<li>Limpieza de plásticos/tablero con APC neutro.</li>
+<li>Limpieza de vidrios interiores sin vetas.</li>
+</ul>
+<div class="note">Tiempo aprox.: 40–60 min.</div>
+</div>
+
+<div class="svc">
+<div class="svc-head">
+<div class="svc-title">Completo (Exterior + Interior)</div>
+<span class="pill">$25.000</span>
+</div>
+<ul class="svc-list">
+<li>Combo = Todo lo del Exterior + todo lo del Interior.</li>
+</ul>
+<div class="note">Tiempo aprox.: 1 h 30 min. Excelente para dejar el auto “como nuevo”.</div>
+</div>
+
+<div class="svc">
+<div class="svc-head">
+<div class="svc-title">Full (detallado ligero)</div>
+<span class="pill">$35.000</span>
+</div>
+<ul class="svc-list">
+<li>Completo + Limpieza detallada de interior.</li>
+<li>Aplicación de cera líquida/sellador de mayor duración.</li>
+<li>Detalle de emblemas, juntas y burletes.</li>
+</ul>
+<div class="note">Tiempo aprox.: 2 h. Para ocasión especial o primera puesta a punto.</div>
+</div>
+
+<p class="note">Los valores son para auto chico/mediano en condición normal. SUV/4x4, barro extremo o pelos de mascota muy impregnados pueden requerir ajuste.</p>
+</div>
+
+<div class="sticky-cta">
+<a class="cta" href="reserva.html">🗓️ Reservar turno</a>
+<div class="socials">
+<a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank" rel="noopener">📸 ¡Visita nuestro Instagram!</a>
+<a class="social-btn" href="https://wa.me/2995760611" target="_blank" rel="noopener">💬 ¡Contactanos por WhatsApp!</a>
+</div>
+<div class="help">Te confirmamos por WhatsApp apenas entra tu solicitud.</div>
+</div>
+</div>
+</section>
+
+<footer>
+© <span id="y"></span> LyS Lavados — Hecho con dedicación y 
+<a href="#" id="secretLink" class="secret">mate</a>.
+</footer>
+</main>
+
+<script>
+document.getElementById('y').textContent = new Date().getFullYear();
+
+document.getElementById('secretLink').addEventListener('click', function(ev){
+ev.preventDefault();
+const pass = prompt("Contraseña:");
+if(pass === "admin"){
+window.location.href = "admin.html";
+} else if(pass !== null){
+alert("Contraseña incorrecta");
+}
+});
+</script>
 </body>
 </html>
