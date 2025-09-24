@@ -119,15 +119,15 @@
             </div>
             <div>
               <label for="f_tipo">Tipo</label>
-              <select id="f_tipo"><option value="">Todos</option><option>Ingreso</option><option>Gasto</option></select>
+              <select id="f_tipo"><option value="">Todos</option><option>ingreso</option><option>gasto</option></select>
             </div>
             <div>
               <label for="f_estado">Estado</label>
-              <select id="f_estado"><option value="">Todos</option><option>Pagado</option><option>Pendiente</option><option>Anulado</option></select>
+              <select id="f_estado"><option value="">Todos</option><option>pagado</option><option>pendiente</option><option>anulado</option></select>
             </div>
             <div>
               <label for="f_medio">Medio</label>
-              <select id="f_medio"><option value="">Todos</option><option>Efectivo</option><option>Transferencia</option>
+              <select id="f_medio"><option value="">Todos</option><option>efectivo</option><option>transfer</option><option>mp</option><option>tarjeta</option></select>
             </div>
             <div>
               <label for="f_categoria">Categoría</label>
@@ -188,7 +188,7 @@
           </div>
           <div>
             <label for="a_tipo">Tipo</label>
-            <select id="a_tipo"><option>Ingreso</option><option>Gasto</option></select>
+            <select id="a_tipo"><option>ingreso</option><option>gasto</option></select>
           </div>
           <div>
             <label for="a_categoria">Categoría</label>
@@ -209,11 +209,11 @@
           </div>
           <div>
             <label for="a_medio">Medio</label>
-            <select id="a_medio"><option>Efectivo</option><option>Transferencia</option>
+            <select id="a_medio"><option>Efectivo</option><option>Transferencia</option></select>
           </div>
           <div>
             <label for="a_estado">Estado</label>
-            <select id="a_estado"><option>Pagado</option><option>Pendiente</option><option>Anulado</option></select>
+            <select id="a_estado"><option>Pagado</option><option>Pendiente</option><option>anulado</option></select>
           </div>
           <div>
             <label for="a_factura">Factura</label>
@@ -297,7 +297,7 @@ $btnHideCfg.onclick = ()=>{ $cfgWrap.style.display='none'; $cfgHint.style.displa
    CATEGORÍAS SUGERIDAS
 ======================== */
 const CATS_INGRESO = ['Lavado','Extra','Propina','Otros'];
-const CATS_GASTO   = ['Insumos','Herramientas','Mantenimiento','Publicidad','Transporte','Impuestos','Otros'];
+const CATS_GASTO   = ['Insumos','Herramientas','Mantenimiento','Publicidad','Impuestos','Otros'];
 
 function fillSelectOptions(sel, items, includeAll=false){
   const opts = (includeAll? [''] : []).concat(items);
