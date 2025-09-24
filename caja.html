@@ -33,6 +33,11 @@
     button:disabled{ opacity:.6; cursor:not-allowed }
     .toolbar{ display:flex; gap:10px; align-items:flex-end; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap }
 
+    /* Quick ranges */
+    .quickbar{ display:flex; gap:8px; flex-wrap:wrap; }
+    .btn-filter{ background:#111827; border:1px solid var(--line); color:#e5e7eb; padding:8px 12px; border-radius:10px; }
+    .btn-filter.active{ background:var(--ok); color:#0b1220; border-color:var(--ok); font-weight:800 }
+
     .cards3{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px; margin:10px 0 14px }
     .card{ background:#111827; border:1px solid var(--line); border-radius:12px; padding:12px }
     .card h3{ margin:0 0 6px; font-size:13px; color:var(--muted) }
@@ -58,7 +63,7 @@
       .cards3{ grid-template-columns:1fr }
     }
     @media (max-width:700px){
-      table{ display:none } /* oculto tabla */
+      table{ display:none }
       .cards-list{ display:grid; gap:10px }
       .card-row{ background:#111827; border:1px solid var(--line); border-radius:12px; padding:12px }
       .card-row .line{ display:flex; justify-content:space-between; gap:12px; margin:4px 0 }
@@ -80,8 +85,9 @@
 
       <!-- FILTROS -->
       <div class="section">
-        <div class="toolbar">
-          <div class="grid cols-4" style="min-width:280px; flex:1">
+        <div class="toolbar" style="flex-direction:column; align-items:stretch; gap:12px">
+          <!-- Fila 1: Fechas + Tipo + Estado -->
+          <div class="grid cols-4" style="min-width:280px">
             <div>
               <label for="f_from">Desde</label>
               <input type="date" id="f_from" />
@@ -98,6 +104,10 @@
               <label for="f_estado">Estado</label>
               <select id="f_estado"><option value="">Todos</option><option value="Pagado">Pagado</option><option value="Pendiente">Pendiente</option></select>
             </div>
+          </div>
+
+          <!-- Fila 2: Medio + Categoría -->
+          <div class="grid cols-2" style="min-width:280px">
             <div>
               <label for="f_medio">Medio</label>
               <select id="f_medio"><option value="">Todos</option><option value="Efectivo">Efectivo</option><option value="Transferencia">Transferencia</option></select>
@@ -107,13 +117,20 @@
               <select id="f_categoria"><option value="">Todas</option></select>
             </div>
           </div>
-          <div class="row" style="gap:8px">
-            <button id="btn_period_hoy">Hoy</button>
-            <button id="btn_period_ayer">Ayer</button>
-            <button id="btn_period_semana">Esta semana</button>
-            <button id="btn_period_mes">Este mes</button>
-            <button class="primary" id="btn_buscar">Buscar</button>
-            <button class="ghost" id="btn_export">Exportar CSV</button>
+
+          <!-- Fila 3: Rango rápido + Acciones -->
+          <div class="row" style="justify-content:space-between; gap:10px">
+            <div class="quickbar" id="quickbar">
+              <button type="button" class="btn-filter" data-range="hoy"  id="btn_period_hoy">Hoy</button>
+              <button type="button" class="btn-filter" data-range="ayer" id="btn_period_ayer">Ayer</button>
+              <button type="button" class="btn-filter" data-range="semana" id="btn_period_semana">Esta semana</button>
+              <button type="button" class="btn-filter" data-range="mes"   id="btn_period_mes">Este mes</button>
+              <button type="button" class="btn-filter" data-range="todo"  id="btn_period_todo">Todo</button>
+            </div>
+            <div class="row" style="gap:8px">
+              <button class="primary" id="btn_buscar">Buscar</button>
+              <button class="ghost" id="btn_export">Exportar CSV</button>
+            </div>
           </div>
         </div>
         <div id="list_msg" class="msg"></div>
@@ -266,6 +283,7 @@ const $tipo = document.getElementById('f_tipo');           // Ingreso | Gasto
 const $estado = document.getElementById('f_estado');       // Pagado | Pendiente
 const $medio = document.getElementById('f_medio');         // Efectivo | Transferencia
 const $catF = document.getElementById('f_categoria');
+const $quickbar = document.getElementById('quickbar');
 
 function fillSelectOptions(sel, items, includeAll=false){
   const opts = (includeAll? [''] : []).concat(items);
@@ -283,10 +301,37 @@ function refreshFilterCategories(){
 }
 $tipo.addEventListener('change', refreshFilterCategories);
 
-document.getElementById('btn_period_hoy').onclick = ()=>{ const d=new Date(); $from.value=ymd(d); $to.value=ymd(d); };
-document.getElementById('btn_period_ayer').onclick = ()=>{ const d=new Date(); d.setDate(d.getDate()-1); $from.value=ymd(d); $to.value=ymd(d); };
-document.getElementById('btn_period_semana').onclick = ()=>{ const d=new Date(); $from.value=ymd(firstDayOfWeek(d)); $to.value=ymd(lastDayOfWeek(d)); };
-document.getElementById('btn_period_mes').onclick = ()=>{ const d=new Date(); $from.value=ymd(firstDayOfMonth(d)); $to.value=ymd(lastDayOfMonth(d)); };
+/* ---- RANGOS RÁPIDOS con activo ---- */
+function clearQuickActive(){
+  $quickbar.querySelectorAll('.btn-filter').forEach(b=>b.classList.remove('active'));
+}
+function setQuickActive(btn){
+  clearQuickActive();
+  if (btn) btn.classList.add('active');
+}
+function applyRange(range){
+  const d=new Date();
+  if (range==='hoy'){
+    $from.value=ymd(d); $to.value=ymd(d);
+  }else if(range==='ayer'){
+    d.setDate(d.getDate()-1); $from.value=ymd(d); $to.value=ymd(d);
+  }else if(range==='semana'){
+    $from.value=ymd(firstDayOfWeek(d)); $to.value=ymd(lastDayOfWeek(d));
+  }else if(range==='mes'){
+    $from.value=ymd(firstDayOfMonth(d)); $to.value=ymd(lastDayOfMonth(d));
+  }else if(range==='todo'){
+    $from.value=''; $to.value=''; // sin límites -> trae todo
+  }
+}
+$quickbar.addEventListener('click', (ev)=>{
+  const btn = ev.target.closest('.btn-filter'); if(!btn) return;
+  const range = btn.dataset.range;
+  applyRange(range);
+  setQuickActive(btn);
+});
+
+/* si el usuario toca fechas a mano, desactivo el rango activo */
+[$from,$to].forEach(i=> i.addEventListener('input', ()=> clearQuickActive()));
 
 document.getElementById('btn_buscar').onclick = cargarLista;
 document.getElementById('btn_export').onclick = exportCSV;
@@ -318,6 +363,7 @@ async function cargarLista(){
    TABLA + EDITOR INLINE
 ======================== */
 function renderTabla(rows){
+  const $tbody = document.getElementById('tbody');
   $tbody.innerHTML = '';
   if (!rows.length){ $tbody.innerHTML = '<tr><td colspan="10" class="muted">Sin movimientos</td></tr>'; return; }
   for (const r of rows){
@@ -375,7 +421,6 @@ function buildEditRow(r){
       <button class="primary" data-save>Guardar</button>
       <span class="msg"></span>
     </div>`;
-  // categorías según tipo
   const tipoSel = div.querySelector('select[name="tipo"]');
   const catSel  = div.querySelector('select[name="categoria"]');
   const fill = ()=>{
@@ -392,7 +437,7 @@ const $mdCancel = document.getElementById('md_cancel');
 const $mdDelete = document.getElementById('md_delete');
 let modalDeleteId = null;
 
-$tbody.addEventListener('click', async (ev)=>{
+document.getElementById('tbody').addEventListener('click', async (ev)=>{
   const btn = ev.target.closest('button'); if(!btn) return;
   const tr = btn.closest('tr'); const id = tr.dataset.id;
   const act = btn.dataset.act;
@@ -404,12 +449,12 @@ $tbody.addEventListener('click', async (ev)=>{
 
   if (act==='edit'){
     if (tr.nextElementSibling && tr.nextElementSibling.classList.contains('edit-holder')){
-      tr.nextElementSibling.remove(); return; // toggle
+      tr.nextElementSibling.remove(); return;
     }
     const r = {
       id,
       fecha: tr.children[0].textContent.trim(),
-      tipo: tr.children[1].textContent.trim(),            // capitalizado
+      tipo: tr.children[1].textContent.trim(),
       categoria: tr.children[2].textContent.trim(),
       concepto: tr.children[3].textContent.trim(),
       monto_ars: Number(tr.children[4].textContent.replace(/[^\d,-]/g,'').replace('.','').replace(',','.')) || 0,
@@ -424,7 +469,6 @@ $tbody.addEventListener('click', async (ev)=>{
     td.appendChild(editor); holder.appendChild(td);
     tr.insertAdjacentElement('afterend', holder);
 
-    // guardar/cancelar
     const msg = editor.querySelector('.msg');
     const btnSave = editor.querySelector('[data-save]');
     const btnCancel = editor.querySelector('[data-cancel]');
@@ -501,14 +545,14 @@ $cards.addEventListener('click', (ev)=>{
    ALTA
 ======================== */
 const $a_fecha = document.getElementById('a_fecha');
-const $a_tipo = document.getElementById('a_tipo');                 // Ingreso | Gasto
+const $a_tipo = document.getElementById('a_tipo');
 const $a_categoria = document.getElementById('a_categoria');
 const $a_categoria_otro = document.getElementById('a_categoria_otro');
 const $a_categoria_otro_wrap = document.getElementById('a_categoria_otro_wrap');
-const $a_medio = document.getElementById('a_medio');               // Efectivo | Transferencia
+const $a_medio = document.getElementById('a_medio');
 const $a_concepto = document.getElementById('a_concepto');
 const $a_monto = document.getElementById('a_monto');
-const $a_estado = document.getElementById('a_estado');             // Pagado | Pendiente
+const $a_estado = document.getElementById('a_estado');
 const $a_factura = document.getElementById('a_factura');
 const $a_cliente = document.getElementById('a_cliente');
 const $a_notas = document.getElementById('a_notas');
@@ -563,15 +607,15 @@ document.getElementById('btn_agregar').onclick = async ()=>{
 ======================== */
 function exportCSV(){
   const rows = [...$tbody.querySelectorAll('tr')].map(tr=>[
-    tr.children[0].innerText.trim(), // Fecha
-    tr.children[1].innerText.trim(), // Tipo
-    tr.children[2].innerText.trim(), // Categoría
-    tr.children[3].innerText.trim(), // Concepto
-    tr.children[4].innerText.trim(), // Monto
-    tr.children[5].innerText.trim(), // Medio
-    tr.children[6].innerText.trim(), // Estado
-    tr.children[7].innerText.trim(), // Factura
-    tr.children[8].innerText.trim()  // Cliente
+    tr.children[0].innerText.trim(),
+    tr.children[1].innerText.trim(),
+    tr.children[2].innerText.trim(),
+    tr.children[3].innerText.trim(),
+    tr.children[4].innerText.trim(),
+    tr.children[5].innerText.trim(),
+    tr.children[6].innerText.trim(),
+    tr.children[7].innerText.trim(),
+    tr.children[8].innerText.trim()
   ]);
   if (!rows.length){ alert('No hay datos para exportar'); return; }
   const header = ['Fecha','Tipo','Categoría','Concepto','Monto','Medio','Estado','Factura','Cliente'];
@@ -586,9 +630,10 @@ function exportCSV(){
    INIT
 ======================== */
 (function init(){
-  document.getElementById('btn_period_mes').click(); // período por defecto: mes actual
-  refreshFilterCategories();                          // categorías del filtro
-  refreshAltaCategorias();                            // categorías de alta
+  // por defecto: mes actual y botón activo
+  document.getElementById('btn_period_mes').click();
+  refreshFilterCategories();
+  refreshAltaCategorias();
   cargarLista();
 })();
 </script>
