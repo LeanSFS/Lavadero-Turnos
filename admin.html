@@ -8,9 +8,13 @@
   body{font-family:system-ui,Arial;background:var(--bg);color:#fff;min-height:100vh;margin:0}
   .wrap{max-width:1100px;margin:0 auto;padding:24px}
   h1{margin:0 0 14px;font-size:28px}
-  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+  .toolbar-spacer{flex:1 1 auto}
   input,select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0b1220;color:#fff}
   button{padding:10px 14px;border-radius:10px;border:1px solid #16a34a;background:#16a34a;color:#0b1220;font-weight:600;cursor:pointer}
+  /* Link con estilo de botón */
+  a.btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid #16a34a;background:#16a34a;color:#0b1220;font-weight:600;text-decoration:none}
+  a.btn:hover{filter:brightness(1.05)}
   table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
   th,td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
   th{background:#0b1220;text-align:left}
@@ -41,6 +45,12 @@
     </label>
     <input id="f-q" placeholder="Buscar (cliente / dir / tel)" style="flex:1 1 320px">
     <button id="btnReload" class="ok" type="button">Actualizar</button>
+
+    <!-- empuja el botón a la derecha -->
+    <span class="toolbar-spacer"></span>
+
+    <!-- Botón para ir a Caja -->
+    <a href="caja.html" class="btn" id="btnCaja" target="_self" title="Ir a Caja (registro económico)">💵 Ir a Caja</a>
   </div>
 
   <div id="msg"></div>
@@ -104,7 +114,7 @@ function render(){
       <td>${r.hora}</td>
       <td>${r.servicio}</td>
       <td>${r.nombre}</td>
-      <td><a class="whats" href="https://wa.me/${(r.telefono||'').replace(/[^0-9+]/g,'')}" target="_blank">${r.telefono||''}</a></td>
+      <td><a class="whats" href="https://wa.me/${(r.telefono||'').replace(/[^0-9+]/g,'')}" target="_blank" rel="noopener">WhatsApp</a> <div class="tiny">${r.telefono||''}</div></td>
       <td>${r.direccion}</td>
       <td><span class="chip">${r.estado}</span></td>
       <td class="actions">
