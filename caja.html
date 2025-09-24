@@ -8,31 +8,39 @@
   <style>
     :root{ --bg:#0f172a; --card:#0b1220; --line:#1f2937; --muted:#9ca3af; --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444 }
     html,body{height:100%}
-    body{ margin:0; background:var(--bg); color:#fff; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif; }
-    .wrap{ max-width:1100px; margin:0 auto; padding:24px; }
-    .box{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px; }
-    h1{ margin:0 0 16px; font-size:22px; text-align:left }
+    body{ margin:0; background:var(--bg); color:#fff; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif }
+    .wrap{ max-width:1100px; margin:0 auto; padding:24px }
+    .box{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px }
+
+    h1{ margin:0 0 16px; font-size:22px }
+    h2{ margin:0 0 10px; font-size:18px }
     .muted{ color:var(--muted) }
-    .grid{ display:grid; gap:12px }
-    .grid.cols-3{ grid-template-columns: repeat(3, minmax(0,1fr)); }
-    .grid.cols-4{ grid-template-columns: repeat(4, minmax(0,1fr)); }
     .row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap }
-    label{ font-size:12px; color:var(--muted) }
-    input, select, textarea{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:#0f172a; color:#fff }
+    .grid{ display:grid; gap:12px }
+    .grid.cols-4{ grid-template-columns: repeat(4, minmax(0,1fr)); }
+    .grid.cols-3{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .grid.cols-2{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+    label{ font-size:12px; color:var(--muted); display:block; margin-bottom:4px }
+
+    input, select, textarea{
+      width:100%; padding:10px 12px; border-radius:10px;
+      border:1px solid var(--line); background:#0f172a; color:#fff; box-sizing:border-box
+    }
     button{ padding:10px 14px; border-radius:10px; border:1px solid var(--line); background:#111827; color:#e5e7eb; cursor:pointer }
     button.primary{ border-color:var(--ok); background:var(--ok); color:#0b1220; font-weight:800 }
     button.warn{ border-color:var(--warn); background:var(--warn); color:#0b1220; font-weight:700 }
     button.ghost{ background:#0f172a }
     button:disabled{ opacity:.6; cursor:not-allowed }
-    .toolbar{ display:flex; gap:10px; align-items:center; justify-content:space-between; margin-bottom:12px }
-    .cards{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px; margin:10px 0 14px }
+    .toolbar{ display:flex; gap:10px; align-items:flex-end; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap }
+
+    .cards3{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px; margin:10px 0 14px }
     .card{ background:#111827; border:1px solid var(--line); border-radius:12px; padding:12px }
     .card h3{ margin:0 0 6px; font-size:13px; color:var(--muted) }
     .card .num{ font-weight:800; font-size:20px }
 
-    table{ width:100%; border-collapse:collapse; }
+    table{ width:100%; border-collapse:collapse }
     th, td{ border-bottom:1px solid var(--line); padding:10px; text-align:left; vertical-align:top }
-    th{ color:#e5e7eb; font-weight:700; font-size:12px }
+    th{ color:#e5e7eb; font-weight:700; font-size:12px; position:sticky; top:0; background:#0f172a }
     tr:hover td{ background:#0f172a }
     .right{ text-align:right }
     .pill{ display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; border:1px solid var(--line); background:#0f172a }
@@ -44,12 +52,25 @@
     .msg{ margin-top:8px; color:var(--muted); white-space:pre-wrap }
     .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0 }
 
-    /* Responsive */
-    @media (max-width:900px){ .cards{ grid-template-columns:1fr } .grid.cols-4{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
-    @media (max-width:600px){ .grid.cols-3{ grid-template-columns:1fr } }
+    /* Responsive -> tabla a cards */
+    @media (max-width:900px){
+      .grid.cols-4{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .cards3{ grid-template-columns:1fr }
+    }
+    @media (max-width:700px){
+      table{ display:none } /* oculto tabla */
+      .cards-list{ display:grid; gap:10px }
+      .card-row{ background:#111827; border:1px solid var(--line); border-radius:12px; padding:12px }
+      .card-row .line{ display:flex; justify-content:space-between; gap:12px; margin:4px 0 }
+      .card-row .label{ color:var(--muted); font-size:12px }
+    }
+    @media (min-width:701px){
+      .cards-list{ display:none }
+    }
 
-    /* Inline editor */
-    .edit-row{ background:#0f172a; border:1px dashed var(--line); border-radius:12px; padding:12px; margin-top:10px }
+    /* Modal simple */
+    .modal{ position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; padding:20px }
+    .modal .panel{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; max-width:420px; width:100% }
   </style>
 </head>
 <body>
@@ -57,30 +78,37 @@
     <div class="box">
       <h1>Gestión — Caja (Ingresos / Gastos)</h1>
 
-      <!-- CONFIG API -->
-      <details>
-        <summary class="muted">Configurar conexión (WEBAPP_URL y API_KEY)</summary>
-        <div class="grid cols-3" style="margin-top:10px">
-          <div>
-            <label for="api_url">WEBAPP_URL</label>
-            <input id="api_url" placeholder="https://script.google.com/macros/s/XXX/exec" />
+      <!-- CONFIG API (se oculta si ya está guardado) -->
+      <div id="cfg_wrap">
+        <details id="cfg_details">
+          <summary class="muted">Configurar conexión (WEBAPP_URL y API_KEY)</summary>
+          <div class="grid cols-3" style="margin-top:10px">
+            <div>
+              <label for="api_url">WEBAPP_URL</label>
+              <input id="api_url" placeholder="https://script.google.com/macros/s/XXX/exec" />
+            </div>
+            <div>
+              <label for="api_key">API_KEY (opcional)</label>
+              <input id="api_key" placeholder="si la activaste en backend" />
+            </div>
+            <div class="row" style="margin-top:20px">
+              <button class="primary" id="btn_save_api">Guardar conexión</button>
+              <button class="ghost" id="btn_test_api">Probar</button>
+              <button class="ghost" id="btn_hide_cfg" title="Ocultar configuración">Ocultar</button>
+            </div>
           </div>
-          <div>
-            <label for="api_key">API_KEY (opcional)</label>
-            <input id="api_key" placeholder="si la activaste en backend" />
-          </div>
-          <div class="row" style="margin-top:20px">
-            <button class="primary" id="btn_save_api">Guardar conexión</button>
-            <button class="ghost" id="btn_test_api">Probar</button>
-          </div>
-        </div>
-        <div id="api_msg" class="msg"></div>
-      </details>
+          <div id="api_msg" class="msg"></div>
+        </details>
+      </div>
+      <div class="row" id="cfg_hint" style="display:none; margin-bottom:12px">
+        <span class="muted">Conexión guardada.</span>
+        <button class="ghost" id="btn_show_cfg">Cambiar conexión</button>
+      </div>
 
       <!-- FILTROS -->
       <div class="section">
         <div class="toolbar">
-          <div class="row" style="gap:8px; flex-wrap:wrap">
+          <div class="grid cols-4" style="min-width:280px; flex:1">
             <div>
               <label for="f_from">Desde</label>
               <input type="date" id="f_from" />
@@ -103,11 +131,13 @@
             </div>
             <div>
               <label for="f_categoria">Categoría</label>
-              <input id="f_categoria" placeholder="Lavado, Insumos…" />
+              <select id="f_categoria"><option value="">Todas</option></select>
             </div>
           </div>
-          <div class="row">
+          <div class="row" style="gap:8px">
             <button id="btn_period_hoy">Hoy</button>
+            <button id="btn_period_ayer">Ayer</button>
+            <button id="btn_period_semana">Esta semana</button>
             <button id="btn_period_mes">Este mes</button>
             <button class="primary" id="btn_buscar">Buscar</button>
             <button class="ghost" id="btn_export">Exportar CSV</button>
@@ -116,14 +146,14 @@
         <div id="list_msg" class="msg"></div>
       </div>
 
-      <!-- CARDS -->
-      <div class="cards">
+      <!-- CARDS TOTALES -->
+      <div class="cards3">
         <div class="card"><h3>Ingresos</h3><div class="num" id="k_ingresos">$ 0</div></div>
         <div class="card"><h3>Gastos</h3><div class="num" id="k_gastos">$ 0</div></div>
         <div class="card"><h3>Neto</h3><div class="num" id="k_neto">$ 0</div></div>
       </div>
 
-      <!-- TABLA -->
+      <!-- TABLA (desktop) -->
       <div class="section">
         <div class="box" style="background:#0f172a; border-radius:12px">
           <table id="tabla">
@@ -138,18 +168,19 @@
                 <th>Estado</th>
                 <th>Factura</th>
                 <th>Cliente</th>
-                <th>Turno</th>
-                <th></th>
+                <th class="right"></th>
               </tr>
             </thead>
             <tbody id="tbody"></tbody>
           </table>
+          <!-- Cards (mobile) -->
+          <div id="cards_list" class="cards-list"></div>
         </div>
       </div>
 
       <!-- ALTA RÁPIDA -->
       <div class="section">
-        <h2 style="font-size:18px; margin:0 0 10px">Agregar movimiento</h2>
+        <h2>Agregar movimiento</h2>
         <div class="grid cols-4">
           <div>
             <label for="a_fecha">Fecha</label>
@@ -161,19 +192,24 @@
           </div>
           <div>
             <label for="a_categoria">Categoría</label>
-            <input id="a_categoria" placeholder="Lavado, Insumos…" />
+            <select id="a_categoria"></select>
           </div>
-          <div>
-            <label for="a_medio">Medio</label>
-            <select id="a_medio"><option>efectivo</option><option>transfer</option><option>mp</option><option>tarjeta</option></select>
+          <div id="a_categoria_otro_wrap" style="display:none">
+            <label for="a_categoria_otro">Otra categoría</label>
+            <input id="a_categoria_otro" placeholder="Especificar" />
           </div>
+
           <div class="colspan">
             <label for="a_concepto">Concepto</label>
-            <input id="a_concepto" placeholder="Detalle (p.ej. Completo Sedan / Shampoo Toxic)" />
+            <input id="a_concepto" placeholder="Detalle (p.ej. Completo / Shampoo)" />
           </div>
           <div>
             <label for="a_monto">Monto (ARS)</label>
             <input id="a_monto" placeholder="25000" inputmode="decimal" />
+          </div>
+          <div>
+            <label for="a_medio">Medio</label>
+            <select id="a_medio"><option>efectivo</option><option>transfer</option><option>mp</option><option>tarjeta</option></select>
           </div>
           <div>
             <label for="a_estado">Estado</label>
@@ -184,16 +220,12 @@
             <input id="a_factura" placeholder="C0001-000123" />
           </div>
           <div>
-            <label for="a_turno">Turno ID (opcional)</label>
-            <input id="a_turno" placeholder="id del turno" />
-          </div>
-          <div>
             <label for="a_cliente">Cliente</label>
             <input id="a_cliente" placeholder="Juan Pérez" />
           </div>
           <div class="colspan">
             <label for="a_notas">Notas</label>
-            <input id="a_notas" placeholder="observaciones" />
+            <input id="a_notas" placeholder="Observaciones" />
           </div>
         </div>
         <div class="row" style="margin-top:10px">
@@ -204,261 +236,406 @@
     </div>
   </main>
 
-  <script>
-  // ===========================
-  // CONFIG CLIENTE
-  // ===========================
-  const $apiUrl = document.getElementById('api_url');
-  const $apiKey = document.getElementById('api_key');
-  const $apiMsg = document.getElementById('api_msg');
-  const STORAGE_KEY = 'lys_admin_api_cfg';
-
-  const cfg = loadCfg();
-  $apiUrl.value = cfg.url || '';
-  $apiKey.value = cfg.key || '';
-
-  function saveCfg(){ localStorage.setItem(STORAGE_KEY, JSON.stringify({ url:$apiUrl.value.trim(), key:$apiKey.value.trim() })); }
-  function loadCfg(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); }catch(_){ return {}; } }
-  function apiUrl(params){
-    if (!cfg.url) throw new Error('Falta WEBAPP_URL en Configuración');
-    const usp = new URLSearchParams(params);
-    if (cfg.key) usp.set('key', cfg.key);
-    usp.set('t', Date.now());
-    return cfg.url + '?' + usp.toString();
-  }
-  document.getElementById('btn_save_api').onclick = ()=>{ saveCfg(); Object.assign(cfg, loadCfg()); $apiMsg.textContent = 'Conexión guardada ✔'; };
-  document.getElementById('btn_test_api').onclick = async ()=>{
-    try{ Object.assign(cfg, loadCfg()); const r = await fetch(apiUrl({action:'health'})); const j = await r.json(); $apiMsg.textContent = j.ok? 'OK: ' + (j.sheet||'') : ('Error: '+j.error); }
-    catch(e){ $apiMsg.textContent = 'Error: '+e.message; }
-  };
-
-  // ===========================
-  // UTILIDADES
-  // ===========================
-  const $tbody = document.getElementById('tbody');
-  const $listMsg = document.getElementById('list_msg');
-  const $ing = document.getElementById('k_ingresos');
-  const $gas = document.getElementById('k_gastos');
-  const $net = document.getElementById('k_neto');
-
-  function fmtMoney(n){
-    const v = Number(n||0);
-    return v.toLocaleString('es-AR', { style:'currency', currency:'ARS', maximumFractionDigits:0 });
-  }
-  function ymd(d){ return d.toISOString().slice(0,10); }
-  function firstDayOfMonth(d){ const x = new Date(d); x.setDate(1); return x; }
-  function lastDayOfMonth(d){ const x = new Date(d.getFullYear(), d.getMonth()+1, 0); return x; }
-  function el(tag, attrs={}, html=''){ const e = document.createElement(tag); Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v)); e.innerHTML = html; return e; }
-
-  // ===========================
-  // FILTROS
-  // ===========================
-  const $from = document.getElementById('f_from');
-  const $to = document.getElementById('f_to');
-  const $tipo = document.getElementById('f_tipo');
-  const $estado = document.getElementById('f_estado');
-  const $medio = document.getElementById('f_medio');
-  const $cat = document.getElementById('f_categoria');
-  document.getElementById('btn_period_hoy').onclick = ()=>{ const d=new Date(); $from.value=ymd(d); $to.value=ymd(d); };
-  document.getElementById('btn_period_mes').onclick = ()=>{ const d=new Date(); $from.value=ymd(firstDayOfMonth(d)); $to.value=ymd(lastDayOfMonth(d)); };
-
-  document.getElementById('btn_buscar').onclick = cargarLista;
-  document.getElementById('btn_export').onclick = exportCSV;
-
-  async function cargarLista(){
-    try{
-      Object.assign(cfg, loadCfg());
-      $listMsg.textContent = 'Cargando…';
-      const params = { action:'caja_list' };
-      if ($from.value) params.from=$from.value;
-      if ($to.value) params.to=$to.value;
-      if ($tipo.value) params.tipo=$tipo.value;
-      if ($estado.value) params.estado=$estado.value;
-      if ($medio.value) params.medio=$medio.value;
-      if ($cat.value.trim()) params.categoria=$cat.value.trim();
-      const res = await fetch(apiUrl(params));
-      const j = await res.json();
-      if (!j.ok) throw new Error(j.error||'No se pudo listar');
-      renderTabla(j.rows||[]);
-      const t = j.total || { ingresos:0, gastos:0, neto:0 };
-      $ing.textContent = fmtMoney(t.ingresos);
-      $gas.textContent = fmtMoney(t.gastos);
-      $net.textContent = fmtMoney(t.neto);
-      $listMsg.textContent = '';
-    }catch(e){ $listMsg.textContent = '⚠️ '+e.message; }
-  }
-
-  function renderTabla(rows){
-    $tbody.innerHTML = '';
-    if (!rows.length){ $tbody.innerHTML = '<tr><td colspan="11" class="muted">Sin movimientos</td></tr>'; return; }
-    for (const r of rows){
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${r.fecha||''}</td>
-        <td>${r.tipo||''}</td>
-        <td>${r.categoria||''}</td>
-        <td>${(r.concepto||'')}</td>
-        <td class="right">${fmtMoney(r.monto_ars||0)}</td>
-        <td>${r.medio||''}</td>
-        <td>${pillEstado(r.estado||'')}</td>
-        <td>${r.factura||''}</td>
-        <td>${r.cliente||''}</td>
-        <td>${r.turno_id||''}</td>
-        <td class="right">
-          <button class="ghost" data-act="edit" data-id="${r.id}">Editar</button>
-          <button class="warn" data-act="del" data-id="${r.id}">Borrar</button>
-        </td>`;
-      $tbody.appendChild(tr);
-      // fila de edición oculta
-      const er = el('tr');
-      const ec = el('td', { colspan:'11' });
-      ec.appendChild(buildEditor(r));
-      er.appendChild(ec); er.style.display='none';
-      $tbody.appendChild(er);
-    }
-  }
-
-  function pillEstado(s){
-    const m = String(s||'').toLowerCase();
-    let cls=''; if (m==='pagado') cls='ok'; else if (m==='pendiente') cls='warn'; else cls='bad';
-    return `<span class="pill ${cls}">${s}</span>`;
-  }
-
-  function buildEditor(r){
-    const box = el('div', {class:'edit-row'});
-    box.innerHTML = `
-      <div class="grid cols-4">
-        <div><label>Fecha</label><input type="date" name="fecha" value="${r.fecha||''}"></div>
-        <div><label>Tipo</label><select name="tipo"><option ${r.tipo==='ingreso'?'selected':''}>ingreso</option><option ${r.tipo==='gasto'?'selected':''}>gasto</option></select></div>
-        <div><label>Categoría</label><input name="categoria" value="${esc(r.categoria)}"></div>
-        <div><label>Medio</label><select name="medio"><option ${r.medio==='efectivo'?'selected':''}>efectivo</option><option ${r.medio==='transfer'?'selected':''}>transfer</option><option ${r.medio==='mp'?'selected':''}>mp</option><option ${r.medio==='tarjeta'?'selected':''}>tarjeta</option></select></div>
-        <div class="colspan"><label>Concepto</label><input name="concepto" value="${esc(r.concepto)}"></div>
-        <div><label>Monto</label><input name="monto" value="${r.monto_ars||0}" inputmode="decimal"></div>
-        <div><label>Estado</label><select name="estado"><option ${r.estado==='pagado'?'selected':''}>pagado</option><option ${r.estado==='pendiente'?'selected':''}>pendiente</option><option ${r.estado==='anulado'?'selected':''}>anulado</option></select></div>
-        <div><label>Factura</label><input name="factura" value="${esc(r.factura)}"></div>
-        <div><label>Turno ID</label><input name="turno_id" value="${esc(r.turno_id)}"></div>
-        <div><label>Cliente</label><input name="cliente" value="${esc(r.cliente)}"></div>
-        <div class="colspan"><label>Notas</label><input name="notas" value="${esc(r.notas)}"></div>
+  <!-- Modal borrar -->
+  <div class="modal" id="modal_del">
+    <div class="panel">
+      <h3 style="margin:0 0 8px">Confirmar borrado</h3>
+      <p class="muted">¿Querés borrar este movimiento? Esta acción no se puede deshacer.</p>
+      <div class="row" style="justify-content:flex-end; margin-top:10px">
+        <button class="ghost" id="md_cancel">Cancelar</button>
+        <button class="warn" id="md_delete">Borrar</button>
       </div>
-      <div class="row" style="margin-top:10px">
-        <button class="primary" data-save="${r.id}">Guardar cambios</button>
-        <span class="msg"></span>
-      </div>`;
-    return box;
+    </div>
+  </div>
+
+<script>
+/* ========================
+   CONFIG CLIENTE
+======================== */
+const STORAGE_KEY = 'lys_admin_api_cfg';
+const $apiUrl = document.getElementById('api_url');
+const $apiKey = document.getElementById('api_key');
+const $apiMsg = document.getElementById('api_msg');
+const $cfgWrap = document.getElementById('cfg_wrap');
+const $cfgHint = document.getElementById('cfg_hint');
+const $cfgDetails = document.getElementById('cfg_details');
+const $btnShowCfg = document.getElementById('btn_show_cfg');
+const $btnHideCfg = document.getElementById('btn_hide_cfg');
+
+const cfg = loadCfg();
+$apiUrl.value = cfg.url || '';
+$apiKey.value = cfg.key || '';
+syncCfgVisibility();
+
+function saveCfg(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ url:$apiUrl.value.trim(), key:$apiKey.value.trim() }));
+  Object.assign(cfg, loadCfg());
+  syncCfgVisibility();
+}
+function loadCfg(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); }catch(_){ return {}; } }
+function syncCfgVisibility(){
+  const has = !!(cfg.url && cfg.url.startsWith('http'));
+  $cfgWrap.style.display = has ? 'none' : '';
+  $cfgHint.style.display = has ? '' : 'none';
+}
+function apiUrl(params){
+  if (!cfg.url) throw new Error('Falta WEBAPP_URL (abrí “Cambiar conexión”)');
+  const usp = new URLSearchParams(params);
+  if (cfg.key) usp.set('key', cfg.key);
+  usp.set('t', Date.now());
+  return cfg.url + '?' + usp.toString();
+}
+document.getElementById('btn_save_api').onclick = ()=>{ saveCfg(); $apiMsg.textContent = 'Conexión guardada ✔'; };
+document.getElementById('btn_test_api').onclick = async ()=>{
+  try{ const r = await fetch(apiUrl({action:'health'})); const j = await r.json(); $apiMsg.textContent = j.ok? 'OK' : ('Error: '+(j.error||'desconocido')); }
+  catch(e){ $apiMsg.textContent = 'Error: '+e.message; }
+};
+$btnShowCfg.onclick = ()=>{ $cfgWrap.style.display=''; $cfgDetails.open=true; $cfgHint.style.display='none'; };
+$btnHideCfg.onclick = ()=>{ $cfgWrap.style.display='none'; $cfgHint.style.display=''; };
+
+/* ========================
+   CATEGORÍAS SUGERIDAS
+======================== */
+const CATS_INGRESO = ['Lavado','Extra','Propina','Otros'];
+const CATS_GASTO   = ['Insumos','Herramientas','Mantenimiento','Publicidad','Servicios','Alquiler','Transporte','Sueldos','Impuestos','Otros'];
+
+function fillSelectOptions(sel, items, includeAll=false){
+  const opts = (includeAll? [''] : []).concat(items);
+  sel.innerHTML = opts.map(v=>{
+    const label = v==='' ? 'Todas' : v;
+    const val = v;
+    return `<option value="${val}">${label}</option>`;
+  }).join('');
+}
+
+/* ========================
+   UTILIDADES
+======================== */
+const $tbody = document.getElementById('tbody');
+const $cards = document.getElementById('cards_list');
+const $listMsg = document.getElementById('list_msg');
+const $ing = document.getElementById('k_ingresos');
+const $gas = document.getElementById('k_gastos');
+const $net = document.getElementById('k_neto');
+
+function fmtMoney(n){ return Number(n||0).toLocaleString('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}); }
+function ymd(d){ return d.toISOString().slice(0,10); }
+function firstDayOfWeek(d){ const x = new Date(d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day); return x; }
+function lastDayOfWeek(d){ const x = firstDayOfWeek(d); x.setDate(x.getDate()+6); return x; }
+function firstDayOfMonth(d){ const x = new Date(d); x.setDate(1); return x; }
+function lastDayOfMonth(d){ return new Date(d.getFullYear(), d.getMonth()+1, 0); }
+function esc(s){ return String(s||'').replace(/[&<>]/g, c=> ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function pillEstado(s){ const m=String(s||'').toLowerCase(); let cls=''; if(m==='pagado')cls='ok'; else if(m==='pendiente')cls='warn'; else cls='bad'; return `<span class="pill ${cls}">${s}</span>`; }
+
+/* ========================
+   FILTROS
+======================== */
+const $from = document.getElementById('f_from');
+const $to = document.getElementById('f_to');
+const $tipo = document.getElementById('f_tipo');
+const $estado = document.getElementById('f_estado');
+const $medio = document.getElementById('f_medio');
+const $catF = document.getElementById('f_categoria');
+
+function refreshFilterCategories(){
+  const t = $tipo.value;
+  if (!t){ fillSelectOptions($catF, [...new Set([...CATS_INGRESO, ...CATS_GASTO])], true); }
+  else if (t==='ingreso'){ fillSelectOptions($catF, CATS_INGRESO, true); }
+  else { fillSelectOptions($catF, CATS_GASTO, true); }
+}
+$tipo.addEventListener('change', refreshFilterCategories);
+
+document.getElementById('btn_period_hoy').onclick = ()=>{ const d=new Date(); $from.value=ymd(d); $to.value=ymd(d); };
+document.getElementById('btn_period_ayer').onclick = ()=>{ const d=new Date(); d.setDate(d.getDate()-1); $from.value=ymd(d); $to.value=ymd(d); };
+document.getElementById('btn_period_semana').onclick = ()=>{ const d=new Date(); $from.value=ymd(firstDayOfWeek(d)); $to.value=ymd(lastDayOfWeek(d)); };
+document.getElementById('btn_period_mes').onclick = ()=>{ const d=new Date(); $from.value=ymd(firstDayOfMonth(d)); $to.value=ymd(lastDayOfMonth(d)); };
+
+document.getElementById('btn_buscar').onclick = cargarLista;
+document.getElementById('btn_export').onclick = exportCSV;
+
+async function cargarLista(){
+  try{
+    Object.assign(cfg, loadCfg());
+    $listMsg.textContent = 'Cargando…';
+    const params = { action:'caja_list' };
+    if ($from.value) params.from=$from.value;
+    if ($to.value) params.to=$to.value;
+    if ($tipo.value) params.tipo=$tipo.value;
+    if ($estado.value) params.estado=$estado.value;
+    if ($medio.value) params.medio=$medio.value;
+    if ($catF.value) params.categoria=$catF.value;
+    const res = await fetch(apiUrl(params));
+    const j = await res.json();
+    if (!j.ok) throw new Error(j.error||'No se pudo listar');
+    renderTabla(j.rows||[]);
+    renderCards(j.rows||[]);
+    const t = j.total || { ingresos:0, gastos:0, neto:0 };
+    $ing.textContent = fmtMoney(t.ingresos);
+    $gas.textContent = fmtMoney(t.gastos);
+    $net.textContent = fmtMoney(t.neto);
+    $listMsg.textContent = '';
+  }catch(e){ $listMsg.textContent = '⚠️ '+e.message; }
+}
+
+/* ========================
+   TABLA + EDITOR INLINE
+======================== */
+function renderTabla(rows){
+  $tbody.innerHTML = '';
+  if (!rows.length){ $tbody.innerHTML = '<tr><td colspan="10" class="muted">Sin movimientos</td></tr>'; return; }
+  for (const r of rows){
+    const tr = document.createElement('tr');
+    tr.dataset.id = r.id;
+    tr.innerHTML = `
+      <td>${r.fecha||''}</td>
+      <td>${r.tipo||''}</td>
+      <td>${r.categoria||''}</td>
+      <td>${esc(r.concepto)||''}</td>
+      <td class="right">${fmtMoney(r.monto_ars||0)}</td>
+      <td>${r.medio||''}</td>
+      <td>${pillEstado(r.estado||'')}</td>
+      <td>${esc(r.factura||'')}</td>
+      <td>${esc(r.cliente||'')}</td>
+      <td class="right">
+        <button class="ghost" data-act="edit">Editar</button>
+        <button class="warn" data-act="del">Borrar</button>
+      </td>`;
+    $tbody.appendChild(tr);
+  }
+}
+
+function buildEditRow(r){
+  const div = document.createElement('div');
+  div.className = 'grid cols-4';
+  div.style.marginTop = '10px';
+  div.innerHTML = `
+    <div><label>Fecha</label><input type="date" name="fecha" value="${r.fecha||''}"></div>
+    <div><label>Tipo</label><select name="tipo"><option ${r.tipo==='ingreso'?'selected':''}>ingreso</option><option ${r.tipo==='gasto'?'selected':''}>gasto</option></select></div>
+    <div><label>Categoría</label><select name="categoria"></select></div>
+    <div><label>Medio</label><select name="medio"><option ${r.medio==='efectivo'?'selected':''}>efectivo</option><option ${r.medio==='transfer'?'selected':''}>transfer</option><option ${r.medio==='mp'?'selected':''}>mp</option><option ${r.medio==='tarjeta'?'selected':''}>tarjeta</option></select></div>
+    <div class="colspan"><label>Concepto</label><input name="concepto" value="${esc(r.concepto)}"></div>
+    <div><label>Monto</label><input name="monto" value="${r.monto_ars||0}" inputmode="decimal"></div>
+    <div><label>Estado</label><select name="estado"><option ${r.estado==='pagado'?'selected':''}>pagado</option><option ${r.estado==='pendiente'?'selected':''}>pendiente</option><option ${r.estado==='anulado'?'selected':''}>anulado</option></select></div>
+    <div><label>Factura</label><input name="factura" value="${esc(r.factura)}"></div>
+    <div><label>Cliente</label><input name="cliente" value="${esc(r.cliente)}"></div>
+    <div class="row" style="grid-column:1/-1; justify-content:flex-end; gap:8px">
+      <button class="ghost" data-cancel>Cancelar</button>
+      <button class="primary" data-save>Guardar</button>
+      <span class="msg"></span>
+    </div>`;
+  // cargar categorías según tipo
+  const tipoSel = div.querySelector('select[name="tipo"]');
+  const catSel  = div.querySelector('select[name="categoria"]');
+  const fill = ()=> fillSelectOptions(catSel, tipoSel.value==='ingreso'? CATS_INGRESO : CATS_GASTO);
+  fill(); catSel.value = r.categoria || '';
+  tipoSel.addEventListener('change', ()=>{ fill(); });
+  return div;
+}
+
+const $modal = document.getElementById('modal_del');
+const $mdCancel = document.getElementById('md_cancel');
+const $mdDelete = document.getElementById('md_delete');
+let modalDeleteId = null;
+
+$tbody.addEventListener('click', async (ev)=>{
+  const btn = ev.target.closest('button'); if(!btn) return;
+  const tr = btn.closest('tr'); const id = tr.dataset.id;
+  const act = btn.dataset.act;
+
+  if (act==='del'){
+    modalDeleteId = id; $modal.style.display='flex';
+    return;
   }
 
-  function esc(s){ return String(s||'').replace(/[&<>]/g, c=> ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+  if (act==='edit'){
+    if (tr.nextElementSibling && tr.nextElementSibling.classList.contains('edit-holder')){
+      tr.nextElementSibling.remove(); return; // toggle
+    }
+    // fetch row values from DOM
+    const r = {
+      id,
+      fecha: tr.children[0].textContent.trim(),
+      tipo: tr.children[1].textContent.trim(),
+      categoria: tr.children[2].textContent.trim(),
+      concepto: tr.children[3].textContent.trim(),
+      monto_ars: Number(tr.children[4].textContent.replace(/[^\d,-]/g,'').replace('.','').replace(',','.')) || 0,
+      medio: tr.children[5].textContent.trim(),
+      estado: tr.children[6].innerText.trim(),
+      factura: tr.children[7].textContent.trim(),
+      cliente: tr.children[8].textContent.trim()
+    };
+    const holder = document.createElement('tr'); holder.className='edit-holder';
+    const td = document.createElement('td'); td.colSpan=10; td.style.background='#0f172a'; td.style.border='1px dashed var(--line)';
+    const editor = buildEditRow(r); td.appendChild(editor); holder.appendChild(td);
+    tr.insertAdjacentElement('afterend', holder);
 
-  // Delegación de eventos para editar / borrar / togglear editor
-  $tbody.addEventListener('click', async (ev)=>{
-    const btn = ev.target.closest('button'); if(!btn) return;
-    const act = btn.dataset.act; const id = btn.dataset.id;
-    const tr = btn.closest('tr'); const editRow = tr.nextElementSibling; // nuestra fila oculta
-    if (act==='edit'){
-      editRow.style.display = editRow.style.display==='none' ? '' : 'none';
-      return;
-    }
-    if (act==='del'){
-      if (!confirm('¿Borrar este movimiento?')) return;
+    // acciones guardar/cancelar
+    const msg = editor.querySelector('.msg');
+    const btnSave = editor.querySelector('[data-save]');
+    const btnCancel = editor.querySelector('[data-cancel]');
+    btnCancel.onclick = ()=> holder.remove();
+    btnSave.onclick = async ()=>{
       try{
-        Object.assign(cfg, loadCfg());
-        const r = await fetch(apiUrl({action:'caja_delete', id}));
-        const j = await r.json();
-        if (!j.ok) throw new Error(j.error||'No se pudo borrar');
-        tr.remove(); editRow.remove();
-      }catch(e){ alert('Error: '+e.message); }
-      return;
-    }
-    // Guardar desde editor
-    const saveId = btn.dataset.save;
-    if (saveId){
-      const editor = btn.closest('.edit-row');
-      const msg = editor.querySelector('.msg');
-      const data = {};
-      editor.querySelectorAll('input,select,textarea').forEach(i=>{ if (i.value!=='' ) data[i.name]= i.value; });
-      try{
-        Object.assign(cfg, loadCfg());
-        const params = new URLSearchParams({ action:'caja_update', id: saveId });
+        btnSave.disabled = true; btnSave.textContent = 'Guardando…'; msg.textContent='';
+        const data = {};
+        editor.querySelectorAll('input,select,textarea').forEach(i=>{ if (i.name && i.value!=='') data[i.name]= i.value; });
+        const params = new URLSearchParams({ action:'caja_update', id });
         Object.entries(data).forEach(([k,v])=> params.append(k,v));
         const r = await fetch(apiUrl(Object.fromEntries(params)));
         const j = await r.json();
         if (!j.ok) throw new Error(j.error||'No se pudo actualizar');
-        msg.textContent = 'Actualizado ✔';
-        await cargarLista();
+        holder.remove(); await cargarLista();
       }catch(e){ msg.textContent = '⚠️ '+e.message; }
-    }
-  });
-
-  // ===========================
-  // ALTA
-  // ===========================
-  const $a_fecha = document.getElementById('a_fecha');
-  const $a_tipo = document.getElementById('a_tipo');
-  const $a_categoria = document.getElementById('a_categoria');
-  const $a_medio = document.getElementById('a_medio');
-  const $a_concepto = document.getElementById('a_concepto');
-  const $a_monto = document.getElementById('a_monto');
-  const $a_estado = document.getElementById('a_estado');
-  const $a_factura = document.getElementById('a_factura');
-  const $a_turno = document.getElementById('a_turno');
-  const $a_cliente = document.getElementById('a_cliente');
-  const $a_notas = document.getElementById('a_notas');
-  const $altaMsg = document.getElementById('alta_msg');
-  document.getElementById('btn_agregar').onclick = async ()=>{
-    $altaMsg.textContent = '';
-    try{
-      Object.assign(cfg, loadCfg());
-      const req = {
-        action:'caja_add',
-        fecha:$a_fecha.value || ymd(new Date()),
-        tipo:$a_tipo.value,
-        categoria:$a_categoria.value.trim(),
-        concepto:$a_concepto.value.trim(),
-        monto:$a_monto.value.replace(',','.'),
-        medio:$a_medio.value,
-        estado:$a_estado.value,
-        factura:$a_factura.value.trim(),
-        turno_id:$a_turno.value.trim(),
-        cliente:$a_cliente.value.trim(),
-        notas:$a_notas.value.trim()
-      };
-      if (!req.concepto || !req.monto) throw new Error('Completá concepto y monto');
-      const r = await fetch(apiUrl(req));
-      const j = await r.json();
-      if (!j.ok) throw new Error(j.error||'No se pudo agregar');
-      $altaMsg.textContent = 'Agregado ✔';
-      // limpiar mínimos
-      $a_concepto.value=''; $a_monto.value=''; $a_factura.value=''; $a_notas.value='';
-      await cargarLista();
-    }catch(e){ $altaMsg.textContent = '⚠️ '+e.message; }
-  };
-
-  // ===========================
-  // EXPORT CSV
-  // ===========================
-  function exportCSV(){
-    const rows = [...$tbody.querySelectorAll('tr')].map(tr=>[...tr.children].slice(0,10).map(td=>td.innerText.replace(/\n/g,' ').trim()));
-    if (!rows.length){ alert('No hay datos para exportar'); return; }
-    const header = ['Fecha','Tipo','Categoría','Concepto','Monto','Medio','Estado','Factura','Cliente','Turno'];
-    const csv = [header].concat(rows).map(r=>r.map(cell=> '"'+cell.replace(/"/g,'""')+'"').join(',')).join('\n');
-    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'caja_'+ Date.now() +'.csv'; a.click();
-    URL.revokeObjectURL(url);
+      finally{ btnSave.disabled=false; btnSave.textContent='Guardar'; }
+    };
   }
+});
 
-  // ===========================
-  // INIT: periodo por defecto = mes actual
-  // ===========================
-  (function init(){
-    const d = new Date();
-    document.getElementById('btn_period_mes').click();
-    // Sugerir valores iniciales de API si no hay
-    if (!cfg.url) $apiMsg.textContent = '⚠️ Cargá tu WEBAPP_URL arriba y guardá';
-    // Si ya hay URL, cargar lista
-    if (cfg.url) cargarLista();
-  })();
-  </script>
+// Modal delete
+$mdCancel.onclick = ()=>{ modalDeleteId=null; $modal.style.display='none'; };
+$mdDelete.onclick = async ()=>{
+  if (!modalDeleteId) return;
+  try{
+    const r = await fetch(apiUrl({action:'caja_delete', id: modalDeleteId}));
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error||'No se pudo borrar');
+    $modal.style.display='none'; modalDeleteId=null; await cargarLista();
+  }catch(e){ alert('Error: '+e.message); }
+};
+
+/* ========================
+   CARDS (mobile)
+======================== */
+function renderCards(rows){
+  $cards.innerHTML = '';
+  for (const r of rows){
+    const div = document.createElement('div');
+    div.className = 'card-row';
+    div.dataset.id = r.id;
+    div.innerHTML = `
+      <div class="line"><span class="label">Fecha</span><span>${r.fecha||''}</span></div>
+      <div class="line"><span class="label">Tipo</span><span>${r.tipo||''}</span></div>
+      <div class="line"><span class="label">Categoría</span><span>${r.categoria||''}</span></div>
+      <div class="line"><span class="label">Concepto</span><span>${esc(r.concepto||'')}</span></div>
+      <div class="line"><span class="label">Monto</span><span>${fmtMoney(r.monto_ars||0)}</span></div>
+      <div class="line"><span class="label">Medio</span><span>${r.medio||''}</span></div>
+      <div class="line"><span class="label">Estado</span><span>${r.estado||''}</span></div>
+      <div class="line"><span class="label">Factura</span><span>${esc(r.factura||'')}</span></div>
+      <div class="line"><span class="label">Cliente</span><span>${esc(r.cliente||'')}</span></div>
+      <div class="row" style="justify-content:flex-end; margin-top:8px; gap:8px">
+        <button class="ghost" data-edit="${r.id}">Editar</button>
+        <button class="warn" data-del="${r.id}">Borrar</button>
+      </div>`;
+    $cards.appendChild(div);
+  }
+}
+// delegación simple para cards
+$cards.addEventListener('click', (ev)=>{
+  const b = ev.target.closest('button'); if(!b) return;
+  const id = b.dataset.edit || b.dataset.del;
+  if (b.dataset.del){ modalDeleteId=id; $modal.style.display='flex'; return; }
+  // scroll a la fila correspondiente y abrir editor
+  const tr = $tbody.querySelector(`tr[data-id="${id}"]`);
+  if (tr){ tr.querySelector('button[data-act="edit"]').click(); window.scrollTo({top:tr.getBoundingClientRect().top + window.scrollY - 120, behavior:'smooth'}); }
+});
+
+/* ========================
+   ALTA
+======================== */
+const $a_fecha = document.getElementById('a_fecha');
+const $a_tipo = document.getElementById('a_tipo');
+const $a_categoria = document.getElementById('a_categoria');
+const $a_categoria_otro = document.getElementById('a_categoria_otro');
+const $a_categoria_otro_wrap = document.getElementById('a_categoria_otro_wrap');
+const $a_medio = document.getElementById('a_medio');
+const $a_concepto = document.getElementById('a_concepto');
+const $a_monto = document.getElementById('a_monto');
+const $a_estado = document.getElementById('a_estado');
+const $a_factura = document.getElementById('a_factura');
+const $a_cliente = document.getElementById('a_cliente');
+const $a_notas = document.getElementById('a_notas');
+const $altaMsg = document.getElementById('alta_msg');
+const $btnAgregar = document.getElementById('btn_agregar');
+
+function refreshAltaCategorias(){
+  fillSelectOptions($a_categoria, $a_tipo.value==='ingreso'? CATS_INGRESO : CATS_GASTO);
+  $a_categoria.value = ($a_tipo.value==='ingreso'? 'Lavado' : 'Insumos');
+  toggleOtro();
+}
+function toggleOtro(){
+  const isOtro = $a_categoria.value==='Otros';
+  $a_categoria_otro_wrap.style.display = isOtro? '' : 'none';
+  if (!isOtro) $a_categoria_otro.value='';
+}
+$a_tipo.addEventListener('change', refreshAltaCategorias);
+$a_categoria.addEventListener('change', toggleOtro);
+
+document.getElementById('btn_agregar').onclick = async ()=>{
+  $altaMsg.textContent = '';
+  try{
+    Object.assign(cfg, loadCfg());
+    $btnAgregar.disabled=true; $btnAgregar.textContent='Agregando…';
+    const categoria = ($a_categoria.value==='Otros' && $a_categoria_otro.value.trim()) ? $a_categoria_otro.value.trim() : $a_categoria.value;
+    const req = {
+      action:'caja_add',
+      fecha:$a_fecha.value || ymd(new Date()),
+      tipo:$a_tipo.value,
+      categoria:categoria,
+      concepto:$a_concepto.value.trim(),
+      monto:$a_monto.value.replace(',','.'),
+      medio:$a_medio.value,
+      estado:$a_estado.value,
+      factura:$a_factura.value.trim(),
+      cliente:$a_cliente.value.trim(),
+      notas:$a_notas.value.trim()
+    };
+    if (!req.concepto || !req.monto) throw new Error('Completá concepto y monto');
+    const r = await fetch(apiUrl(req));
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error||'No se pudo agregar');
+    $altaMsg.textContent = 'Agregado ✔';
+    $a_concepto.value=''; $a_monto.value=''; $a_factura.value=''; $a_notas.value='';
+    await cargarLista();
+  }catch(e){ $altaMsg.textContent = '⚠️ '+e.message; }
+  finally{ $btnAgregar.disabled=false; $btnAgregar.textContent='Agregar'; }
+};
+
+/* ========================
+   EXPORT CSV
+======================== */
+function exportCSV(){
+  const rows = [...$tbody.querySelectorAll('tr')].map(tr=>[
+    tr.children[0].innerText.trim(), // fecha
+    tr.children[1].innerText.trim(), // tipo
+    tr.children[2].innerText.trim(), // categoría
+    tr.children[3].innerText.trim(), // concepto
+    tr.children[4].innerText.trim(), // monto
+    tr.children[5].innerText.trim(), // medio
+    tr.children[6].innerText.trim(), // estado
+    tr.children[7].innerText.trim(), // factura
+    tr.children[8].innerText.trim()  // cliente
+  ]);
+  if (!rows.length){ alert('No hay datos para exportar'); return; }
+  const header = ['Fecha','Tipo','Categoría','Concepto','Monto','Medio','Estado','Factura','Cliente'];
+  const csv = [header].concat(rows).map(r=>r.map(cell=> '"'+cell.replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'caja_'+ Date.now() +'.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ========================
+   INIT
+======================== */
+(function init(){
+  // periodo por defecto: mes actual
+  document.getElementById('btn_period_mes').click();
+  // filtros categorías iniciales
+  refreshFilterCategories();
+  // alta: categorías iniciales segun tipo
+  refreshAltaCategorias();
+  if (cfg.url) cargarLista();
+})();
+</script>
 </body>
 </html>
