@@ -53,6 +53,18 @@
     .pill.bad{ background:rgba(239,68,68,.12); border-color:#7a2222 }
     .pill.warn{ background:rgba(245,158,11,.12); border-color:#8a5a10 }
 
+    /* Tooltip */
+    .tip{ position:relative; display:inline-flex; align-items:center; gap:6px; }
+    .tip .dot{ width:22px; height:22px; border-radius:999px; border:1px solid var(--line); display:inline-grid; place-items:center; background:#0f172a; font-size:12px; }
+    .tip[data-tip]:hover::after{
+      content: attr(data-tip);
+      position:absolute; left:28px; top:50%; transform:translateY(-50%);
+      max-width:360px; white-space:pre-wrap;
+      background:#0f172a; color:#e5e7eb; border:1px solid var(--line);
+      padding:8px 10px; border-radius:8px; z-index:5;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+
     .section{ margin-top:18px }
     .msg{ margin-top:8px; color:var(--muted); white-space:pre-wrap }
     .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0 }
@@ -158,6 +170,7 @@
                 <th>Estado</th>
                 <th>Factura</th>
                 <th>Cliente</th>
+                <th>Notas</th> <!-- tooltip -->
                 <th class="right"></th>
               </tr>
             </thead>
@@ -363,12 +376,12 @@ async function cargarLista(){
    TABLA + EDITOR INLINE
 ======================== */
 function renderTabla(rows){
-  const $tbody = document.getElementById('tbody');
   $tbody.innerHTML = '';
-  if (!rows.length){ $tbody.innerHTML = '<tr><td colspan="10" class="muted">Sin movimientos</td></tr>'; return; }
+  if (!rows.length){ $tbody.innerHTML = '<tr><td colspan="11" class="muted">Sin movimientos</td></tr>'; return; }
   for (const r of rows){
     const tr = document.createElement('tr');
     tr.dataset.id = r.id;
+    const nota = esc(r.notas||'');
     tr.innerHTML = `
       <td>${r.fecha||''}</td>
       <td>${capitalize(r.tipo||'')}</td>
@@ -379,6 +392,7 @@ function renderTabla(rows){
       <td>${pillEstado(r.estado||'')}</td>
       <td>${esc(r.factura||'')}</td>
       <td>${esc(r.cliente||'')}</td>
+      <td>${nota ? `<span class="tip" data-tip="${nota}"><span class="dot">🛈</span></span>` : '—'}</td>
       <td class="right">
         <button class="ghost" data-act="edit">Editar</button>
         <button class="warn" data-act="del">Borrar</button>
@@ -416,6 +430,7 @@ function buildEditRow(r){
     </div>
     <div><label>Factura</label><input name="factura" value="${esc(r.factura)}"></div>
     <div><label>Cliente</label><input name="cliente" value="${esc(r.cliente)}"></div>
+    <div><label>Notas</label><input name="notas" value="${esc(r.notas||'')}"></div>
     <div class="row" style="grid-column:1/-1; justify-content:flex-end; gap:8px">
       <button class="ghost" data-cancel>Cancelar</button>
       <button class="primary" data-save>Guardar</button>
@@ -437,7 +452,7 @@ const $mdCancel = document.getElementById('md_cancel');
 const $mdDelete = document.getElementById('md_delete');
 let modalDeleteId = null;
 
-document.getElementById('tbody').addEventListener('click', async (ev)=>{
+$tbody.addEventListener('click', async (ev)=>{
   const btn = ev.target.closest('button'); if(!btn) return;
   const tr = btn.closest('tr'); const id = tr.dataset.id;
   const act = btn.dataset.act;
@@ -461,10 +476,11 @@ document.getElementById('tbody').addEventListener('click', async (ev)=>{
       medio: tr.children[5].textContent.trim(),
       estado: tr.children[6].innerText.trim(),
       factura: tr.children[7].textContent.trim(),
-      cliente: tr.children[8].textContent.trim()
+      cliente: tr.children[8].textContent.trim(),
+      notas: tr.children[9].textContent.trim() // tooltip cell (si no hay, será "—")
     };
     const holder = document.createElement('tr'); holder.className='edit-holder';
-    const td = document.createElement('td'); td.colSpan=10; td.style.background='#0f172a'; td.style.border='1px dashed var(--line)';
+    const td = document.createElement('td'); td.colSpan=11; td.style.background='#0f172a'; td.style.border='1px dashed var(--line)';
     const editor = buildEditRow({ ...r, tipo:r.tipo, medio:r.medio, estado:r.estado });
     td.appendChild(editor); holder.appendChild(td);
     tr.insertAdjacentElement('afterend', holder);
@@ -526,6 +542,7 @@ function renderCards(rows){
       <div class="line"><span class="label">Estado</span><span>${capitalize(r.estado||'')}</span></div>
       <div class="line"><span class="label">Factura</span><span>${esc(r.factura||'')}</span></div>
       <div class="line"><span class="label">Cliente</span><span>${esc(r.cliente||'')}</span></div>
+      <div class="line"><span class="label">Notas</span><span>${esc(r.notas||'')}</span></div>
       <div class="row" style="justify-content:flex-end; margin-top:8px; gap:8px">
         <button class="ghost" data-edit="${r.id}">Editar</button>
         <button class="warn" data-del="${r.id}">Borrar</button>
@@ -607,18 +624,19 @@ document.getElementById('btn_agregar').onclick = async ()=>{
 ======================== */
 function exportCSV(){
   const rows = [...$tbody.querySelectorAll('tr')].map(tr=>[
-    tr.children[0].innerText.trim(),
-    tr.children[1].innerText.trim(),
-    tr.children[2].innerText.trim(),
-    tr.children[3].innerText.trim(),
-    tr.children[4].innerText.trim(),
-    tr.children[5].innerText.trim(),
-    tr.children[6].innerText.trim(),
-    tr.children[7].innerText.trim(),
-    tr.children[8].innerText.trim()
+    tr.children[0].innerText.trim(), // Fecha
+    tr.children[1].innerText.trim(), // Tipo
+    tr.children[2].innerText.trim(), // Categoría
+    tr.children[3].innerText.trim(), // Concepto
+    tr.children[4].innerText.trim(), // Monto
+    tr.children[5].innerText.trim(), // Medio
+    tr.children[6].innerText.trim(), // Estado
+    tr.children[7].innerText.trim(), // Factura
+    tr.children[8].innerText.trim(), // Cliente
+    tr.children[9].innerText.trim()  // Notas (tooltip)
   ]);
   if (!rows.length){ alert('No hay datos para exportar'); return; }
-  const header = ['Fecha','Tipo','Categoría','Concepto','Monto','Medio','Estado','Factura','Cliente'];
+  const header = ['Fecha','Tipo','Categoría','Concepto','Monto','Medio','Estado','Factura','Cliente','Notas'];
   const csv = [header].concat(rows).map(r=>r.map(cell=> '"'+cell.replace(/"/g,'""')+'"').join(',')).join('\n');
   const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
@@ -630,8 +648,7 @@ function exportCSV(){
    INIT
 ======================== */
 (function init(){
-  // por defecto: mes actual y botón activo
-  document.getElementById('btn_period_mes').click();
+  document.getElementById('btn_period_mes').click(); // período por defecto
   refreshFilterCategories();
   refreshAltaCategorias();
   cargarLista();
