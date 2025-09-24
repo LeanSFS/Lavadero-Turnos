@@ -78,33 +78,6 @@
     <div class="box">
       <h1>Gestión — Caja (Ingresos / Gastos)</h1>
 
-      <!-- CONFIG API (se oculta si ya está guardado) -->
-      <div id="cfg_wrap">
-        <details id="cfg_details">
-          <summary class="muted">Configurar conexión (WEBAPP_URL y API_KEY)</summary>
-          <div class="grid cols-3" style="margin-top:10px">
-            <div>
-              <label for="api_url">WEBAPP_URL</label>
-              <input id="api_url" placeholder="https://script.google.com/macros/s/XXX/exec" />
-            </div>
-            <div>
-              <label for="api_key">API_KEY (opcional)</label>
-              <input id="api_key" placeholder="si la activaste en backend" />
-            </div>
-            <div class="row" style="margin-top:20px">
-              <button class="primary" id="btn_save_api">Guardar conexión</button>
-              <button class="ghost" id="btn_test_api">Probar</button>
-              <button class="ghost" id="btn_hide_cfg" title="Ocultar configuración">Ocultar</button>
-            </div>
-          </div>
-          <div id="api_msg" class="msg"></div>
-        </details>
-      </div>
-      <div class="row" id="cfg_hint" style="display:none; margin-bottom:12px">
-        <span class="muted">Conexión guardada.</span>
-        <button class="ghost" id="btn_show_cfg">Cambiar conexión</button>
-      </div>
-
       <!-- FILTROS -->
       <div class="section">
         <div class="toolbar">
@@ -250,57 +223,20 @@
 
 <script>
 /* ========================
-   CONFIG CLIENTE
+   CONFIG (URL fija)
 ======================== */
-const STORAGE_KEY = 'lys_admin_api_cfg';
-const $apiUrl = document.getElementById('api_url');
-const $apiKey = document.getElementById('api_key');
-const $apiMsg = document.getElementById('api_msg');
-const $cfgWrap = document.getElementById('cfg_wrap');
-const $cfgHint = document.getElementById('cfg_hint');
-const $cfgDetails = document.getElementById('cfg_details');
-const $btnShowCfg = document.getElementById('btn_show_cfg');
-const $btnHideCfg = document.getElementById('btn_hide_cfg');
-
-const cfg = loadCfg();
-$apiUrl.value = cfg.url || '';
-$apiKey.value = cfg.key || '';
-syncCfgVisibility();
-
-function saveCfg(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ url:$apiUrl.value.trim(), key:$apiKey.value.trim() }));
-  Object.assign(cfg, loadCfg());
-  syncCfgVisibility();
-}
-function loadCfg(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); }catch(_){ return {}; } }
-function syncCfgVisibility(){
-  const has = !!(cfg.url && cfg.url.startsWith('http'));
-  $cfgWrap.style.display = has ? 'none' : '';
-  $cfgHint.style.display = has ? '' : 'none';
-}
-function apiUrl(params){
-  if (!cfg.url) throw new Error('Falta WEBAPP_URL (abrí “Cambiar conexión”)');
-  const usp = new URLSearchParams(params);
-  if (cfg.key) usp.set('key', cfg.key);
-  usp.set('t', Date.now());
-  return cfg.url + '?' + usp.toString();
-}
-document.getElementById('btn_save_api').onclick = ()=>{ saveCfg(); $apiMsg.textContent = 'Conexión guardada ✔'; };
-document.getElementById('btn_test_api').onclick = async ()=>{
-  try{ const r = await fetch(apiUrl({action:'health'})); const j = await r.json(); $apiMsg.textContent = j.ok? 'OK' : ('Error: '+(j.error||'desconocido')); }
-  catch(e){ $apiMsg.textContent = 'Error: '+e.message; }
-};
-$btnShowCfg.onclick = ()=>{ $cfgWrap.style.display=''; $cfgDetails.open=true; $cfgHint.style.display='none'; };
-$btnHideCfg.onclick = ()=>{ $cfgWrap.style.display='none'; $cfgHint.style.display=''; };
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyDd--FDaQPnqG_LQ4MzLuRmIQc99Y0WK1Axpwh3Tc4GX1DLCHn77XTr2-wBZUVCuVO/exec';
+const apiUrl = (params) => WEBAPP_URL + '?' + new URLSearchParams({ ...params, t: Date.now() }).toString();
 
 /* ========================
-   CATEGORÍAS SUGERIDAS (con mayúscula para mostrar)
+   CATEGORÍAS (mostrar capitalizado)
 ======================== */
 const CATS_INGRESO = ['Lavado','Extra','Propina','Otros'];
 const CATS_GASTO   = ['Insumos','Herramientas','Mantenimiento','Publicidad','Impuestos','Otros'];
 
-/* helpers para mostrar capitalizado pero enviar minúscula */
+/* helpers: mostrar Capitalizado pero enviar minúscula al backend */
 const toApi = s => String(s||'').toLowerCase();
+const capitalize = s => s ? s.charAt(0).toUpperCase()+s.slice(1) : s;
 
 /* ========================
    UTILIDADES
@@ -320,7 +256,6 @@ function firstDayOfMonth(d){ const x = new Date(d); x.setDate(1); return x; }
 function lastDayOfMonth(d){ return new Date(d.getFullYear(), d.getMonth()+1, 0); }
 function esc(s){ return String(s||'').replace(/[&<>]/g, c=> ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
 function pillEstado(s){ const m=String(s||'').toLowerCase(); let cls=''; if(m==='pagado')cls='ok'; else if(m==='pendiente')cls='warn'; else cls='bad'; return `<span class="pill ${cls}">${capitalize(m)}</span>`; }
-function capitalize(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
 
 /* ========================
    FILTROS
@@ -340,7 +275,6 @@ function fillSelectOptions(sel, items, includeAll=false){
     return `<option value="${val}">${label}</option>`;
   }).join('');
 }
-
 function refreshFilterCategories(){
   const t = $tipo.value;
   if (!t){ fillSelectOptions($catF, [...new Set([...CATS_INGRESO, ...CATS_GASTO])], true); }
@@ -359,15 +293,14 @@ document.getElementById('btn_export').onclick = exportCSV;
 
 async function cargarLista(){
   try{
-    Object.assign(cfg, loadCfg());
     $listMsg.textContent = 'Cargando…';
     const params = { action:'caja_list' };
     if ($from.value) params.from=$from.value;
     if ($to.value) params.to=$to.value;
-    if ($tipo.value) params.tipo=toApi($tipo.value);              // minúscula
+    if ($tipo.value) params.tipo=toApi($tipo.value);
     if ($estado.value) params.estado=toApi($estado.value);
     if ($medio.value) params.medio=toApi($medio.value);
-    if ($catF.value) params.categoria=$catF.value;                // categorías quedan tal cual
+    if ($catF.value) params.categoria=$catF.value;
     const res = await fetch(apiUrl(params));
     const j = await res.json();
     if (!j.ok) throw new Error(j.error||'No se pudo listar');
@@ -442,7 +375,7 @@ function buildEditRow(r){
       <button class="primary" data-save>Guardar</button>
       <span class="msg"></span>
     </div>`;
-  // cargar categorías según tipo
+  // categorías según tipo
   const tipoSel = div.querySelector('select[name="tipo"]');
   const catSel  = div.querySelector('select[name="categoria"]');
   const fill = ()=>{
@@ -476,7 +409,7 @@ $tbody.addEventListener('click', async (ev)=>{
     const r = {
       id,
       fecha: tr.children[0].textContent.trim(),
-      tipo: tr.children[1].textContent.trim(),            // ya capitalizado
+      tipo: tr.children[1].textContent.trim(),            // capitalizado
       categoria: tr.children[2].textContent.trim(),
       concepto: tr.children[3].textContent.trim(),
       monto_ars: Number(tr.children[4].textContent.replace(/[^\d,-]/g,'').replace('.','').replace(',','.')) || 0,
@@ -491,7 +424,7 @@ $tbody.addEventListener('click', async (ev)=>{
     td.appendChild(editor); holder.appendChild(td);
     tr.insertAdjacentElement('afterend', holder);
 
-    // acciones guardar/cancelar
+    // guardar/cancelar
     const msg = editor.querySelector('.msg');
     const btnSave = editor.querySelector('[data-save]');
     const btnCancel = editor.querySelector('[data-cancel]');
@@ -569,7 +502,7 @@ $cards.addEventListener('click', (ev)=>{
 ======================== */
 const $a_fecha = document.getElementById('a_fecha');
 const $a_tipo = document.getElementById('a_tipo');                 // Ingreso | Gasto
-const $a_categoria = document.getElementById('a_categoria');       // listado por tipo
+const $a_categoria = document.getElementById('a_categoria');
 const $a_categoria_otro = document.getElementById('a_categoria_otro');
 const $a_categoria_otro_wrap = document.getElementById('a_categoria_otro_wrap');
 const $a_medio = document.getElementById('a_medio');               // Efectivo | Transferencia
@@ -599,7 +532,6 @@ $a_categoria.addEventListener('change', toggleOtro);
 document.getElementById('btn_agregar').onclick = async ()=>{
   $altaMsg.textContent = '';
   try{
-    Object.assign(cfg, loadCfg());
     $btnAgregar.disabled=true; $btnAgregar.textContent='Agregando…';
     const categoria = ($a_categoria.value==='Otros' && $a_categoria_otro.value.trim()) ? $a_categoria_otro.value.trim() : $a_categoria.value;
     const req = {
@@ -631,11 +563,11 @@ document.getElementById('btn_agregar').onclick = async ()=>{
 ======================== */
 function exportCSV(){
   const rows = [...$tbody.querySelectorAll('tr')].map(tr=>[
-    tr.children[0].innerText.trim(), // fecha
+    tr.children[0].innerText.trim(), // Fecha
     tr.children[1].innerText.trim(), // Tipo
     tr.children[2].innerText.trim(), // Categoría
-    tr.children[3].innerText.trim(), // concepto
-    tr.children[4].innerText.trim(), // monto
+    tr.children[3].innerText.trim(), // Concepto
+    tr.children[4].innerText.trim(), // Monto
     tr.children[5].innerText.trim(), // Medio
     tr.children[6].innerText.trim(), // Estado
     tr.children[7].innerText.trim(), // Factura
@@ -654,13 +586,10 @@ function exportCSV(){
    INIT
 ======================== */
 (function init(){
-  // periodo por defecto: mes actual
-  document.getElementById('btn_period_mes').click();
-  // filtros categorías iniciales
-  refreshFilterCategories();
-  // alta: categorías iniciales segun tipo
-  refreshAltaCategorias();
-  if (cfg.url) cargarLista();
+  document.getElementById('btn_period_mes').click(); // período por defecto: mes actual
+  refreshFilterCategories();                          // categorías del filtro
+  refreshAltaCategorias();                            // categorías de alta
+  cargarLista();
 })();
 </script>
 </body>
