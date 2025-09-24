@@ -119,15 +119,15 @@
             </div>
             <div>
               <label for="f_tipo">Tipo</label>
-              <select id="f_tipo"><option value="">Todos</option><option>ingreso</option><option>gasto</option></select>
+              <select id="f_tipo"><option value="">Todos</option><option value="Ingreso">Ingreso</option><option value="Gasto">Gasto</option></select>
             </div>
             <div>
               <label for="f_estado">Estado</label>
-              <select id="f_estado"><option value="">Todos</option><option>pagado</option><option>pendiente</option><option>anulado</option></select>
+              <select id="f_estado"><option value="">Todos</option><option value="Pagado">Pagado</option><option value="Pendiente">Pendiente</option></select>
             </div>
             <div>
               <label for="f_medio">Medio</label>
-              <select id="f_medio"><option value="">Todos</option><option>efectivo</option><option>transfer</option><option>mp</option><option>tarjeta</option></select>
+              <select id="f_medio"><option value="">Todos</option><option value="Efectivo">Efectivo</option><option value="Transferencia">Transferencia</option></select>
             </div>
             <div>
               <label for="f_categoria">Categoría</label>
@@ -188,7 +188,7 @@
           </div>
           <div>
             <label for="a_tipo">Tipo</label>
-            <select id="a_tipo"><option>ingreso</option><option>gasto</option></select>
+            <select id="a_tipo"><option value="Ingreso">Ingreso</option><option value="Gasto">Gasto</option></select>
           </div>
           <div>
             <label for="a_categoria">Categoría</label>
@@ -209,11 +209,11 @@
           </div>
           <div>
             <label for="a_medio">Medio</label>
-            <select id="a_medio"><option>Efectivo</option><option>Transferencia</option></select>
+            <select id="a_medio"><option value="Efectivo">Efectivo</option><option value="Transferencia">Transferencia</option></select>
           </div>
           <div>
             <label for="a_estado">Estado</label>
-            <select id="a_estado"><option>Pagado</option><option>Pendiente</option><option>anulado</option></select>
+            <select id="a_estado"><option value="Pagado">Pagado</option><option value="Pendiente">Pendiente</option></select>
           </div>
           <div>
             <label for="a_factura">Factura</label>
@@ -294,19 +294,13 @@ $btnShowCfg.onclick = ()=>{ $cfgWrap.style.display=''; $cfgDetails.open=true; $c
 $btnHideCfg.onclick = ()=>{ $cfgWrap.style.display='none'; $cfgHint.style.display=''; };
 
 /* ========================
-   CATEGORÍAS SUGERIDAS
+   CATEGORÍAS SUGERIDAS (con mayúscula para mostrar)
 ======================== */
 const CATS_INGRESO = ['Lavado','Extra','Propina','Otros'];
 const CATS_GASTO   = ['Insumos','Herramientas','Mantenimiento','Publicidad','Impuestos','Otros'];
 
-function fillSelectOptions(sel, items, includeAll=false){
-  const opts = (includeAll? [''] : []).concat(items);
-  sel.innerHTML = opts.map(v=>{
-    const label = v==='' ? 'Todas' : v;
-    const val = v;
-    return `<option value="${val}">${label}</option>`;
-  }).join('');
-}
+/* helpers para mostrar capitalizado pero enviar minúscula */
+const toApi = s => String(s||'').toLowerCase();
 
 /* ========================
    UTILIDADES
@@ -325,22 +319,32 @@ function lastDayOfWeek(d){ const x = firstDayOfWeek(d); x.setDate(x.getDate()+6)
 function firstDayOfMonth(d){ const x = new Date(d); x.setDate(1); return x; }
 function lastDayOfMonth(d){ return new Date(d.getFullYear(), d.getMonth()+1, 0); }
 function esc(s){ return String(s||'').replace(/[&<>]/g, c=> ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
-function pillEstado(s){ const m=String(s||'').toLowerCase(); let cls=''; if(m==='pagado')cls='ok'; else if(m==='pendiente')cls='warn'; else cls='bad'; return `<span class="pill ${cls}">${s}</span>`; }
+function pillEstado(s){ const m=String(s||'').toLowerCase(); let cls=''; if(m==='pagado')cls='ok'; else if(m==='pendiente')cls='warn'; else cls='bad'; return `<span class="pill ${cls}">${capitalize(m)}</span>`; }
+function capitalize(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
 
 /* ========================
    FILTROS
 ======================== */
 const $from = document.getElementById('f_from');
 const $to = document.getElementById('f_to');
-const $tipo = document.getElementById('f_tipo');
-const $estado = document.getElementById('f_estado');
-const $medio = document.getElementById('f_medio');
+const $tipo = document.getElementById('f_tipo');           // Ingreso | Gasto
+const $estado = document.getElementById('f_estado');       // Pagado | Pendiente
+const $medio = document.getElementById('f_medio');         // Efectivo | Transferencia
 const $catF = document.getElementById('f_categoria');
+
+function fillSelectOptions(sel, items, includeAll=false){
+  const opts = (includeAll? [''] : []).concat(items);
+  sel.innerHTML = opts.map(v=>{
+    const label = v==='' ? 'Todas' : v;
+    const val = v;
+    return `<option value="${val}">${label}</option>`;
+  }).join('');
+}
 
 function refreshFilterCategories(){
   const t = $tipo.value;
   if (!t){ fillSelectOptions($catF, [...new Set([...CATS_INGRESO, ...CATS_GASTO])], true); }
-  else if (t==='ingreso'){ fillSelectOptions($catF, CATS_INGRESO, true); }
+  else if (t==='Ingreso'){ fillSelectOptions($catF, CATS_INGRESO, true); }
   else { fillSelectOptions($catF, CATS_GASTO, true); }
 }
 $tipo.addEventListener('change', refreshFilterCategories);
@@ -360,10 +364,10 @@ async function cargarLista(){
     const params = { action:'caja_list' };
     if ($from.value) params.from=$from.value;
     if ($to.value) params.to=$to.value;
-    if ($tipo.value) params.tipo=$tipo.value;
-    if ($estado.value) params.estado=$estado.value;
-    if ($medio.value) params.medio=$medio.value;
-    if ($catF.value) params.categoria=$catF.value;
+    if ($tipo.value) params.tipo=toApi($tipo.value);              // minúscula
+    if ($estado.value) params.estado=toApi($estado.value);
+    if ($medio.value) params.medio=toApi($medio.value);
+    if ($catF.value) params.categoria=$catF.value;                // categorías quedan tal cual
     const res = await fetch(apiUrl(params));
     const j = await res.json();
     if (!j.ok) throw new Error(j.error||'No se pudo listar');
@@ -388,11 +392,11 @@ function renderTabla(rows){
     tr.dataset.id = r.id;
     tr.innerHTML = `
       <td>${r.fecha||''}</td>
-      <td>${r.tipo||''}</td>
+      <td>${capitalize(r.tipo||'')}</td>
       <td>${r.categoria||''}</td>
       <td>${esc(r.concepto)||''}</td>
       <td class="right">${fmtMoney(r.monto_ars||0)}</td>
-      <td>${r.medio||''}</td>
+      <td>${capitalize(r.medio||'')}</td>
       <td>${pillEstado(r.estado||'')}</td>
       <td>${esc(r.factura||'')}</td>
       <td>${esc(r.cliente||'')}</td>
@@ -410,12 +414,27 @@ function buildEditRow(r){
   div.style.marginTop = '10px';
   div.innerHTML = `
     <div><label>Fecha</label><input type="date" name="fecha" value="${r.fecha||''}"></div>
-    <div><label>Tipo</label><select name="tipo"><option ${r.tipo==='ingreso'?'selected':''}>ingreso</option><option ${r.tipo==='gasto'?'selected':''}>gasto</option></select></div>
+    <div><label>Tipo</label>
+      <select name="tipo">
+        <option ${capitalize(r.tipo)==='Ingreso'?'selected':''}>Ingreso</option>
+        <option ${capitalize(r.tipo)==='Gasto'?'selected':''}>Gasto</option>
+      </select>
+    </div>
     <div><label>Categoría</label><select name="categoria"></select></div>
-    <div><label>Medio</label><select name="medio"><option ${r.medio==='efectivo'?'selected':''}>efectivo</option><option ${r.medio==='transfer'?'selected':''}>transfer</option><option ${r.medio==='mp'?'selected':''}>mp</option><option ${r.medio==='tarjeta'?'selected':''}>tarjeta</option></select></div>
+    <div><label>Medio</label>
+      <select name="medio">
+        <option ${capitalize(r.medio)==='Efectivo'?'selected':''}>Efectivo</option>
+        <option ${capitalize(r.medio)==='Transferencia'?'selected':''}>Transferencia</option>
+      </select>
+    </div>
     <div class="colspan"><label>Concepto</label><input name="concepto" value="${esc(r.concepto)}"></div>
     <div><label>Monto</label><input name="monto" value="${r.monto_ars||0}" inputmode="decimal"></div>
-    <div><label>Estado</label><select name="estado"><option ${r.estado==='pagado'?'selected':''}>pagado</option><option ${r.estado==='pendiente'?'selected':''}>pendiente</option><option ${r.estado==='anulado'?'selected':''}>anulado</option></select></div>
+    <div><label>Estado</label>
+      <select name="estado">
+        <option ${capitalize(r.estado)==='Pagado'?'selected':''}>Pagado</option>
+        <option ${capitalize(r.estado)==='Pendiente'?'selected':''}>Pendiente</option>
+      </select>
+    </div>
     <div><label>Factura</label><input name="factura" value="${esc(r.factura)}"></div>
     <div><label>Cliente</label><input name="cliente" value="${esc(r.cliente)}"></div>
     <div class="row" style="grid-column:1/-1; justify-content:flex-end; gap:8px">
@@ -426,9 +445,12 @@ function buildEditRow(r){
   // cargar categorías según tipo
   const tipoSel = div.querySelector('select[name="tipo"]');
   const catSel  = div.querySelector('select[name="categoria"]');
-  const fill = ()=> fillSelectOptions(catSel, tipoSel.value==='ingreso'? CATS_INGRESO : CATS_GASTO);
+  const fill = ()=>{
+    const list = (tipoSel.value==='Ingreso') ? CATS_INGRESO : CATS_GASTO;
+    catSel.innerHTML = list.map(v=>`<option>${v}</option>`).join('');
+  };
   fill(); catSel.value = r.categoria || '';
-  tipoSel.addEventListener('change', ()=>{ fill(); });
+  tipoSel.addEventListener('change', fill);
   return div;
 }
 
@@ -451,11 +473,10 @@ $tbody.addEventListener('click', async (ev)=>{
     if (tr.nextElementSibling && tr.nextElementSibling.classList.contains('edit-holder')){
       tr.nextElementSibling.remove(); return; // toggle
     }
-    // fetch row values from DOM
     const r = {
       id,
       fecha: tr.children[0].textContent.trim(),
-      tipo: tr.children[1].textContent.trim(),
+      tipo: tr.children[1].textContent.trim(),            // ya capitalizado
       categoria: tr.children[2].textContent.trim(),
       concepto: tr.children[3].textContent.trim(),
       monto_ars: Number(tr.children[4].textContent.replace(/[^\d,-]/g,'').replace('.','').replace(',','.')) || 0,
@@ -466,7 +487,8 @@ $tbody.addEventListener('click', async (ev)=>{
     };
     const holder = document.createElement('tr'); holder.className='edit-holder';
     const td = document.createElement('td'); td.colSpan=10; td.style.background='#0f172a'; td.style.border='1px dashed var(--line)';
-    const editor = buildEditRow(r); td.appendChild(editor); holder.appendChild(td);
+    const editor = buildEditRow({ ...r, tipo:r.tipo, medio:r.medio, estado:r.estado });
+    td.appendChild(editor); holder.appendChild(td);
     tr.insertAdjacentElement('afterend', holder);
 
     // acciones guardar/cancelar
@@ -478,7 +500,12 @@ $tbody.addEventListener('click', async (ev)=>{
       try{
         btnSave.disabled = true; btnSave.textContent = 'Guardando…'; msg.textContent='';
         const data = {};
-        editor.querySelectorAll('input,select,textarea').forEach(i=>{ if (i.name && i.value!=='') data[i.name]= i.value; });
+        editor.querySelectorAll('input,select,textarea').forEach(i=>{
+          if (!i.name) return;
+          let val = i.value;
+          if (i.name==='tipo' || i.name==='estado' || i.name==='medio') val = toApi(val);
+          data[i.name] = val;
+        });
         const params = new URLSearchParams({ action:'caja_update', id });
         Object.entries(data).forEach(([k,v])=> params.append(k,v));
         const r = await fetch(apiUrl(Object.fromEntries(params)));
@@ -514,12 +541,12 @@ function renderCards(rows){
     div.dataset.id = r.id;
     div.innerHTML = `
       <div class="line"><span class="label">Fecha</span><span>${r.fecha||''}</span></div>
-      <div class="line"><span class="label">Tipo</span><span>${r.tipo||''}</span></div>
+      <div class="line"><span class="label">Tipo</span><span>${capitalize(r.tipo||'')}</span></div>
       <div class="line"><span class="label">Categoría</span><span>${r.categoria||''}</span></div>
       <div class="line"><span class="label">Concepto</span><span>${esc(r.concepto||'')}</span></div>
       <div class="line"><span class="label">Monto</span><span>${fmtMoney(r.monto_ars||0)}</span></div>
-      <div class="line"><span class="label">Medio</span><span>${r.medio||''}</span></div>
-      <div class="line"><span class="label">Estado</span><span>${r.estado||''}</span></div>
+      <div class="line"><span class="label">Medio</span><span>${capitalize(r.medio||'')}</span></div>
+      <div class="line"><span class="label">Estado</span><span>${capitalize(r.estado||'')}</span></div>
       <div class="line"><span class="label">Factura</span><span>${esc(r.factura||'')}</span></div>
       <div class="line"><span class="label">Cliente</span><span>${esc(r.cliente||'')}</span></div>
       <div class="row" style="justify-content:flex-end; margin-top:8px; gap:8px">
@@ -529,12 +556,10 @@ function renderCards(rows){
     $cards.appendChild(div);
   }
 }
-// delegación simple para cards
 $cards.addEventListener('click', (ev)=>{
   const b = ev.target.closest('button'); if(!b) return;
   const id = b.dataset.edit || b.dataset.del;
   if (b.dataset.del){ modalDeleteId=id; $modal.style.display='flex'; return; }
-  // scroll a la fila correspondiente y abrir editor
   const tr = $tbody.querySelector(`tr[data-id="${id}"]`);
   if (tr){ tr.querySelector('button[data-act="edit"]').click(); window.scrollTo({top:tr.getBoundingClientRect().top + window.scrollY - 120, behavior:'smooth'}); }
 });
@@ -543,14 +568,14 @@ $cards.addEventListener('click', (ev)=>{
    ALTA
 ======================== */
 const $a_fecha = document.getElementById('a_fecha');
-const $a_tipo = document.getElementById('a_tipo');
-const $a_categoria = document.getElementById('a_categoria');
+const $a_tipo = document.getElementById('a_tipo');                 // Ingreso | Gasto
+const $a_categoria = document.getElementById('a_categoria');       // listado por tipo
 const $a_categoria_otro = document.getElementById('a_categoria_otro');
 const $a_categoria_otro_wrap = document.getElementById('a_categoria_otro_wrap');
-const $a_medio = document.getElementById('a_medio');
+const $a_medio = document.getElementById('a_medio');               // Efectivo | Transferencia
 const $a_concepto = document.getElementById('a_concepto');
 const $a_monto = document.getElementById('a_monto');
-const $a_estado = document.getElementById('a_estado');
+const $a_estado = document.getElementById('a_estado');             // Pagado | Pendiente
 const $a_factura = document.getElementById('a_factura');
 const $a_cliente = document.getElementById('a_cliente');
 const $a_notas = document.getElementById('a_notas');
@@ -558,8 +583,9 @@ const $altaMsg = document.getElementById('alta_msg');
 const $btnAgregar = document.getElementById('btn_agregar');
 
 function refreshAltaCategorias(){
-  fillSelectOptions($a_categoria, $a_tipo.value==='ingreso'? CATS_INGRESO : CATS_GASTO);
-  $a_categoria.value = ($a_tipo.value==='ingreso'? 'Lavado' : 'Insumos');
+  const list = ($a_tipo.value==='Ingreso') ? CATS_INGRESO : CATS_GASTO;
+  $a_categoria.innerHTML = list.map(v=>`<option>${v}</option>`).join('');
+  $a_categoria.value = list[0] || 'Otros';
   toggleOtro();
 }
 function toggleOtro(){
@@ -579,12 +605,12 @@ document.getElementById('btn_agregar').onclick = async ()=>{
     const req = {
       action:'caja_add',
       fecha:$a_fecha.value || ymd(new Date()),
-      tipo:$a_tipo.value,
+      tipo:toApi($a_tipo.value),
       categoria:categoria,
       concepto:$a_concepto.value.trim(),
       monto:$a_monto.value.replace(',','.'),
-      medio:$a_medio.value,
-      estado:$a_estado.value,
+      medio:toApi($a_medio.value),
+      estado:toApi($a_estado.value),
       factura:$a_factura.value.trim(),
       cliente:$a_cliente.value.trim(),
       notas:$a_notas.value.trim()
@@ -606,14 +632,14 @@ document.getElementById('btn_agregar').onclick = async ()=>{
 function exportCSV(){
   const rows = [...$tbody.querySelectorAll('tr')].map(tr=>[
     tr.children[0].innerText.trim(), // fecha
-    tr.children[1].innerText.trim(), // tipo
-    tr.children[2].innerText.trim(), // categoría
+    tr.children[1].innerText.trim(), // Tipo
+    tr.children[2].innerText.trim(), // Categoría
     tr.children[3].innerText.trim(), // concepto
     tr.children[4].innerText.trim(), // monto
-    tr.children[5].innerText.trim(), // medio
-    tr.children[6].innerText.trim(), // estado
-    tr.children[7].innerText.trim(), // factura
-    tr.children[8].innerText.trim()  // cliente
+    tr.children[5].innerText.trim(), // Medio
+    tr.children[6].innerText.trim(), // Estado
+    tr.children[7].innerText.trim(), // Factura
+    tr.children[8].innerText.trim()  // Cliente
   ]);
   if (!rows.length){ alert('No hay datos para exportar'); return; }
   const header = ['Fecha','Tipo','Categoría','Concepto','Monto','Medio','Estado','Factura','Cliente'];
