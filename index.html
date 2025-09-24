@@ -80,6 +80,17 @@ padding:10px 14px; border-radius:10px; text-decoration:none; }
 .social-btn.full{ flex-basis:100%; }
 
 footer{ margin-top:18px; text-align:center; color:var(--muted); font-size:13px }
+
+/* “Link” oculto para el mate */
+.mate-link{
+  cursor:pointer;
+  border-bottom:1px dashed transparent;
+  text-underline-offset:2px;
+}
+.mate-link:hover,.mate-link:focus{
+  border-bottom-color:currentColor;
+  outline:none;
+}
 </style>
 </head>
 <body>
@@ -154,7 +165,6 @@ footer{ margin-top:18px; text-align:center; color:var(--muted); font-size:13px }
   También puede aplicarse en casos de barro extremo o exceso de pelos de mascota.
 </p>
 
-
 <div class="sticky-cta">
 <a class="cta" href="reserva.html">🗓️ Reservar turno</a>
 <div class="socials">
@@ -162,18 +172,45 @@ footer{ margin-top:18px; text-align:center; color:var(--muted); font-size:13px }
 <a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank" rel="noopener">📸 ¡Visita nuestro Instagram!</a>
 <a class="social-btn full" href="https://wa.me/2995760611" target="_blank" rel="noopener">💬 ¡Contactanos por WhatsApp!</a>
 </div>
-          <div class="help">Te confirmamos por WhatsApp apenas entra tu solicitud.</div>
-          
+<div class="help">Te confirmamos por WhatsApp apenas entra tu solicitud.</div>
 </div>
 </div>
 </section>
 
 <footer>
-© <span id="y"></span> LyS Lavados — Hecho con dedicación y mate.
+© <span id="y"></span> LyS Lavados — Hecho con dedicación y <span id="mateLink" class="mate-link" role="link" tabindex="0" aria-label="Acceso oculto">mate</span>.
 </footer>
 </main>
 
 <script>
+// Año dinámico
 document.getElementById('y').textContent = new Date().getFullYear();
+
+// === Configuración del acceso oculto ===
+// Cambiá estas dos constantes según tu caso:
+const ADMIN_URL  = 'admin.html';         // por ejemplo: 'admin-caja.html' o una URL absoluta
+const ADMIN_PASS = 'yerba';               // contraseña que querés usar
+
+function solicitarClaveYEntrar() {
+  const clave = prompt('Ingresá la contraseña:');
+  if (clave === null) return; // cancelado
+  if ((clave || '').trim() === ADMIN_PASS) {
+    // Abre en nueva pestaña, sin pasar referrer
+    const w = window.open(ADMIN_URL, '_blank', 'noopener,noreferrer');
+    if (!w) alert('Permití las ventanas emergentes para continuar.');
+  } else {
+    alert('Contraseña incorrecta.');
+  }
+}
+
+const mate = document.getElementById('mateLink');
+mate.addEventListener('click', solicitarClaveYEntrar);
+mate.addEventListener('keydown', (e)=>{
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    solicitarClaveYEntrar();
+  }
+});
 </script>
 </body>
+</html>
