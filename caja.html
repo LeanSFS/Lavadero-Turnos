@@ -359,11 +359,24 @@ async function cargarLista(){
     if ($estado.value) params.estado=toApi($estado.value);
     if ($medio.value) params.medio=toApi($medio.value);
     if ($catF.value) params.categoria=$catF.value;
+
     const res = await fetch(apiUrl(params));
     const j = await res.json();
     if (!j.ok) throw new Error(j.error||'No se pudo listar');
-    renderTabla(j.rows||[]);
-    renderCards(j.rows||[]);
+
+    // ⬇️ ORDENAR POR FECHA DESC (más reciente primero).
+    const rows = (j.rows || []).slice().sort((a,b)=>{
+      const da = a.fecha || '';
+      const db = b.fecha || '';
+      if (!da && !db) return 0;
+      if (!da) return 1;       // vacías al final
+      if (!db) return -1;
+      return db.localeCompare(da); // YYYY-MM-DD → string OK
+    });
+
+    renderTabla(rows);
+    renderCards(rows);
+
     const t = j.total || { ingresos:0, gastos:0, neto:0 };
     $ing.textContent = fmtMoney(t.ingresos);
     $gas.textContent = fmtMoney(t.gastos);
@@ -477,7 +490,7 @@ $tbody.addEventListener('click', async (ev)=>{
       estado: tr.children[6].innerText.trim(),
       factura: tr.children[7].textContent.trim(),
       cliente: tr.children[8].textContent.trim(),
-      notas: tr.children[9].textContent.trim() // tooltip cell (si no hay, será "—")
+      notas: tr.children[9].textContent.trim() // tooltip cell (o "—")
     };
     const holder = document.createElement('tr'); holder.className='edit-holder';
     const td = document.createElement('td'); td.colSpan=11; td.style.background='#0f172a'; td.style.border='1px dashed var(--line)';
@@ -655,4 +668,4 @@ function exportCSV(){
 })();
 </script>
 </body>
-</html>
+</html> 
