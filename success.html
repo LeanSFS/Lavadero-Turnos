@@ -60,6 +60,7 @@
       <div id="detalles" class="card" style="display:none">
         <div class="row"><div class="lbl">Fecha</div><div class="val" id="v-fecha">—</div></div>
         <div class="row"><div class="lbl">Hora</div><div class="val" id="v-hora">—</div></div>
+        <div class="row"><div class="lbl">Vehículo</div><div class="val" id="v-vehiculo">—</div></div>
         <div class="row"><div class="lbl">Servicio</div><div class="val" id="v-servicio">—</div></div>
         <div class="row"><div class="lbl">Nombre</div><div class="val" id="v-nombre">—</div></div>
         <div class="row"><div class="lbl">Dirección</div><div class="val" id="v-direccion">—</div></div>
@@ -107,6 +108,7 @@
 
       document.getElementById('v-fecha').textContent = niceFecha(b.fecha);
       document.getElementById('v-hora').textContent = b.hora;
+      document.getElementById('v-vehiculo').textContent = b.vehiculo || '—';
       document.getElementById('v-servicio').textContent = b.servicio || '—';
       document.getElementById('v-nombre').textContent = b.nombre || '—';
       document.getElementById('v-direccion').textContent = b.direccion || '—';

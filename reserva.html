@@ -32,11 +32,27 @@ border:1px solid var(--line);background:#0f172a;color:#fff
 }
 .slots{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 16px}
 .slot{
-padding:10px 12px;border-radius:10px;
-border:1px solid var(--line);background:#111827;
-color:#e5e7eb;cursor:pointer
+  padding:10px 12px;border-radius:10px;
+  border:1px solid var(--line);background:#111827;
+  color:#e5e7eb;cursor:pointer
 }
 .slot.sel{outline:2px solid var(--ok)}
+.services{display:flex;flex-direction:column;gap:10px;margin:12px 0 0}
+.service-card{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:14px 16px;border-radius:12px;
+  border:1px solid var(--line);background:#111827;color:#e5e7eb;
+  cursor:pointer;text-align:left;
+  transition:background-color .2s,border-color .2s;
+}
+.service-card .name{font-weight:700;font-size:16px}
+.service-card .price{font-weight:700;font-size:18px;color:#fff}
+.service-card.sel{outline:2px solid var(--ok);background:#132035;border-color:var(--ok)}
+.service-card:focus-visible{outline:2px solid var(--ok)}
+@media(max-width:600px){
+  .service-card{flex-direction:column;align-items:flex-start}
+  .service-card .price{font-size:16px}
+}
 button{
 width:100%; padding:12px 14px;border-radius:10px;border:1px solid var(--ok);
 background:var(--ok);color:#0b1220;font-weight:800;cursor:pointer
@@ -71,13 +87,18 @@ button:disabled{opacity:.6;cursor:not-allowed}
 <input id="telefono" placeholder="2994...">
 <label>Dirección</label>
 <input id="direccion" placeholder="Calle y número, barrio">
-<label>Servicio</label>
-<select id="servicio">
-<option value="Exterior">Exterior – $15.000</option>
-<option value="Interior">Interior – $15.000</option>
-<option value="Completo">Completo – $25.000</option>
-<option value="Full">Full – $35.000</option>
+<label>Tipo de vehículo</label>
+<select id="vehiculo">
+  <option value="">Elegí una opción…</option>
+  <option value="auto">Auto</option>
+  <option value="suv">SUV o camioneta chica</option>
+  <option value="pickup">Pickup</option>
 </select>
+<label>Servicio</label>
+<p id="servicio-ayuda" class="muted" style="margin:0 0 8px;text-align:left" role="status" aria-live="polite">Elegí el tipo de vehículo…</p>
+<div id="servicio-bloque" style="display:none">
+  <div id="servicios" class="services" role="radiogroup" aria-label="Servicios disponibles"></div>
+</div>
 
 <div style="margin-top:14px">
 <button id="btn">Reservar</button>
@@ -94,8 +115,98 @@ const $slots = document.getElementById('slots');
 const $sub = document.getElementById('subfecha');
 const $bloque = document.getElementById('bloque-slots');
 const $msg = document.getElementById('msg');
+const $vehiculo = document.getElementById('vehiculo');
+const $servicios = document.getElementById('servicios');
+const $servicioAyuda = document.getElementById('servicio-ayuda');
+const $servicioBloque = document.getElementById('servicio-bloque');
 
-const S = { map:new Map(), selFecha:null, selHora:null };
+const S = { map:new Map(), selFecha:null, selHora:null, selServicio:null, selPrecio:null, selResumen:null };
+
+const VEHICULOS = {
+  auto: 'Auto',
+  suv: 'SUV o camioneta chica',
+  pickup: 'Pickup'
+};
+
+const SERVICIOS = {
+  auto: [
+    { nombre: 'Completo', precio: 25000 },
+    { nombre: 'Full', precio: 35000 }
+  ],
+  suv: [
+    { nombre: 'Completo', precio: 30000 },
+    { nombre: 'Full', precio: 40000 }
+  ],
+  pickup: [
+    { nombre: 'Completo', precio: 40000 },
+    { nombre: 'Full', precio: 50000 }
+  ]
+};
+
+const formatPrice = n => new Intl.NumberFormat('es-AR').format(n);
+
+function resetServicios(){
+  S.selServicio = null;
+  S.selPrecio = null;
+  S.selResumen = null;
+  $servicios.innerHTML = '';
+  $servicios.dataset.tipo = '';
+  $servicioAyuda.textContent = 'Elegí el tipo de vehículo…';
+  $servicioBloque.style.display = 'none';
+}
+
+function renderServicios(tipo){
+  const nombreVehiculo = VEHICULOS[tipo] || '';
+  const servicios = SERVICIOS[tipo] || [];
+  $servicios.innerHTML = servicios.map(({nombre, precio}) => {
+    const precioFmt = formatPrice(precio);
+    const resumen = `${nombre} – $${precioFmt}`;
+    return `
+      <button type="button" class="service-card" role="radio" aria-checked="false" tabindex="0"
+        data-servicio="${nombre}" data-precio="${precio}" data-resumen="${resumen}">
+        <span class="name">${nombre}</span>
+        <span class="price">$${precioFmt}</span>
+      </button>`;
+  }).join('');
+  $servicios.dataset.tipo = tipo;
+  $servicioAyuda.textContent = `Elegí el lavado para tu ${nombreVehiculo}.`;
+  $servicioBloque.style.display = servicios.length ? 'block' : 'none';
+}
+
+function seleccionarServicio(card){
+  if(!card) return;
+  const buttons = Array.from($servicios.querySelectorAll('.service-card'));
+  buttons.forEach(btn => {
+    const sel = btn === card;
+    btn.classList.toggle('sel', sel);
+    btn.setAttribute('aria-checked', sel ? 'true' : 'false');
+    if(sel){
+      try{
+        btn.focus({preventScroll:true});
+      }catch(_e){
+        btn.focus();
+      }
+    }
+  });
+  S.selServicio = card.dataset.servicio || null;
+  S.selPrecio = Number(card.dataset.precio) || null;
+  S.selResumen = card.dataset.resumen || null;
+  if(S.selResumen){
+    const tipo = $servicios.dataset.tipo || '';
+    const nombreVehiculo = VEHICULOS[tipo] || 'vehículo';
+    $servicioAyuda.textContent = `Lavado ${S.selResumen} para tu ${nombreVehiculo}.`;
+  }
+}
+
+function actualizarServicios(){
+  const tipo = $vehiculo.value;
+  if(!tipo || !SERVICIOS[tipo]){
+    resetServicios();
+    return;
+  }
+  resetServicios();
+  renderServicios(tipo);
+}
 
 const pad = n => String(n).padStart(2,'0');
 function niceFecha(iso){
@@ -131,7 +242,7 @@ S.selFecha = $dia.value || null;
 S.selHora = null;
 if (!S.selFecha){ $bloque.style.display='none'; return; }
 const libres = S.map.get(S.selFecha) || [];
-$sub.textContent = `Horarios disponibles para ${S.selFecha}`;
+$sub.textContent = `Horarios disponibles para ${niceFecha(S.selFecha)}`;
 $slots.innerHTML = libres.length
 ? libres.map(h => `<button type="button" class="slot" data-h="${h}">${h}</button>`).join('')
 : '<span class="muted">No hay horarios libres en este día.</span>';
@@ -144,16 +255,41 @@ S.selHora = b.dataset.h;
 [...$slots.querySelectorAll('.slot')].forEach(el => el.classList.toggle('sel', el===b));
 });
 
+$vehiculo.addEventListener('change', () => {
+  actualizarServicios();
+});
+
+resetServicios();
+
+$servicios.addEventListener('click', ev => {
+  const card = ev.target.closest('.service-card');
+  if(!card) return;
+  seleccionarServicio(card);
+});
+
+$servicios.addEventListener('keydown', ev => {
+  if(ev.key !== 'Enter' && ev.key !== ' ' && ev.key !== 'Spacebar'){
+    return;
+  }
+  const card = ev.target.closest('.service-card');
+  if(!card) return;
+  ev.preventDefault();
+  seleccionarServicio(card);
+});
+
 document.getElementById('btn').onclick = async () => {
 $msg.textContent = '';
 const nombre = document.getElementById('nombre').value.trim();
 const telefono = document.getElementById('telefono').value.trim();
 const direccion = document.getElementById('direccion').value.trim();
-const servicio = document.getElementById('servicio').value;
+const vehiculo = $vehiculo.value;
+const nombreVehiculo = VEHICULOS[vehiculo] || '';
 const btn = document.getElementById('btn');
 
-if (!S.selFecha || !S.selHora || !nombre || !telefono || !direccion){
-$msg.textContent = '⚠️ Completá todos los campos y elegí día y horario.'; return;
+const servicioResumen = S.selResumen || '';
+
+if (!S.selFecha || !S.selHora || !nombre || !telefono || !direccion || !vehiculo || !servicioResumen){
+$msg.textContent = '⚠️ Completá todos los campos y elegí día, horario, vehículo y servicio.'; return;
 }
 
 try{
@@ -162,14 +298,16 @@ btn.textContent = "Reservando…";
 
 const qs = new URLSearchParams({
 action:'create',
-fecha:S.selFecha, hora:S.selHora, servicio,
-nombre, telefono, direccion
+fecha:S.selFecha, hora:S.selHora, servicio:servicioResumen,
+nombre, telefono, direccion,
+vehiculo:nombreVehiculo
 });
 const res = await fetch(`${WEBAPP_URL}?${qs.toString()}`);
 const j = await res.json();
 if (!j.ok) throw new Error(j.error||'No se pudo reservar');
 
-const booking = { id:j.id, nombre, telefono, direccion, servicio,
+const booking = { id:j.id, nombre, telefono, direccion, servicio:servicioResumen,
+vehiculo:nombreVehiculo,
 fecha:S.selFecha, hora:S.selHora };
 sessionStorage.setItem('lastBooking', JSON.stringify(booking));
 location.href = 'success.html';
