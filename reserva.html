@@ -1,341 +1,186 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/reserva.html b/reserva.html
-index 60843163b8e2b6dfcf25653f3919bef5d145864c..c2d8bade0db4d32ae3bbbea87d979a983362c79c 100644
---- a/reserva.html
-+++ b/reserva.html
-@@ -10,177 +10,315 @@
- body{
- font-family:system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
- background:var(--bg); color:#fff; margin:0; padding:24px
- }
- .wrap{ max-width:720px; margin:0 auto }
- .box{
- background:var(--card); border:1px solid var(--line);
- border-radius:16px; padding:20px
- }
- 
- /* LOGO XXL dentro de la caja */
- .brand__logo{
- height:360px; width:auto; display:block; margin:0 auto 20px auto;
- image-rendering:-webkit-optimize-contrast;
- }
- h1{margin:0 0 8px;font-size:22px;text-align:center}
- .muted{color:var(--muted);margin:0 0 16px;text-align:center}
- 
- label{display:block;margin:12px 0 6px}
- select,input{
- width:100%;padding:12px;border-radius:10px;
- border:1px solid var(--line);background:#0f172a;color:#fff
- }
- .slots{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 16px}
- .slot{
--padding:10px 12px;border-radius:10px;
--border:1px solid var(--line);background:#111827;
--color:#e5e7eb;cursor:pointer
-+  padding:10px 12px;border-radius:10px;
-+  border:1px solid var(--line);background:#111827;
-+  color:#e5e7eb;cursor:pointer
- }
- .slot.sel{outline:2px solid var(--ok)}
-+.services{display:flex;flex-direction:column;gap:10px;margin:12px 0 0}
-+.service-card{
-+  display:flex;justify-content:space-between;align-items:center;gap:12px;
-+  padding:14px 16px;border-radius:12px;
-+  border:1px solid var(--line);background:#111827;color:#e5e7eb;
-+  cursor:pointer;text-align:left;
-+  transition:background-color .2s,border-color .2s;
-+}
-+.service-card .name{font-weight:700;font-size:16px}
-+.service-card .price{font-weight:700;font-size:18px;color:#fff}
-+.service-card.sel{outline:2px solid var(--ok);background:#132035;border-color:var(--ok)}
-+.service-card:focus-visible{outline:2px solid var(--ok)}
-+@media(max-width:600px){
-+  .service-card{flex-direction:column;align-items:flex-start}
-+  .service-card .price{font-size:16px}
-+}
- button{
- width:100%; padding:12px 14px;border-radius:10px;border:1px solid var(--ok);
- background:var(--ok);color:#0b1220;font-weight:800;cursor:pointer
- }
- button:disabled{opacity:.6;cursor:not-allowed}
- .msg{margin-top:10px;color:var(--muted);white-space:pre-wrap;text-align:center}
- 
- @media(max-width:600px){
- .brand__logo{height:270px; margin-bottom:16px}
- }
- </style>
- </head>
- <body>
- <main class="wrap">
- <div class="box">
- <!-- Logo + encabezado -->
- <h1 class="sr-only">LyS Lavados – Reservá tu turno</h1>
- <img src="logo-lys.png" alt="LyS Lavados" class="brand__logo">
- <p class="muted">Elegí el día, el horario disponible y el servicio. Te confirmamos por WhatsApp.</p>
- 
- <label for="dia">Día (próximos 14)</label>
- <select id="dia"><option value="">Cargando días…</option></select>
- 
- <div id="bloque-slots" style="display:none">
- <div class="muted" id="subfecha"></div>
- <div id="slots" class="slots"></div>
- </div>
- 
- <label>Nombre y Apellido</label>
- <input id="nombre" placeholder="Juan Pérez">
- <label>Teléfono</label>
- <input id="telefono" placeholder="2994...">
- <label>Dirección</label>
- <input id="direccion" placeholder="Calle y número, barrio">
--<label>Servicio</label>
--<select id="servicio">
--<option value="Exterior">Exterior – $15.000</option>
--<option value="Interior">Interior – $15.000</option>
--<option value="Completo">Completo – $25.000</option>
--<option value="Full">Full – $35.000</option>
-+<label>Tipo de vehículo</label>
-+<select id="vehiculo">
-+  <option value="">Elegí una opción…</option>
-+  <option value="auto">Auto</option>
-+  <option value="suv">SUV o camioneta chica</option>
-+  <option value="pickup">Pickup</option>
- </select>
-+<label>Servicio</label>
-+<p id="servicio-ayuda" class="muted" style="margin:0 0 8px;text-align:left" role="status" aria-live="polite">Elegí el tipo de vehículo…</p>
-+<div id="servicio-bloque" style="display:none">
-+  <div id="servicios" class="services" role="radiogroup" aria-label="Servicios disponibles"></div>
-+</div>
- 
- <div style="margin-top:14px">
- <button id="btn">Reservar</button>
- </div>
- <div id="msg" class="msg"></div>
- </div>
- </main>
- 
- <script>
- const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyDd--FDaQPnqG_LQ4MzLuRmIQc99Y0WK1Axpwh3Tc4GX1DLCHn77XTr2-wBZUVCuVO/exec';
- 
- const $dia = document.getElementById('dia');
- const $slots = document.getElementById('slots');
- const $sub = document.getElementById('subfecha');
- const $bloque = document.getElementById('bloque-slots');
- const $msg = document.getElementById('msg');
-+const $vehiculo = document.getElementById('vehiculo');
-+const $servicios = document.getElementById('servicios');
-+const $servicioAyuda = document.getElementById('servicio-ayuda');
-+const $servicioBloque = document.getElementById('servicio-bloque');
-+
-+const S = { map:new Map(), selFecha:null, selHora:null, selServicio:null, selPrecio:null, selResumen:null };
- 
--const S = { map:new Map(), selFecha:null, selHora:null };
-+const VEHICULOS = {
-+  auto: 'Auto',
-+  suv: 'SUV o camioneta chica',
-+  pickup: 'Pickup'
-+};
-+
-+const SERVICIOS = {
-+  auto: [
-+    { nombre: 'Completo', precio: 25000 },
-+    { nombre: 'Full', precio: 35000 }
-+  ],
-+  suv: [
-+    { nombre: 'Completo', precio: 30000 },
-+    { nombre: 'Full', precio: 40000 }
-+  ],
-+  pickup: [
-+    { nombre: 'Completo', precio: 40000 },
-+    { nombre: 'Full', precio: 50000 }
-+  ]
-+};
-+
-+const formatPrice = n => new Intl.NumberFormat('es-AR').format(n);
-+
-+function resetServicios(){
-+  S.selServicio = null;
-+  S.selPrecio = null;
-+  S.selResumen = null;
-+  $servicios.innerHTML = '';
-+  $servicios.dataset.tipo = '';
-+  $servicioAyuda.textContent = 'Elegí el tipo de vehículo…';
-+  $servicioBloque.style.display = 'none';
-+}
-+
-+function renderServicios(tipo){
-+  const nombreVehiculo = VEHICULOS[tipo] || '';
-+  const servicios = SERVICIOS[tipo] || [];
-+  $servicios.innerHTML = servicios.map(({nombre, precio}) => {
-+    const precioFmt = formatPrice(precio);
-+    const resumen = `${nombre} – $${precioFmt}`;
-+    return `
-+      <button type="button" class="service-card" role="radio" aria-checked="false" tabindex="0"
-+        data-servicio="${nombre}" data-precio="${precio}" data-resumen="${resumen}">
-+        <span class="name">${nombre}</span>
-+        <span class="price">$${precioFmt}</span>
-+      </button>`;
-+  }).join('');
-+  $servicios.dataset.tipo = tipo;
-+  $servicioAyuda.textContent = `Elegí el lavado para tu ${nombreVehiculo}.`;
-+  $servicioBloque.style.display = servicios.length ? 'block' : 'none';
-+}
-+
-+function seleccionarServicio(card){
-+  if(!card) return;
-+  const buttons = Array.from($servicios.querySelectorAll('.service-card'));
-+  buttons.forEach(btn => {
-+    const sel = btn === card;
-+    btn.classList.toggle('sel', sel);
-+    btn.setAttribute('aria-checked', sel ? 'true' : 'false');
-+    if(sel){
-+      try{
-+        btn.focus({preventScroll:true});
-+      }catch(_e){
-+        btn.focus();
-+      }
-+    }
-+  });
-+  S.selServicio = card.dataset.servicio || null;
-+  S.selPrecio = Number(card.dataset.precio) || null;
-+  S.selResumen = card.dataset.resumen || null;
-+  if(S.selResumen){
-+    const tipo = $servicios.dataset.tipo || '';
-+    const nombreVehiculo = VEHICULOS[tipo] || 'vehículo';
-+    $servicioAyuda.textContent = `Lavado ${S.selResumen} para tu ${nombreVehiculo}.`;
-+  }
-+}
-+
-+function actualizarServicios(){
-+  const tipo = $vehiculo.value;
-+  if(!tipo || !SERVICIOS[tipo]){
-+    resetServicios();
-+    return;
-+  }
-+  resetServicios();
-+  renderServicios(tipo);
-+}
- 
- const pad = n => String(n).padStart(2,'0');
- function niceFecha(iso){
- const [y,m,d]=iso.split('-').map(Number);
- const dt=new Date(y,(m||1)-1,d);
- const dias=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
- return `${dias[dt.getDay()]} ${pad(d)}/${pad(m)}`;
- }
- 
- async function cargarDias(){
- $msg.textContent = 'Cargando disponibilidad…';
- try{
- const r = await fetch(`${WEBAPP_URL}?action=slots14&days=14&t=${Date.now()}`);
- const j = await r.json();
- if (!j.ok || !Array.isArray(j.rows)) throw new Error(j.error||'Respuesta inválida');
- 
- $dia.innerHTML = '<option value="">Elegí un día…</option>' +
- j.rows.map(d => {
- const libres = (d.count ?? (d.slots? d.slots.length : 0));
- return `<option value="${d.fecha}">${niceFecha(d.fecha)} — ${libres} libres</option>`;
- }).join('');
- 
- S.map = new Map(j.rows.map(x => [x.fecha, x.slots]));
- $msg.textContent = '';
- }catch(e){
- console.error(e);
- $msg.textContent = '⚠️ No se pudieron cargar los días. ' + e.message;
- }
- }
- 
- $dia.addEventListener('change', () => {
- S.selFecha = $dia.value || null;
- S.selHora = null;
- if (!S.selFecha){ $bloque.style.display='none'; return; }
- const libres = S.map.get(S.selFecha) || [];
--$sub.textContent = `Horarios disponibles para ${S.selFecha}`;
-+$sub.textContent = `Horarios disponibles para ${niceFecha(S.selFecha)}`;
- $slots.innerHTML = libres.length
- ? libres.map(h => `<button type="button" class="slot" data-h="${h}">${h}</button>`).join('')
- : '<span class="muted">No hay horarios libres en este día.</span>';
- $bloque.style.display = 'block';
- });
- 
- $slots.addEventListener('click', (ev) => {
- const b = ev.target.closest('.slot'); if(!b) return;
- S.selHora = b.dataset.h;
- [...$slots.querySelectorAll('.slot')].forEach(el => el.classList.toggle('sel', el===b));
- });
- 
-+$vehiculo.addEventListener('change', () => {
-+  actualizarServicios();
-+});
-+
-+resetServicios();
-+
-+$servicios.addEventListener('click', ev => {
-+  const card = ev.target.closest('.service-card');
-+  if(!card) return;
-+  seleccionarServicio(card);
-+});
-+
-+$servicios.addEventListener('keydown', ev => {
-+  if(ev.key !== 'Enter' && ev.key !== ' ' && ev.key !== 'Spacebar'){
-+    return;
-+  }
-+  const card = ev.target.closest('.service-card');
-+  if(!card) return;
-+  ev.preventDefault();
-+  seleccionarServicio(card);
-+});
-+
- document.getElementById('btn').onclick = async () => {
- $msg.textContent = '';
- const nombre = document.getElementById('nombre').value.trim();
- const telefono = document.getElementById('telefono').value.trim();
- const direccion = document.getElementById('direccion').value.trim();
--const servicio = document.getElementById('servicio').value;
-+const vehiculo = $vehiculo.value;
-+const nombreVehiculo = VEHICULOS[vehiculo] || '';
- const btn = document.getElementById('btn');
- 
--if (!S.selFecha || !S.selHora || !nombre || !telefono || !direccion){
--$msg.textContent = '⚠️ Completá todos los campos y elegí día y horario.'; return;
-+const servicioResumen = S.selResumen || '';
-+
-+if (!S.selFecha || !S.selHora || !nombre || !telefono || !direccion || !vehiculo || !servicioResumen){
-+$msg.textContent = '⚠️ Completá todos los campos y elegí día, horario, vehículo y servicio.'; return;
- }
- 
- try{
- btn.disabled = true;
- btn.textContent = "Reservando…";
- 
- const qs = new URLSearchParams({
- action:'create',
--fecha:S.selFecha, hora:S.selHora, servicio,
--nombre, telefono, direccion
-+fecha:S.selFecha, hora:S.selHora, servicio:servicioResumen,
-+nombre, telefono, direccion,
-+vehiculo:nombreVehiculo
- });
- const res = await fetch(`${WEBAPP_URL}?${qs.toString()}`);
- const j = await res.json();
- if (!j.ok) throw new Error(j.error||'No se pudo reservar');
- 
--const booking = { id:j.id, nombre, telefono, direccion, servicio,
-+const booking = { id:j.id, nombre, telefono, direccion, servicio:servicioResumen,
-+vehiculo:nombreVehiculo,
- fecha:S.selFecha, hora:S.selHora };
- sessionStorage.setItem('lastBooking', JSON.stringify(booking));
- location.href = 'success.html';
- }catch(e){
- $msg.textContent = '⚠️ ' + e.message;
- btn.disabled = false;
- btn.textContent = "Reservar";
- }
- };
- 
- document.addEventListener('DOMContentLoaded', cargarDias);
- </script>
- </body>
- </html>
- 
-EOF
-)
+<!doctype html>
+<html lang="es">
+<head>
+  <link rel="icon" type="image/png" href="favicon.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LyS Lavados – Reservas</title>
+<style>
+:root{--bg:#0f172a;--card:#0b1220;--line:#1f2937;--muted:#9ca3af;--ok:#22c55e}
+body{
+font-family:system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
+background:var(--bg); color:#fff; margin:0; padding:24px
+}
+.wrap{ max-width:720px; margin:0 auto }
+.box{
+background:var(--card); border:1px solid var(--line);
+border-radius:16px; padding:20px
+}
+
+/* LOGO XXL dentro de la caja */
+.brand__logo{
+height:360px; width:auto; display:block; margin:0 auto 20px auto;
+image-rendering:-webkit-optimize-contrast;
+}
+h1{margin:0 0 8px;font-size:22px;text-align:center}
+.muted{color:var(--muted);margin:0 0 16px;text-align:center}
+
+label{display:block;margin:12px 0 6px}
+select,input{
+width:100%;padding:12px;border-radius:10px;
+border:1px solid var(--line);background:#0f172a;color:#fff
+}
+.slots{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 16px}
+.slot{
+padding:10px 12px;border-radius:10px;
+border:1px solid var(--line);background:#111827;
+color:#e5e7eb;cursor:pointer
+}
+.slot.sel{outline:2px solid var(--ok)}
+button{
+width:100%; padding:12px 14px;border-radius:10px;border:1px solid var(--ok);
+background:var(--ok);color:#0b1220;font-weight:800;cursor:pointer
+}
+button:disabled{opacity:.6;cursor:not-allowed}
+.msg{margin-top:10px;color:var(--muted);white-space:pre-wrap;text-align:center}
+
+@media(max-width:600px){
+.brand__logo{height:270px; margin-bottom:16px}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+<div class="box">
+<!-- Logo + encabezado -->
+<h1 class="sr-only">LyS Lavados – Reservá tu turno</h1>
+<img src="logo-lys.png" alt="LyS Lavados" class="brand__logo">
+<p class="muted">Elegí el día, el horario disponible y el servicio. Te confirmamos por WhatsApp.</p>
+
+<label for="dia">Día (próximos 14)</label>
+<select id="dia"><option value="">Cargando días…</option></select>
+
+<div id="bloque-slots" style="display:none">
+<div class="muted" id="subfecha"></div>
+<div id="slots" class="slots"></div>
+</div>
+
+<label>Nombre y Apellido</label>
+<input id="nombre" placeholder="Juan Pérez">
+<label>Teléfono</label>
+<input id="telefono" placeholder="2994...">
+<label>Dirección</label>
+<input id="direccion" placeholder="Calle y número, barrio">
+<label>Servicio</label>
+<select id="servicio">
+<option value="Exterior">Exterior – $15.000</option>
+<option value="Interior">Interior – $15.000</option>
+<option value="Completo">Completo – $25.000</option>
+<option value="Full">Full – $35.000</option>
+</select>
+
+<div style="margin-top:14px">
+<button id="btn">Reservar</button>
+</div>
+<div id="msg" class="msg"></div>
+</div>
+</main>
+
+<script>
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyDd--FDaQPnqG_LQ4MzLuRmIQc99Y0WK1Axpwh3Tc4GX1DLCHn77XTr2-wBZUVCuVO/exec';
+
+const $dia = document.getElementById('dia');
+const $slots = document.getElementById('slots');
+const $sub = document.getElementById('subfecha');
+const $bloque = document.getElementById('bloque-slots');
+const $msg = document.getElementById('msg');
+
+const S = { map:new Map(), selFecha:null, selHora:null };
+
+const pad = n => String(n).padStart(2,'0');
+function niceFecha(iso){
+const [y,m,d]=iso.split('-').map(Number);
+const dt=new Date(y,(m||1)-1,d);
+const dias=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+return `${dias[dt.getDay()]} ${pad(d)}/${pad(m)}`;
+}
+
+async function cargarDias(){
+$msg.textContent = 'Cargando disponibilidad…';
+try{
+const r = await fetch(`${WEBAPP_URL}?action=slots14&days=14&t=${Date.now()}`);
+const j = await r.json();
+if (!j.ok || !Array.isArray(j.rows)) throw new Error(j.error||'Respuesta inválida');
+
+$dia.innerHTML = '<option value="">Elegí un día…</option>' +
+j.rows.map(d => {
+const libres = (d.count ?? (d.slots? d.slots.length : 0));
+return `<option value="${d.fecha}">${niceFecha(d.fecha)} — ${libres} libres</option>`;
+}).join('');
+
+S.map = new Map(j.rows.map(x => [x.fecha, x.slots]));
+$msg.textContent = '';
+}catch(e){
+console.error(e);
+$msg.textContent = '⚠️ No se pudieron cargar los días. ' + e.message;
+}
+}
+
+$dia.addEventListener('change', () => {
+S.selFecha = $dia.value || null;
+S.selHora = null;
+if (!S.selFecha){ $bloque.style.display='none'; return; }
+const libres = S.map.get(S.selFecha) || [];
+$sub.textContent = `Horarios disponibles para ${S.selFecha}`;
+$slots.innerHTML = libres.length
+? libres.map(h => `<button type="button" class="slot" data-h="${h}">${h}</button>`).join('')
+: '<span class="muted">No hay horarios libres en este día.</span>';
+$bloque.style.display = 'block';
+});
+
+$slots.addEventListener('click', (ev) => {
+const b = ev.target.closest('.slot'); if(!b) return;
+S.selHora = b.dataset.h;
+[...$slots.querySelectorAll('.slot')].forEach(el => el.classList.toggle('sel', el===b));
+});
+
+document.getElementById('btn').onclick = async () => {
+$msg.textContent = '';
+const nombre = document.getElementById('nombre').value.trim();
+const telefono = document.getElementById('telefono').value.trim();
+const direccion = document.getElementById('direccion').value.trim();
+const servicio = document.getElementById('servicio').value;
+const btn = document.getElementById('btn');
+
+if (!S.selFecha || !S.selHora || !nombre || !telefono || !direccion){
+$msg.textContent = '⚠️ Completá todos los campos y elegí día y horario.'; return;
+}
+
+try{
+btn.disabled = true;
+btn.textContent = "Reservando…";
+
+const qs = new URLSearchParams({
+action:'create',
+fecha:S.selFecha, hora:S.selHora, servicio,
+nombre, telefono, direccion
+});
+const res = await fetch(`${WEBAPP_URL}?${qs.toString()}`);
+const j = await res.json();
+if (!j.ok) throw new Error(j.error||'No se pudo reservar');
+
+const booking = { id:j.id, nombre, telefono, direccion, servicio,
+fecha:S.selFecha, hora:S.selHora };
+sessionStorage.setItem('lastBooking', JSON.stringify(booking));
+location.href = 'success.html';
+}catch(e){
+$msg.textContent = '⚠️ ' + e.message;
+btn.disabled = false;
+btn.textContent = "Reservar";
+}
+};
+
+document.addEventListener('DOMContentLoaded', cargarDias);
+</script>
+</body>
+</html>
