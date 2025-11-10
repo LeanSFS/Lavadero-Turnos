@@ -1,122 +1,96 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <link rel="icon" type="image/png" href="favicon.png">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LyS Lavados – ¡Reserva hecha!</title>
-<style>
-  :root{--bg:#0f172a;--card:#0b1220;--line:#1f2937;--muted:#9ca3af;--ok:#22c55e;--ok-ink:#0b1220}
-  body{
-    font-family:system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
-    background:var(--bg); color:#fff; margin:0; padding:24px
-  }
-  .wrap{ max-width:720px; margin:0 auto }
-  .box{
-    background:var(--card); border:1px solid var(--line);
-    border-radius:16px; padding:20px; text-align:center;
-  }
-
-  /* LOGO MUY GRANDE */
-  .brand__logo{
-    height:360px; width:auto; display:block; margin:0 auto 20px auto;
-    image-rendering:-webkit-optimize-contrast;
-  }
-
-  h1{ margin:6px 0 6px; font-size:28px; text-align:center }
-  p.muted{ color:var(--muted); margin:0 0 16px; text-align:center }
-
-  .card{
-    border:1px solid var(--line); background:#0c1526;
-    border-radius:12px; padding:14px 16px; margin-top:10px; text-align:left;
-  }
-  .row{ display:flex; gap:10px; margin:6px 0; align-items:baseline }
-  .lbl{ color:#9ca3af; min-width:92px; font-size:14px }
-  .val{ color:#e5e7eb; font-weight:600 }
-
-  .actions{ display:flex; gap:10px; margin-top:16px }
-  .btn{
-    flex:1; padding:12px 14px; border-radius:10px; border:1px solid var(--ok);
-    background:var(--ok); color:var(--ok-ink); font-weight:800; cursor:pointer; text-align:center;
-    text-decoration:none;
-  }
-  .btn.sec{
-    background:transparent; color:#e5e7eb; border-color:#2a3a52
-  }
-
-  @media(max-width:600px){
-    .brand__logo{ height:270px; margin-bottom:16px }
-    .actions{ flex-direction:column }
-  }
-</style>
-</head>
-<body>
-  <main class="wrap">
-    <div class="box">
-      <img src="logo-lys.png" alt="LyS Lavados" class="brand__logo">
-      <h1>¡Reserva realizada!</h1>
-      <p class="muted">Te vamos a escribir por WhatsApp para confirmar el turno. 👌</p>
-
-      <div id="detalles" class="card" style="display:none">
-        <div class="row"><div class="lbl">Fecha</div><div class="val" id="v-fecha">—</div></div>
-        <div class="row"><div class="lbl">Hora</div><div class="val" id="v-hora">—</div></div>
-        <div class="row"><div class="lbl">Servicio</div><div class="val" id="v-servicio">—</div></div>
-        <div class="row"><div class="lbl">Nombre</div><div class="val" id="v-nombre">—</div></div>
-        <div class="row"><div class="lbl">Dirección</div><div class="val" id="v-direccion">—</div></div>
-      </div>
-
-      <div id="sinDatos" class="card" style="display:none">
-        <p class="muted" style="margin:0;text-align:left">
-          No encontramos los datos de la reserva en este dispositivo. Si llegaste aquí por error,
-          volvé a la página de reservas para generar un turno.
-        </p>
-      </div>
-
-      <div class="actions">
-        <a class="btn" href="reserva.html">Hacer otra reserva</a>
-        <a class="btn sec" href="index.html">Volver al inicio</a>
-      </div>
-    </div>
-  </main>
-
-<script>
-  // Formatea "YYYY-MM-DD" -> "Lun 05/09"
-  const pad = n => String(n).padStart(2,'0');
-  function niceFecha(iso){
-    const [y,m,d] = iso.split('-').map(Number);
-    const dt = new Date(y,(m||1)-1,d||1);
-    const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-    return `${dias[dt.getDay()]} ${pad(d)}/${pad(m)}`;
-  }
-
-  (function init(){
-    try{
-      const raw = sessionStorage.getItem('lastBooking');
-      const bloqueDatos = document.getElementById('detalles');
-      const bloqueSin = document.getElementById('sinDatos');
-
-      if(!raw){
-        bloqueSin.style.display = 'block';
-        return;
-      }
-      const b = JSON.parse(raw || '{}');
-      if(!b || !b.fecha || !b.hora){
-        bloqueSin.style.display = 'block';
-        return;
-      }
-
-      document.getElementById('v-fecha').textContent = niceFecha(b.fecha);
-      document.getElementById('v-hora').textContent = b.hora;
-      document.getElementById('v-servicio').textContent = b.servicio || '—';
-      document.getElementById('v-nombre').textContent = b.nombre || '—';
-      document.getElementById('v-direccion').textContent = b.direccion || '—';
-
-      bloqueDatos.style.display = 'block';
-    }catch(e){
-      console.error(e);
-      document.getElementById('sinDatos').style.display = 'block';
-    }
-  })();
-</script>
-</body>
-</html>
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/success.html b/success.html
+index 898ed37dc1a0d0440803c63fe2e7d48f566dcf05..32549fff02d9769ec3890b27de84608afee21198 100644
+--- a/success.html
++++ b/success.html
+@@ -38,85 +38,87 @@
+   .btn{
+     flex:1; padding:12px 14px; border-radius:10px; border:1px solid var(--ok);
+     background:var(--ok); color:var(--ok-ink); font-weight:800; cursor:pointer; text-align:center;
+     text-decoration:none;
+   }
+   .btn.sec{
+     background:transparent; color:#e5e7eb; border-color:#2a3a52
+   }
+ 
+   @media(max-width:600px){
+     .brand__logo{ height:270px; margin-bottom:16px }
+     .actions{ flex-direction:column }
+   }
+ </style>
+ </head>
+ <body>
+   <main class="wrap">
+     <div class="box">
+       <img src="logo-lys.png" alt="LyS Lavados" class="brand__logo">
+       <h1>¡Reserva realizada!</h1>
+       <p class="muted">Te vamos a escribir por WhatsApp para confirmar el turno. 👌</p>
+ 
+       <div id="detalles" class="card" style="display:none">
+         <div class="row"><div class="lbl">Fecha</div><div class="val" id="v-fecha">—</div></div>
+         <div class="row"><div class="lbl">Hora</div><div class="val" id="v-hora">—</div></div>
++        <div class="row"><div class="lbl">Vehículo</div><div class="val" id="v-vehiculo">—</div></div>
+         <div class="row"><div class="lbl">Servicio</div><div class="val" id="v-servicio">—</div></div>
+         <div class="row"><div class="lbl">Nombre</div><div class="val" id="v-nombre">—</div></div>
+         <div class="row"><div class="lbl">Dirección</div><div class="val" id="v-direccion">—</div></div>
+       </div>
+ 
+       <div id="sinDatos" class="card" style="display:none">
+         <p class="muted" style="margin:0;text-align:left">
+           No encontramos los datos de la reserva en este dispositivo. Si llegaste aquí por error,
+           volvé a la página de reservas para generar un turno.
+         </p>
+       </div>
+ 
+       <div class="actions">
+         <a class="btn" href="reserva.html">Hacer otra reserva</a>
+         <a class="btn sec" href="index.html">Volver al inicio</a>
+       </div>
+     </div>
+   </main>
+ 
+ <script>
+   // Formatea "YYYY-MM-DD" -> "Lun 05/09"
+   const pad = n => String(n).padStart(2,'0');
+   function niceFecha(iso){
+     const [y,m,d] = iso.split('-').map(Number);
+     const dt = new Date(y,(m||1)-1,d||1);
+     const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+     return `${dias[dt.getDay()]} ${pad(d)}/${pad(m)}`;
+   }
+ 
+   (function init(){
+     try{
+       const raw = sessionStorage.getItem('lastBooking');
+       const bloqueDatos = document.getElementById('detalles');
+       const bloqueSin = document.getElementById('sinDatos');
+ 
+       if(!raw){
+         bloqueSin.style.display = 'block';
+         return;
+       }
+       const b = JSON.parse(raw || '{}');
+       if(!b || !b.fecha || !b.hora){
+         bloqueSin.style.display = 'block';
+         return;
+       }
+ 
+       document.getElementById('v-fecha').textContent = niceFecha(b.fecha);
+       document.getElementById('v-hora').textContent = b.hora;
++      document.getElementById('v-vehiculo').textContent = b.vehiculo || '—';
+       document.getElementById('v-servicio').textContent = b.servicio || '—';
+       document.getElementById('v-nombre').textContent = b.nombre || '—';
+       document.getElementById('v-direccion').textContent = b.direccion || '—';
+ 
+       bloqueDatos.style.display = 'block';
+     }catch(e){
+       console.error(e);
+       document.getElementById('sinDatos').style.display = 'block';
+     }
+   })();
+ </script>
+ </body>
+ </html>
+ 
+EOF
+)
