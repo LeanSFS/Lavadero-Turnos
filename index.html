@@ -32,43 +32,44 @@
       font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;
       color:#fff;
       min-height:100vh;
-      padding:16px 10px 72px; /* espacio para sticky CTA */
+      padding:18px 12px 80px; /* espacio para sticky CTA */
       background:
         radial-gradient(900px 600px at 0% 0%, rgba(34,197,94,0.10), transparent),
         radial-gradient(700px 500px at 100% 0%, rgba(56,189,248,0.06), transparent),
         #020817;
+      font-size:15px;
     }
 
     .wrap{
-      max-width:480px;
+      max-width:520px;
       margin:0 auto;
     }
 
     .card{
       background:var(--card);
-      border-radius:18px;
-      padding:16px 14px 14px;
+      border-radius:20px;
+      padding:18px 16px 16px;
       border:1px solid rgba(148,163,253,0.12);
       box-shadow:0 18px 40px rgba(0,0,0,0.6);
     }
 
     .brand-logo{
       display:block;
-      height:80px;
+      height:84px;
       margin:0 auto 8px auto;
     }
 
     .tagline{
       text-align:center;
-      font-size:10px;
+      font-size:11px;
       color:var(--muted);
       letter-spacing:0.14em;
       text-transform:uppercase;
-      margin-bottom:4px;
+      margin-bottom:6px;
     }
 
     h1{
-      font-size:20px;
+      font-size:24px;
       text-align:center;
       font-weight:800;
       color:var(--title);
@@ -76,10 +77,11 @@
     }
 
     .hero-lead{
-      font-size:12px;
-      color:#cbd5e1;
+      font-size:14px;
+      color:#e5e7eb;
       text-align:center;
-      margin-bottom:10px;
+      margin-bottom:12px;
+      line-height:1.4;
     }
 
     .chips{
@@ -87,14 +89,14 @@
       flex-wrap:wrap;
       gap:6px;
       justify-content:center;
-      margin-bottom:10px;
+      margin-bottom:14px;
     }
     .chip{
-      padding:5px 8px;
+      padding:6px 9px;
       border-radius:999px;
       border:1px solid var(--line);
-      font-size:9px;
-      color:#9ca3af;
+      font-size:11px;
+      color:#e5e7eb;
       background:#020817;
       display:flex;
       align-items:center;
@@ -103,25 +105,24 @@
 
     /* BLOQUE: elegir vehículo */
     .veh-toggle{
-      margin-top:4px;
-      margin-bottom:10px;
-      padding:10px 9px 9px;
-      border-radius:14px;
+      margin-bottom:14px;
+      padding:12px 10px 10px;
+      border-radius:16px;
       background:#020817;
-      border:1px solid rgba(34,197,94,0.35);
-      box-shadow:0 0 18px rgba(34,197,94,0.14);
+      border:1px solid rgba(34,197,94,0.45);
+      box-shadow:0 0 18px rgba(34,197,94,0.16);
     }
     .veh-label{
       display:flex;
       align-items:flex-start;
-      gap:6px;
-      font-size:12px;
+      gap:8px;
+      font-size:14px;
       font-weight:600;
       color:#22c55e;
-      margin-bottom:6px;
+      margin-bottom:8px;
     }
     .veh-label .icon{
-      font-size:16px;
+      font-size:18px;
       line-height:1;
       margin-top:1px;
     }
@@ -133,34 +134,39 @@
     .veh-buttons{
       display:grid;
       grid-template-columns:1fr;
-      gap:6px;
+      gap:8px;
     }
-    @media (min-width:480px){
+    @media (min-width:520px){
       .veh-buttons{
         grid-template-columns:repeat(3,minmax(0,1fr));
       }
     }
     .veh-btn{
       width:100%;
-      padding:7px 9px;
+      padding:9px 10px;
       border-radius:999px;
       border:1px solid #293548;
       background:#020817;
-      color:#9ca3af;
-      font-size:11px;
+      color:#e5e7eb;
+      font-size:12px;
       cursor:pointer;
       display:flex;
-      align-items:center;
-      gap:6px;
+      align-items:flex-start;
+      gap:8px;
       transition:all .16s ease;
       text-align:left;
     }
     .veh-btn span{
-      font-size:14px;
+      font-size:16px;
+      line-height:1.1;
+    }
+    .veh-btn small{
+      display:block;
+      font-size:10px;
+      color:#9ca3af;
     }
     .veh-btn:hover{
       border-color:#22c55e;
-      color:#e5e7eb;
       transform:translateY(-1px);
     }
     .veh-btn-init{
@@ -186,29 +192,29 @@
 
     /* Servicios */
     .svc-title-label{
-      font-size:11px;
+      font-size:13px;
       color:var(--muted);
-      margin:2px 0 4px;
+      margin:4px 0 6px;
     }
 
     .svc{
       border:1px solid var(--line);
       background:#020817;
-      border-radius:12px;
-      padding:8px 9px 7px;
-      margin-bottom:6px;
+      border-radius:14px;
+      padding:9px 10px 8px;
+      margin-bottom:8px;
     }
     .svc-head{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:6px;
-      margin-bottom:3px;
+      gap:8px;
+      margin-bottom:4px;
     }
     .svc-title{
       font-weight:700;
       color:#e5e7eb;
-      font-size:13px;
+      font-size:15px;
     }
 
     .price-wrap{
@@ -217,24 +223,24 @@
       gap:4px;
     }
     .price-label{
-      font-size:9px;
+      font-size:10px;
       color:var(--muted);
     }
     .price-wrap.price-active .price-label{
-      color:#9ca3af;
+      color:#cbd5e1;
     }
 
     .pill{
-      font-size:10px;
+      font-size:11px;
       font-weight:700;
-      padding:3px 8px;
+      padding:4px 10px;
       border-radius:999px;
       white-space:nowrap;
       transition:all .18s ease;
     }
     .pill-init{
       color:#bbf7d0;
-      background:rgba(34,197,94,0.12);
+      background:rgba(34,197,94,0.14);
       border:1px solid rgba(34,197,94,0.38);
       box-shadow:0 0 8px rgba(34,197,94,0.18);
       animation:pulseSoft 1.4s ease-in-out infinite;
@@ -249,52 +255,55 @@
 
     .svc-list{
       margin:0;
-      padding-left:14px;
-      color:#9ca3af;
-      font-size:10px;
+      padding-left:16px;
+      color:#d1d5db;
+      font-size:12px;
+      line-height:1.5;
     }
     .svc-list li{ margin:1px 0; }
 
     .note{
       color:#9ca3af;
-      font-size:9px;
-      margin-top:4px;
-      line-height:1.45;
+      font-size:10px;
+      margin-top:6px;
+      line-height:1.5;
     }
 
-    /* Social */
+    /* Social: ahora más visibles */
     .socials{
       display:flex;
       flex-wrap:wrap;
-      gap:5px;
-      margin-top:8px;
+      gap:8px;
+      margin-top:10px;
     }
     .social-btn{
       flex:1;
-      padding:6px 8px;
+      padding:8px 10px;
       border-radius:999px;
-      border:1px solid #111827;
-      background:#020817;
-      color:#9ca3af;
-      font-size:9px;
+      border:1px solid #22c55e;
+      background:#0b1726;
+      color:#e5e7eb;
+      font-size:11px;
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:4px;
+      gap:6px;
       text-decoration:none;
+      font-weight:600;
       transition:all .16s ease;
     }
     .social-btn:hover{
-      border-color:#22c55e;
-      color:#e5e7eb;
+      background:#22c55e;
+      color:#020817;
       transform:translateY(-1px);
+      box-shadow:0 6px 16px rgba(34,197,94,0.5);
     }
 
     /* Sticky CTA */
     .sticky-cta{
       position:fixed;
       left:0; right:0; bottom:0;
-      padding:8px 10px 10px;
+      padding:10px 12px 12px;
       background:linear-gradient(to top, rgba(2,8,23,0.98), rgba(2,8,23,0.9));
       display:flex;
       justify-content:center;
@@ -306,17 +315,17 @@
       align-items:center;
       justify-content:center;
       gap:8px;
-      padding:9px 18px;
+      padding:11px 20px;
       border-radius:999px;
       border:1px solid #16a34a;
       background:var(--cta);
       color:var(--cta-ink);
       font-weight:800;
-      font-size:13px;
+      font-size:15px;
       text-decoration:none;
       box-shadow:0 10px 26px rgba(22,163,74,0.7);
       width:100%;
-      max-width:420px;
+      max-width:520px;
       transition:all .14s ease;
     }
     .cta-main:hover{
@@ -325,10 +334,10 @@
     }
 
     footer{
-      margin-top:10px;
+      margin-top:12px;
       text-align:center;
       color:#6b7280;
-      font-size:9px;
+      font-size:10px;
     }
     .mate-link{
       cursor:pointer;
@@ -343,14 +352,8 @@
 
     @media (min-width:600px){
       body{
-        padding-top:22px;
-        padding-bottom:80px;
-      }
-      .card{
-        padding:18px 16px 16px;
-      }
-      h1{
-        font-size:22px;
+        padding-top:24px;
+        padding-bottom:90px;
       }
     }
   </style>
@@ -363,7 +366,8 @@
     <div class="tagline">LAVADO A DOMICILIO • CIPOLLETTI</div>
     <h1>Tu auto limpio sin moverte de casa.</h1>
     <p class="hero-lead">
-      Elegí tu tipo de vehículo, mirá el precio final al instante y reservá tu turno online. Vamos a tu domicilio con todo lo necesario.
+      Elegí tu tipo de vehículo, mirá el precio final al instante y reservá tu turno online.
+      Vamos a tu domicilio con todo lo necesario.
     </p>
 
     <div class="chips">
@@ -386,21 +390,21 @@
           <span>🚗</span>
           <div>
             Auto chico / mediano
-            <div style="font-size:9px;color:#6b7280;">Ej: Clio, Gol, 208, Onix…</div>
+            <small>Ej: Clio, Gol, 208, Onix…</small>
           </div>
         </button>
         <button type="button" class="veh-btn veh-btn-init" data-type="suv">
           <span>🚙</span>
           <div>
             SUV / camioneta chica / utilitario
-            <div style="font-size:9px;color:#6b7280;">Ej: Duster, Tracker, Kangoo…</div>
+            <small>Ej: Duster, Tracker, Kangoo…</small>
           </div>
         </button>
         <button type="button" class="veh-btn veh-btn-init" data-type="pickup">
           <span>🛻</span>
           <div>
             Pickup / camioneta grande
-            <div style="font-size:9px;color:#6b7280;">Ej: Hilux, Amarok, Ranger…</div>
+            <small>Ej: Hilux, Amarok, Ranger…</small>
           </div>
         </button>
       </div>
@@ -430,7 +434,7 @@
         <div class="svc-title">Interior</div>
         <div class="price-wrap">
           <span class="price-label">Precio:</span>
-          <!-- Ahora también arranca oculto y se muestra $20.000 cuando eligen tipo -->
+          <!-- Se revela $20.000 al elegir tipo, sin extra -->
           <span class="pill pill-init" data-base="20000">Elegí tu vehículo ↑</span>
         </div>
       </div>
@@ -475,15 +479,15 @@
       autos chicos/medianos = precio base;
       SUV / camioneta chica / utilitario = +$5.000;
       pickups / camionetas grandes = +$15.000.
-      El servicio Interior mantiene el mismo valor ($20.000) para todos.
+      El servicio Interior mantiene el mismo valor para todos ($20.000).
       En la reserva online vas a ver el monto final antes de confirmar.
     </p>
 
-    <!-- Redes -->
+    <!-- Redes / contacto visibles -->
     <div class="socials">
-      <a class="social-btn" href="https://wa.me/2995760611" target="_blank" rel="noopener">💬 WhatsApp directo</a>
-      <a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank" rel="noopener">📸 Instagram</a>
-      <a class="social-btn" href="https://www.facebook.com/profile.php?id=61580252349290" target="_blank" rel="noopener">📘 Facebook</a>
+      <a class="social-btn" href="https://wa.me/2995760611" target="_blank" rel="noopener">💬 Escribinos por WhatsApp</a>
+      <a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank" rel="noopener">📸 Ver trabajos en Instagram</a>
+      <a class="social-btn" href="https://www.facebook.com/profile.php?id=61580252349290" target="_blank" rel="noopener">📘 Seguinos en Facebook</a>
     </div>
   </section>
 
@@ -502,12 +506,7 @@
   // Año dinámico
   document.getElementById('y').textContent = new Date().getFullYear();
 
-  // Extras (no se aplican al Interior)
-  const TYPE_EXTRA = {
-    auto: 0,
-    suv: 5000,
-    pickup: 15000
-  };
+  const TYPE_EXTRA = { auto:0, suv:5000, pickup:15000 };
 
   const pillEls = document.querySelectorAll('.pill');
   const vehButtons = document.querySelectorAll('.veh-btn');
@@ -524,7 +523,6 @@
       const title = svc?.querySelector('.svc-title')?.textContent || '';
       const isInteriorSolo = title.includes('Interior') && !title.includes('Completo');
 
-      // Interior: siempre base; otros: base + extra
       const final = isInteriorSolo ? base : base + extra;
 
       pill.textContent = '$' + final.toLocaleString('es-AR');
@@ -541,7 +539,7 @@
       const tipo = btn.dataset.type;
 
       vehButtons.forEach(b => {
-        b.classList.remove('active', 'veh-btn-init');
+        b.classList.remove('active','veh-btn-init');
       });
       btn.classList.add('active');
 
