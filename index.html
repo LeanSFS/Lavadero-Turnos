@@ -104,6 +104,50 @@ p{
   display:grid;
   gap:12px;
 }
+
+/* Selector de tipo de vehículo */
+.veh-toggle{
+  margin-top:14px;
+  margin-bottom:6px;
+}
+.veh-label{
+  font-size:13px;
+  color:var(--muted);
+  margin:0 0 6px;
+}
+.veh-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.veh-btn{
+  flex:1;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:999px;
+  border:1px solid #2a3a52;
+  background:#0b1220;
+  color:#9ca3af;
+  font-size:13px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  transition:all .16s ease;
+}
+.veh-btn span{
+  font-size:15px;
+}
+.veh-btn.active{
+  background:var(--cta);
+  color:var(--cta-ink);
+  border-color:#16a34a;
+  box-shadow:var(--ring);
+  font-weight:700;
+}
+
+/* Servicios */
 .svc{
   border:1px solid var(--line);
   background:#0c1526;
@@ -131,6 +175,14 @@ p{
   padding:6px 10px;
   border-radius:999px;
   white-space:nowrap;
+  /* estado inicial: difuminado hasta que elijan vehículo */
+  filter:blur(4px);
+  opacity:.25;
+  transition:all .18s ease;
+}
+.pill-visible{
+  filter:none;
+  opacity:1;
 }
 .svc-list{
   margin:0;
@@ -230,14 +282,32 @@ footer{
       </div>
 
       <div class="services">
+        <!-- Selector de tipo de vehículo -->
+        <div class="veh-toggle">
+          <p id="veh-label" class="veh-label">
+            Elegí tu tipo de vehículo para ver los precios finales:
+          </p>
+          <div class="veh-buttons">
+            <button type="button" class="veh-btn" data-type="auto">
+              <span>🚗</span> Auto chico / mediano
+            </button>
+            <button type="button" class="veh-btn" data-type="suv">
+              <span>🚙</span> SUV / Monovolumen
+            </button>
+            <button type="button" class="veh-btn" data-type="pickup">
+              <span>🛻</span> Pickup / Camioneta grande
+            </button>
+          </div>
+        </div>
+
         <p class="muted" style="margin-top:10px">
-          Qué incluye cada lavado (precios para autos chicos/medianos en estado normal)
+          Qué incluye cada lavado
         </p>
 
         <div class="svc">
           <div class="svc-head">
             <div class="svc-title">Exterior</div>
-            <span class="pill">$15.000</span>
+            <span class="pill" data-base="15000">Seleccioná vehículo</span>
           </div>
           <ul class="svc-list">
             <li>Prelavado con snow foam.</li>
@@ -251,7 +321,7 @@ footer{
         <div class="svc">
           <div class="svc-head">
             <div class="svc-title">Interior</div>
-            <span class="pill">$20.000</span>
+            <span class="pill" data-base="20000">Seleccioná vehículo</span>
           </div>
           <ul class="svc-list">
             <li>Aspirado completo (alfombras, asientos, baúl).</li>
@@ -263,7 +333,7 @@ footer{
         <div class="svc">
           <div class="svc-head">
             <div class="svc-title">Completo (Exterior + Interior)</div>
-            <span class="pill">$25.000</span>
+            <span class="pill" data-base="25000">Seleccioná vehículo</span>
           </div>
           <ul class="svc-list">
             <li>Todo lo del Exterior + todo lo del Interior.</li>
@@ -273,7 +343,7 @@ footer{
         <div class="svc">
           <div class="svc-head">
             <div class="svc-title">Full (detallado ligero)</div>
-            <span class="pill">$35.000</span>
+            <span class="pill" data-base="35000">Seleccioná vehículo</span>
           </div>
           <ul class="svc-list">
             <li>Completo + limpieza más detallada del interior.</li>
@@ -283,11 +353,9 @@ footer{
         </div>
 
         <p class="note">
-          🔹 Los precios publicados aplican a autos chicos o medianos en condiciones normales.<br>
-          🔹 SUV / monovolumen: adicional fijo de <strong>$5.000</strong> sobre el valor publicado.<br>
-          🔹 Pickups / camionetas grandes: adicional fijo de <strong>$15.000</strong> sobre el valor publicado.<br>
-          🔹 Al reservar tu turno online te mostramos el precio final según el tipo de vehículo seleccionado.<br>
-          🔹 Precios para consumidor final. Facturación a empresas puede tener costos adicionales.
+          Los precios se actualizan según el tipo de vehículo que elijas arriba.
+          En la reserva online también verás el monto final antes de enviar tu solicitud.
+          Precios para consumidor final. Facturación a empresas puede tener costos adicionales.
         </p>
 
         <div class="sticky-cta">
@@ -314,7 +382,47 @@ footer{
   // Año dinámico
   document.getElementById('y').textContent = new Date().getFullYear();
 
-  // Acceso oculto admin (ojo: visible en el código, úsalo solo para cosas livianas)
+  // Config precios
+  const TYPE_EXTRA = {
+    auto: 0,
+    suv: 5000,
+    pickup: 15000
+  };
+
+  const pillEls = document.querySelectorAll('.pill');
+  const vehButtons = document.querySelectorAll('.veh-btn');
+  const vehLabel = document.getElementById('veh-label');
+
+  function actualizarPills(tipo) {
+    const extra = TYPE_EXTRA[tipo];
+    pillEls.forEach(pill => {
+      const base = Number(pill.dataset.base);
+      if (Number.isNaN(base)) return;
+      const final = base + extra;
+      pill.textContent = '$' + final.toLocaleString('es-AR');
+      pill.classList.add('pill-visible');
+    });
+  }
+
+  vehButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tipo = btn.dataset.type;
+
+      vehButtons.forEach(b => b.classList.toggle('active', b === btn));
+
+      if (tipo === 'auto') {
+        vehLabel.textContent = 'Mostrando precios finales para autos chicos / medianos.';
+      } else if (tipo === 'suv') {
+        vehLabel.textContent = 'Mostrando precios finales para SUV / Monovolumen (incluye +$5.000).';
+      } else if (tipo === 'pickup') {
+        vehLabel.textContent = 'Mostrando precios finales para pickups / camionetas grandes (incluye +$15.000).';
+      }
+
+      actualizarPills(tipo);
+    });
+  });
+
+  // Link oculto admin (recordá que es visible en el código)
   const ADMIN_URL  = 'admin.html';
   const ADMIN_PASS = 'yerba';
 
