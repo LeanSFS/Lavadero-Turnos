@@ -361,13 +361,13 @@
           </p>
           <div class="veh-buttons">
             <button type="button" class="veh-btn veh-btn-init" data-type="auto">
-              <span>🚗</span> Auto chico / mediano
+              <span>🚗</span> Auto chico / Mediano
             </button>
             <button type="button" class="veh-btn veh-btn-init" data-type="suv">
-              <span>🚙</span> SUV / Monovolumen
+              <span>🚙</span> SUV / Camioneta Chjica
             </button>
             <button type="button" class="veh-btn veh-btn-init" data-type="pickup">
-              <span>🛻</span> Pickup / Camioneta grande
+              <span>🛻</span> Pickup / Camioneta Grande
             </button>
           </div>
         </div>
@@ -504,11 +504,11 @@
       btn.classList.add('active');
 
       if (tipo === 'auto') {
-        vehLabel.innerHTML = '<span class="icon">🚘</span><span>Precios para autos chicos / medianos.</span>';
+        vehLabel.innerHTML = '<span class="icon">🚘</span><span>Precios para autos chicos / Medianos.</span>';
       } else if (tipo === 'suv') {
-        vehLabel.innerHTML = '<span class="icon">🚘</span><span>Precios para SUV / Monovolumen (incluye +$5.000).</span>';
+        vehLabel.innerHTML = '<span class="icon">🚘</span><span>Precios para SUV / Camioneta Chica (incluye +$5.000).</span>';
       } else if (tipo === 'pickup') {
-        vehLabel.innerHTML = '<span class="icon">🚘</span><span>Precios para pickups / camionetas grandes (incluye +$15.000).</span>';
+        vehLabel.innerHTML = '<span class="icon">🚘</span><span>Precios para pickups / Camionetas Grandes (incluye +$15.000).</span>';
       }
 
       actualizarPills(tipo);
