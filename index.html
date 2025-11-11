@@ -112,7 +112,7 @@
       gap:12px;
     }
 
-    /* Selector de tipo de vehículo */
+    /* Selector tipo vehículo */
     .veh-toggle{
       margin-top:14px;
       margin-bottom:6px;
@@ -151,6 +151,12 @@
       color:#e5e7eb;
       transform:translateY(-1px);
     }
+    /* Mismo glow inicial que las pills */
+    .veh-btn-init{
+      box-shadow:0 0 14px rgba(34,197,94,0.18);
+      border-color:rgba(34,197,94,0.35);
+      animation:pillPulse 1.4s ease-in-out infinite;
+    }
     .veh-btn.active{
       background:var(--cta);
       color:var(--cta-ink);
@@ -158,6 +164,7 @@
       box-shadow:var(--ring);
       font-weight:700;
       transform:translateY(-1px);
+      animation:none;
     }
 
     /* Servicios */
@@ -180,6 +187,21 @@
       font-size:18px;
     }
 
+    .price-wrap{
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .price-label{
+      font-size:11px;
+      color:var(--muted);
+      opacity:.9;
+    }
+    .price-wrap.price-active .price-label{
+      color:#9ca3af;
+      opacity:1;
+    }
+
     .pill{
       font-size:12px;
       font-weight:700;
@@ -188,7 +210,6 @@
       white-space:nowrap;
       transition:all .18s ease;
     }
-    /* Estado inicial: invita a elegir vehículo */
     .pill-init{
       color:#bbf7d0;
       background:rgba(34,197,94,0.10);
@@ -196,7 +217,6 @@
       box-shadow:0 0 14px rgba(34,197,94,0.18);
       animation:pillPulse 1.4s ease-in-out infinite;
     }
-    /* Estado con precio definido */
     .pill-visible{
       color:#0b1220;
       background:#22c55e;
@@ -204,6 +224,7 @@
       box-shadow:none;
       animation:none;
     }
+
     @keyframes pillPulse{
       0%{ transform:scale(1); box-shadow:0 0 10px rgba(34,197,94,0.16); opacity:.9; }
       50%{ transform:scale(1.03); box-shadow:0 0 18px rgba(34,197,94,0.32); opacity:1; }
@@ -284,7 +305,6 @@
       font-size:13px;
     }
 
-    /* Link oculto admin */
     .mate-link{
       cursor:pointer;
       border-bottom:1px dashed transparent;
@@ -325,14 +345,14 @@
             Elegí tu tipo de vehículo para ver los precios finales:
           </p>
           <div class="veh-buttons">
-            <button type="button" class="veh-btn" data-type="auto">
-              <span>🚗</span> Auto chico / mediano
+            <button type="button" class="veh-btn veh-btn-init" data-type="auto">
+              <span>🚗</span> Auto chico / Mediano
             </button>
-            <button type="button" class="veh-btn" data-type="suv">
-              <span>🚙</span> SUV / Monovolumen
+            <button type="button" class="veh-btn veh-btn-init" data-type="suv">
+              <span>🚙</span> SUV / Camioneta Chica
             </button>
-            <button type="button" class="veh-btn" data-type="pickup">
-              <span>🛻</span> Pickup / Camioneta grande
+            <button type="button" class="veh-btn veh-btn-init" data-type="pickup">
+              <span>🛻</span> Pickup / Camioneta Grande
             </button>
           </div>
         </div>
@@ -344,7 +364,10 @@
         <div class="svc">
           <div class="svc-head">
             <div class="svc-title">Exterior</div>
-            <span class="pill pill-init" data-base="15000">Elegí tu vehículo ↑</span>
+            <div class="price-wrap">
+              <span class="price-label">Precio:</span>
+              <span class="pill pill-init" data-base="15000">Elegí tu vehículo ↑</span>
+            </div>
           </div>
           <ul class="svc-list">
             <li>Prelavado con snow foam.</li>
@@ -358,7 +381,10 @@
         <div class="svc">
           <div class="svc-head">
             <div class="svc-title">Interior</div>
-            <span class="pill pill-init" data-base="20000">Elegí tu vehículo ↑</span>
+            <div class="price-wrap">
+              <span class="price-label">Precio:</span>
+              <span class="pill pill-init" data-base="20000">Elegí tu vehículo ↑</span>
+            </div>
           </div>
           <ul class="svc-list">
             <li>Aspirado completo (alfombras, asientos, baúl).</li>
@@ -370,7 +396,10 @@
         <div class="svc">
           <div class="svc-head">
             <div class="svc-title">Completo (Exterior + Interior)</div>
-            <span class="pill pill-init" data-base="25000">Elegí tu vehículo ↑</span>
+            <div class="price-wrap">
+              <span class="price-label">Precio:</span>
+              <span class="pill pill-init" data-base="25000">Elegí tu vehículo ↑</span>
+            </div>
           </div>
           <ul class="svc-list">
             <li>Todo lo del Exterior + todo lo del Interior.</li>
@@ -380,7 +409,10 @@
         <div class="svc">
           <div class="svc-head">
             <div class="svc-title">Full (detallado ligero)</div>
-            <span class="pill pill-init" data-base="35000">Elegí tu vehículo ↑</span>
+            <div class="price-wrap">
+              <span class="price-label">Precio:</span>
+              <span class="pill pill-init" data-base="35000">Elegí tu vehículo ↑</span>
+            </div>
           </div>
           <ul class="svc-list">
             <li>Completo + limpieza más detallada del interior.</li>
@@ -420,7 +452,7 @@
   // Año dinámico
   document.getElementById('y').textContent = new Date().getFullYear();
 
-  // Config extras
+  // Config extras por tipo
   const TYPE_EXTRA = {
     auto: 0,
     suv: 5000,
@@ -440,6 +472,9 @@
       pill.textContent = '$' + final.toLocaleString('es-AR');
       pill.classList.remove('pill-init');
       pill.classList.add('pill-visible');
+
+      const wrap = pill.closest('.price-wrap');
+      if (wrap) wrap.classList.add('price-active');
     });
   }
 
@@ -447,21 +482,26 @@
     btn.addEventListener('click', () => {
       const tipo = btn.dataset.type;
 
-      vehButtons.forEach(b => b.classList.toggle('active', b === btn));
+      // Limpiar estados iniciales / activos
+      vehButtons.forEach(b => {
+        b.classList.remove('active');
+        b.classList.remove('veh-btn-init');
+      });
+      btn.classList.add('active');
 
       if (tipo === 'auto') {
-        vehLabel.textContent = 'Mostrando precios finales para autos chicos / medianos.';
+        vehLabel.textContent = 'Mostrando precios finales para autos chicos / Medianos.';
       } else if (tipo === 'suv') {
-        vehLabel.textContent = 'Mostrando precios finales para SUV / Monovolumen (incluye +$5.000).';
+        vehLabel.textContent = 'Mostrando precios finales para SUV / Camioneta Chica (+$5.000).';
       } else if (tipo === 'pickup') {
-        vehLabel.textContent = 'Mostrando precios finales para pickups / camionetas grandes (incluye +$15.000).';
+        vehLabel.textContent = 'Mostrando precios finales para pickups / camionetas Grandes (+$15.000).';
       }
 
       actualizarPills(tipo);
     });
   });
 
-  // Link oculto admin (solo para cosas livianas, es visible en el código)
+  // Link oculto admin (visible en código, usar solo para cosas light)
   const ADMIN_URL  = 'admin.html';
   const ADMIN_PASS = 'yerba';
 
