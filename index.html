@@ -32,7 +32,7 @@
       font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;
       color:#fff;
       min-height:100vh;
-      padding:16px 10px 72px; /* espacio abajo para sticky CTA */
+      padding:16px 10px 72px; /* espacio para sticky CTA */
       background:
         radial-gradient(900px 600px at 0% 0%, rgba(34,197,94,0.10), transparent),
         radial-gradient(700px 500px at 100% 0%, rgba(56,189,248,0.06), transparent),
@@ -113,7 +113,7 @@
     }
     .veh-label{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       gap:6px;
       font-size:12px;
       font-weight:600;
@@ -122,20 +122,27 @@
     }
     .veh-label .icon{
       font-size:16px;
+      line-height:1;
+      margin-top:1px;
     }
-    .veh-label span.txt{
+    .veh-label .txt{
       color:#bbf7d0;
+      line-height:1.4;
     }
 
     .veh-buttons{
-      display:flex;
-      flex-wrap:wrap;
+      display:grid;
+      grid-template-columns:1fr;
       gap:6px;
     }
+    @media (min-width:480px){
+      .veh-buttons{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+    }
     .veh-btn{
-      flex:1;
-      min-width:0;
-      padding:7px 8px;
+      width:100%;
+      padding:7px 9px;
       border-radius:999px;
       border:1px solid #293548;
       background:#020817;
@@ -144,10 +151,9 @@
       cursor:pointer;
       display:flex;
       align-items:center;
-      justify-content:center;
       gap:6px;
       transition:all .16s ease;
-      white-space:nowrap;
+      text-align:left;
     }
     .veh-btn span{
       font-size:14px;
@@ -158,7 +164,7 @@
       transform:translateY(-1px);
     }
     .veh-btn-init{
-      box-shadow:0 0 10px rgba(34,197,94,0.20);
+      box-shadow:0 0 10px rgba(34,197,94,0.16);
       border-color:rgba(34,197,94,0.42);
       animation:pulseSoft 1.4s ease-in-out infinite;
     }
@@ -284,7 +290,7 @@
       transform:translateY(-1px);
     }
 
-    /* Sticky CTA para mobile */
+    /* Sticky CTA */
     .sticky-cta{
       position:fixed;
       left:0; right:0; bottom:0;
@@ -371,17 +377,31 @@
     <div class="veh-toggle">
       <p id="veh-label" class="veh-label">
         <span class="icon">🚘</span>
-        <span class="txt">Elegí tu tipo de vehículo para ver los precios:</span>
+        <span class="txt">
+          Elegí tu tipo de vehículo y vamos a actualizar automáticamente los precios de Exterior, Completo y Full.
+        </span>
       </p>
       <div class="veh-buttons">
         <button type="button" class="veh-btn veh-btn-init" data-type="auto">
-          <span>🚗</span> Auto chico / mediano
+          <span>🚗</span>
+          <div>
+            Auto chico / mediano
+            <div style="font-size:9px;color:#6b7280;">Ej: Clio, Gol, 208, Onix…</div>
+          </div>
         </button>
         <button type="button" class="veh-btn veh-btn-init" data-type="suv">
-          <span>🚙</span> SUV / camioneta chica / utilitario
+          <span>🚙</span>
+          <div>
+            SUV / camioneta chica / utilitario
+            <div style="font-size:9px;color:#6b7280;">Ej: Duster, Tracker, Kangoo…</div>
+          </div>
         </button>
         <button type="button" class="veh-btn veh-btn-init" data-type="pickup">
-          <span>🛻</span> Pickup / camioneta grande
+          <span>🛻</span>
+          <div>
+            Pickup / camioneta grande
+            <div style="font-size:9px;color:#6b7280;">Ej: Hilux, Amarok, Ranger…</div>
+          </div>
         </button>
       </div>
     </div>
@@ -410,8 +430,8 @@
         <div class="svc-title">Interior</div>
         <div class="price-wrap">
           <span class="price-label">Precio:</span>
-          <!-- Interior: fijo, no depende del tipo -->
-          <span class="pill pill-visible" data-base="20000">$20.000</span>
+          <!-- Ahora también arranca oculto y se muestra $20.000 cuando eligen tipo -->
+          <span class="pill pill-init" data-base="20000">Elegí tu vehículo ↑</span>
         </div>
       </div>
       <ul class="svc-list">
@@ -455,7 +475,7 @@
       autos chicos/medianos = precio base;
       SUV / camioneta chica / utilitario = +$5.000;
       pickups / camionetas grandes = +$15.000.
-      El servicio Interior se mantiene fijo en $20.000.
+      El servicio Interior mantiene el mismo valor ($20.000) para todos.
       En la reserva online vas a ver el monto final antes de confirmar.
     </p>
 
@@ -500,12 +520,12 @@
       const base = Number(pill.dataset.base);
       if (Number.isNaN(base)) return;
 
-      // Detectar si es el servicio Interior por título
       const svc = pill.closest('.svc');
       const title = svc?.querySelector('.svc-title')?.textContent || '';
-      const isInterior = title.includes('Interior') && !title.includes('Completo');
+      const isInteriorSolo = title.includes('Interior') && !title.includes('Completo');
 
-      const final = isInterior ? base : base + extra;
+      // Interior: siempre base; otros: base + extra
+      const final = isInteriorSolo ? base : base + extra;
 
       pill.textContent = '$' + final.toLocaleString('es-AR');
       pill.classList.remove('pill-init');
@@ -526,11 +546,14 @@
       btn.classList.add('active');
 
       if (tipo === 'auto') {
-        vehLabel.innerHTML = '<span class="icon">🚘</span><span class="txt">Mostrando precios para autos chicos / mediano.</span>';
+        vehLabel.innerHTML =
+          '<span class="icon">🚘</span><span class="txt">Mostrando precios para autos chicos / medianos.</span>';
       } else if (tipo === 'suv') {
-        vehLabel.innerHTML = '<span class="icon">🚘</span><span class="txt">Mostrando precios para SUV / camioneta chica / utilitario (+$5.000 en servicios con exterior).</span>';
+        vehLabel.innerHTML =
+          '<span class="icon">🚘</span><span class="txt">Mostrando precios para SUV / camioneta chica / utilitario (+$5.000 en servicios con exterior).</span>';
       } else {
-        vehLabel.innerHTML = '<span class="icon">🚘</span><span class="txt">Mostrando precios para pickups / camionetas grandes (+$15.000 en servicios con exterior).</span>';
+        vehLabel.innerHTML =
+          '<span class="icon">🚘</span><span class="txt">Mostrando precios para pickups / camionetas grandes (+$15.000 en servicios con exterior).</span>';
       }
 
       actualizarPills(tipo);
