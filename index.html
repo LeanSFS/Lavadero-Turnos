@@ -131,19 +131,8 @@
       color:#22c55e;
       margin:0 0 8px;
     }
-    .veh-label span.icon{
+    .veh-label .icon{
       font-size:18px;
-    }
-    .veh-label span.step{
-      font-size:11px;
-      font-weight:700;
-      padding:2px 7px;
-      border-radius:999px;
-      border:1px solid rgba(34,197,94,0.4);
-      color:#bbf7d0;
-      background:rgba(15,23,42,1);
-      text-transform:uppercase;
-      letter-spacing:0.06em;
     }
 
     .veh-buttons{
@@ -175,7 +164,7 @@
       color:#e5e7eb;
       transform:translateY(-1px);
     }
-    /* Glow inicial para todos */
+    /* Glow inicial */
     .veh-btn-init{
       box-shadow:0 0 14px rgba(34,197,94,0.18);
       border-color:rgba(34,197,94,0.35);
@@ -367,7 +356,6 @@
         <!-- BLOQUE DESTACADO: elegir tipo de vehículo -->
         <div class="veh-toggle">
           <p id="veh-label" class="veh-label">
-            <span class="step">PASO 1</span>
             <span class="icon">🚘</span>
             <span>Elegí tu tipo de vehículo para ver los precios finales:</span>
           </p>
@@ -509,7 +497,6 @@
     btn.addEventListener('click', () => {
       const tipo = btn.dataset.type;
 
-      // limpiar estados
       vehButtons.forEach(b => {
         b.classList.remove('active');
         b.classList.remove('veh-btn-init');
@@ -517,18 +504,18 @@
       btn.classList.add('active');
 
       if (tipo === 'auto') {
-        vehLabel.innerHTML = '<span class="step">PASO 1</span><span class="icon">🚘</span><span>Precios para autos chicos / medianos.</span>';
+        vehLabel.innerHTML = '<span class="icon">🚘</span><span>Precios para autos chicos / medianos.</span>';
       } else if (tipo === 'suv') {
-        vehLabel.innerHTML = '<span class="step">PASO 1</span><span class="icon">🚘</span><span>Precios para SUV / Monovolumen (incluye +$5.000).</span>';
+        vehLabel.innerHTML = '<span class="icon">🚘</span><span>Precios para SUV / Monovolumen (incluye +$5.000).</span>';
       } else if (tipo === 'pickup') {
-        vehLabel.innerHTML = '<span class="step">PASO 1</span><span class="icon">🚘</span><span>Precios para pickups / camionetas grandes (incluye +$15.000).</span>';
+        vehLabel.innerHTML = '<span class="icon">🚘</span><span>Precios para pickups / camionetas grandes (incluye +$15.000).</span>';
       }
 
       actualizarPills(tipo);
     });
   });
 
-  // Link oculto admin (visible en código)
+  // Link oculto admin
   const ADMIN_URL  = 'admin.html';
   const ADMIN_PASS = 'yerba';
 
