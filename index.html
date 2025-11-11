@@ -112,16 +112,40 @@
       gap:12px;
     }
 
-    /* Selector tipo vehículo */
+    /* BLOQUE DESTACADO: elegir vehículo */
     .veh-toggle{
-      margin-top:14px;
+      margin-top:18px;
       margin-bottom:6px;
+      padding:12px 14px 10px;
+      border-radius:16px;
+      background:rgba(6,16,32,0.98);
+      border:1px solid rgba(34,197,94,0.32);
+      box-shadow:0 0 26px rgba(34,197,94,0.16);
     }
     .veh-label{
-      font-size:13px;
-      color:var(--muted);
-      margin:0 0 6px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:15px;
+      font-weight:600;
+      color:#22c55e;
+      margin:0 0 8px;
     }
+    .veh-label span.icon{
+      font-size:18px;
+    }
+    .veh-label span.step{
+      font-size:11px;
+      font-weight:700;
+      padding:2px 7px;
+      border-radius:999px;
+      border:1px solid rgba(34,197,94,0.4);
+      color:#bbf7d0;
+      background:rgba(15,23,42,1);
+      text-transform:uppercase;
+      letter-spacing:0.06em;
+    }
+
     .veh-buttons{
       display:flex;
       flex-wrap:wrap;
@@ -133,30 +157,31 @@
       padding:9px 12px;
       border-radius:999px;
       border:1px solid #2a3a52;
-      background:#0b1220;
+      background:#020817;
       color:#9ca3af;
       font-size:13px;
       cursor:pointer;
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:4px;
+      gap:6px;
       transition:all .16s ease;
     }
     .veh-btn span{
-      font-size:15px;
+      font-size:16px;
     }
     .veh-btn:hover{
       border-color:#22c55e;
       color:#e5e7eb;
       transform:translateY(-1px);
     }
-    /* Mismo glow inicial que las pills */
+    /* Glow inicial para todos */
     .veh-btn-init{
       box-shadow:0 0 14px rgba(34,197,94,0.18);
       border-color:rgba(34,197,94,0.35);
       animation:pillPulse 1.4s ease-in-out infinite;
     }
+    /* Seleccionado */
     .veh-btn.active{
       background:var(--cta);
       color:var(--cta-ink);
@@ -339,20 +364,22 @@
       </div>
 
       <div class="services">
-        <!-- Selector de tipo de vehículo -->
+        <!-- BLOQUE DESTACADO: elegir tipo de vehículo -->
         <div class="veh-toggle">
           <p id="veh-label" class="veh-label">
-            Elegí tu tipo de vehículo para ver los precios finales:
+            <span class="step">PASO 1</span>
+            <span class="icon">🚘</span>
+            <span>Elegí tu tipo de vehículo para ver los precios finales:</span>
           </p>
           <div class="veh-buttons">
             <button type="button" class="veh-btn veh-btn-init" data-type="auto">
-              <span>🚗</span> Auto chico / Mediano
+              <span>🚗</span> Auto chico / mediano
             </button>
             <button type="button" class="veh-btn veh-btn-init" data-type="suv">
-              <span>🚙</span> SUV / Camioneta Chica
+              <span>🚙</span> SUV / Monovolumen
             </button>
             <button type="button" class="veh-btn veh-btn-init" data-type="pickup">
-              <span>🛻</span> Pickup / Camioneta Grande
+              <span>🛻</span> Pickup / Camioneta grande
             </button>
           </div>
         </div>
@@ -452,7 +479,7 @@
   // Año dinámico
   document.getElementById('y').textContent = new Date().getFullYear();
 
-  // Config extras por tipo
+  // Extras por tipo
   const TYPE_EXTRA = {
     auto: 0,
     suv: 5000,
@@ -482,7 +509,7 @@
     btn.addEventListener('click', () => {
       const tipo = btn.dataset.type;
 
-      // Limpiar estados iniciales / activos
+      // limpiar estados
       vehButtons.forEach(b => {
         b.classList.remove('active');
         b.classList.remove('veh-btn-init');
@@ -490,18 +517,18 @@
       btn.classList.add('active');
 
       if (tipo === 'auto') {
-        vehLabel.textContent = 'Mostrando precios finales para autos chicos / Medianos.';
+        vehLabel.innerHTML = '<span class="step">PASO 1</span><span class="icon">🚘</span><span>Precios para autos chicos / medianos.</span>';
       } else if (tipo === 'suv') {
-        vehLabel.textContent = 'Mostrando precios finales para SUV / Camioneta Chica (+$5.000).';
+        vehLabel.innerHTML = '<span class="step">PASO 1</span><span class="icon">🚘</span><span>Precios para SUV / Monovolumen (incluye +$5.000).</span>';
       } else if (tipo === 'pickup') {
-        vehLabel.textContent = 'Mostrando precios finales para pickups / camionetas Grandes (+$15.000).';
+        vehLabel.innerHTML = '<span class="step">PASO 1</span><span class="icon">🚘</span><span>Precios para pickups / camionetas grandes (incluye +$15.000).</span>';
       }
 
       actualizarPills(tipo);
     });
   });
 
-  // Link oculto admin (visible en código, usar solo para cosas light)
+  // Link oculto admin (visible en código)
   const ADMIN_URL  = 'admin.html';
   const ADMIN_PASS = 'yerba';
 
