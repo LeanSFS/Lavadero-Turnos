@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Agenda – Admin</title>
+
   <style>
     :root{
       --bg:#0f172a;
@@ -50,10 +51,7 @@
       background:rgba(0,0,0,.18);
       border-bottom:1px solid var(--line);
     }
-    .calTitle{
-      font-weight:800;
-      letter-spacing:.2px;
-    }
+    .calTitle{font-weight:800;letter-spacing:.2px}
     .calNav{display:flex;gap:8px;align-items:center}
     .ghost{background:transparent}
     .calGrid{
@@ -80,36 +78,50 @@
     .dayHead .dow{font-size:12px;color:var(--muted);font-weight:700}
     .dayHead .date{font-size:14px;font-weight:900;margin-top:2px}
     .dayHead .meta{font-size:11px;color:var(--muted);margin-top:2px}
-    .dayBody{padding:10px; display:flex; flex-direction:column; gap:10px}
+    .dayBody{padding:10px;display:flex;flex-direction:column;gap:10px}
 
+    /* ====== Tarjeta compacta y ordenada ====== */
     .slotCard{
       background:rgba(255,255,255,.03);
       border:1px solid var(--line);
       border-radius:14px;
-      padding:10px;
+      padding:12px;
       box-shadow:0 8px 22px rgba(0,0,0,.22);
+      /* si querés todas con altura parecida, descomentá:
+      min-height:240px;
+      */
     }
-    .slotTop{
+
+    .cardHeader{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
       gap:10px;
-      margin-bottom:6px;
     }
-    .hora{
-      font-weight:950;
-      font-size:14px;
-      letter-spacing:.2px;
+    .titleBlock{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-width:0;
+      width:100%;
     }
+
+    .topLine{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .hora{font-weight:950;font-size:13px;letter-spacing:.2px}
+
     .chip{
       padding:5px 9px;
       border-radius:999px;
       border:1px solid var(--line);
       display:inline-flex;
       align-items:center;
-      gap:6px;
       font-size:12px;
-      font-weight:800;
+      font-weight:900;
       white-space:nowrap;
     }
     .chip.pendiente{border-color:#64748b;color:#e5e7eb}
@@ -117,33 +129,58 @@
     .chip.hecho{border-color:#38bdf8;background:rgba(56,189,248,.12);color:#bae6fd}
     .chip.cancelado{border-color:var(--danger);background:rgba(239,68,68,.12);color:#fecaca}
 
-    .srv{font-weight:850; margin:2px 0 6px}
-    .line{height:1px;background:var(--line);opacity:.9;margin:8px 0}
-
-    .tiny{font-size:11px;color:var(--muted)}
-    .muted{color:var(--muted)}
-    .kv{display:grid;grid-template-columns: 1fr; gap:4px}
-    .kv b{font-weight:850}
-    .row{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin-top:8px;
+    .srv{font-weight:900;font-size:14px;margin:0}
+    .client{
+      font-weight:950;
+      font-size:14px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
+    .sub{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.25;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+
+    .badgeRow{display:flex;gap:8px;align-items:center;flex-shrink:0}
+
+    /* WhatsApp chico */
     a.whats{
-      padding:8px 10px;
+      padding:6px 9px;
       border-radius:10px;
       border:1px solid var(--line);
       background:var(--card);
       color:#e5e7eb;
       text-decoration:none;
-      font-weight:800;
+      font-weight:950;
+      font-size:12px;
+      line-height:1;
     }
     a.whats:hover{filter:brightness(1.06)}
 
-    .actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-    .actions button{padding:8px 10px;border-radius:10px;font-weight:900}
+    .line{height:1px;background:var(--line);opacity:.7;margin:10px 0}
+
+    /* Acciones compactas en grilla */
+    .actions{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap:6px;
+      margin-top:0;
+    }
+    .actions button{
+      padding:8px 8px;
+      border-radius:10px;
+      font-size:12px;
+      font-weight:950;
+    }
+    @media (max-width: 520px){
+      .actions{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
 
     .empty{
       border:1px dashed rgba(148,163,184,.35);
@@ -154,66 +191,62 @@
       text-align:center;
     }
 
-    /* Footer */
     .footerBar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px;color:var(--muted)}
   </style>
 </head>
 
 <body>
-<div class="wrap">
-  <h1>Agenda – Admin</h1>
+  <div class="wrap">
+    <h1>Agenda – Admin</h1>
 
-  <div class="toolbar">
-    <label>Inicio <input type="date" id="f-fecha"></label>
+    <div class="toolbar">
+      <label>Inicio <input type="date" id="f-fecha"></label>
 
-    <label>Estado
-      <select id="f-estado">
-        <option value="">(todos)</option>
-        <option value="pendiente">pendiente</option>
-        <option value="confirmado">confirmado</option>
-        <option value="hecho">hecho</option>
-        <option value="cancelado">cancelado</option>
-      </select>
-    </label>
+      <label>Estado
+        <select id="f-estado">
+          <option value="">(todos)</option>
+          <option value="pendiente">pendiente</option>
+          <option value="confirmado">confirmado</option>
+          <option value="hecho">hecho</option>
+          <option value="cancelado">cancelado</option>
+        </select>
+      </label>
 
-    <input id="f-q" placeholder="Buscar (cliente / dir / tel)" style="flex:1 1 320px">
-    <button id="btnReload" class="ok" type="button">Actualizar</button>
+      <input id="f-q" placeholder="Buscar (cliente / dir / tel)" style="flex:1 1 320px">
+      <button id="btnReload" class="ok" type="button">Actualizar</button>
 
-    <span class="toolbar-spacer"></span>
-    <a href="caja.html" class="btn" id="btnCaja" target="_self" title="Ir a Caja (registro económico)">💵 Ir a Caja</a>
-  </div>
-
-  <div id="msg"></div>
-
-  <div class="calWrap">
-    <div class="calTop">
-      <div class="calNav">
-        <button id="btnPrev" class="ghost" type="button">←</button>
-        <button id="btnToday" class="ghost" type="button">Hoy</button>
-        <button id="btnNext" class="ghost" type="button">→</button>
-      </div>
-      <div class="calTitle" id="rangeTitle"></div>
-      <div class="toolbar-spacer"></div>
-      <div class="tiny">Tip: podés scrollear horizontal para ver las 2 semanas completas.</div>
+      <span class="toolbar-spacer"></span>
+      <a href="caja.html" class="btn" id="btnCaja" target="_self" title="Ir a Caja (registro económico)">💵 Ir a Caja</a>
     </div>
 
-    <div id="calGrid" class="calGrid"></div>
-  </div>
+    <div id="msg"></div>
 
-  <div class="footerBar">
-    <div id="count"></div>
-    <div class="tiny" id="hint"></div>
+    <div class="calWrap">
+      <div class="calTop">
+        <div class="calNav">
+          <button id="btnPrev" class="ghost" type="button">←</button>
+          <button id="btnToday" class="ghost" type="button">Hoy</button>
+          <button id="btnNext" class="ghost" type="button">→</button>
+        </div>
+        <div class="calTitle" id="rangeTitle"></div>
+        <div class="toolbar-spacer"></div>
+        <div class="sub" style="max-width:420px">Tip: scrol horizontal para ver las 2 semanas completas.</div>
+      </div>
+
+      <div id="calGrid" class="calGrid"></div>
+    </div>
+
+    <div class="footerBar">
+      <div id="count"></div>
+      <div class="sub" id="hint"></div>
+    </div>
   </div>
-</div>
 
 <script>
   // TU WebApp
   const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyDd--FDaQPnqG_LQ4MzLuRmIQc99Y0WK1Axpwh3Tc4GX1DLCHn77XTr2-wBZUVCuVO/exec';
 
-  const state = {
-    rows: [],
-    startISO: '', // inicio de la ventana de 14 días
-  };
+  const state = { rows: [], startISO: '' };
 
   const pad = n => String(n).padStart(2,'0');
 
@@ -254,6 +287,10 @@
     document.getElementById('rangeTitle').textContent = niceRangeTitle(iso);
   }
 
+  function cleanPhone(p){
+    return String(p||'').replace(/[^0-9+]/g,'');
+  }
+
   async function load(){
     try{
       setMsg('Cargando…');
@@ -288,6 +325,47 @@
     return rows;
   }
 
+  function cardHTML(r){
+    const estado = (r.estado||'').toLowerCase();
+    const chipCls = ['pendiente','confirmado','hecho','cancelado'].includes(estado) ? estado : '';
+    const telClean = cleanPhone(r.telefono);
+
+    return `
+      <div class="slotCard" data-id="${encodeURIComponent(r.idnd;r.id)}">
+        <div class="cardHeader">
+          <div class="titleBlock">
+            <div class="topLine">
+              <div class="hora">${r.hora || '—'}</div>
+              <span class="chip ${chipCls}">${r.estado || '—'}</span>
+            </div>
+
+            <div class="srv">${r.servicio || 'Servicio'}</div>
+            <div class="client" title="${(r.nombre||'').replace(/"/g,'&quot;')}">${r.nombre || 'Cliente'}</div>
+
+            ${r.direccion ? `<div class="sub" title="${(r.direccion||'').replace(/"/g,'&quot;')}">${r.direccion}</div>` : ``}
+            ${r.telefono ? `<div class="sub">📞 ${r.telefono}</div>` : ``}
+          </div>
+
+          <div class="badgeRow">
+            <a class="whats" href="https://wa.me/${telClean}" target="_blank" rel="noopener">WA</a>
+          </div>
+        </div>
+
+        <div class="line"></div>
+
+        <div class="actions">
+          <button class="ok" type="button" data-act="status" data-estado="confirmado" data-id="${encodeURIComponent(r.id)}">Confirmar</button>
+          <button class="ok" type="button" data-act="status" data-estado="hecho" data-id="${encodeURIComponent(r.id)}">Hecho</button>
+          <button class="warn" type="button" data-act="status" data-estado="cancelado" data-id="${encodeURIComponent(r.id)}">Cancelar</button>
+          <button class="danger" type="button" data-act="delete"
+            data-id="${encodeURIComponent(r.id)}"
+            data-fecha="${encodeURIComponent(r.fecha)}"
+            data-hora="${encodeURIComponent(r.hora)}">Borrar</button>
+        </div>
+      </div>
+    `;
+  }
+
   function render(){
     const calGrid = document.getElementById('calGrid');
 
@@ -302,7 +380,6 @@
     const endT = end.getTime();
 
     const rows = getFilteredRows().filter(r => {
-      // filtra por ventana 14 días
       if (!r.fecha) return false;
       const t = dateFromISO(r.fecha).getTime();
       return t >= startT && t < endT;
@@ -315,7 +392,7 @@
     });
 
     document.getElementById('count').textContent = `${rows.length} turno(s) en estas 2 semanas`;
-    document.getElementById('hint').textContent = rows.length ? 'Click en botones para actualizar estado o borrar.' : '';
+    document.getElementById('hint').textContent = rows.length ? 'Usá los botones para actualizar estado o borrar.' : '';
 
     // agrupar por fecha
     const byDate = new Map();
@@ -354,49 +431,6 @@
     calGrid.innerHTML = cols.join('');
   }
 
-  function cleanPhone(p){
-    return String(p||'').replace(/[^0-9+]/g,'');
-  }
-
-  function cardHTML(r){
-    const estado = (r.estado||'').toLowerCase();
-    const chipCls = ['pendiente','confirmado','hecho','cancelado'].includes(estado) ? estado : '';
-    const telClean = cleanPhone(r.telefono);
-
-    return `
-      <div class="slotCard" data-id="${encodeURIComponent(r.id)}">
-        <div class="slotTop">
-          <div class="hora">${r.hora || '—'}</div>
-          <span class="chip ${chipCls}">${r.estado || '—'}</span>
-        </div>
-
-        <div class="srv">${r.servicio || 'Servicio'}</div>
-
-        <div class="kv">
-          <div><b>${r.nombre || 'Cliente'}</b></div>
-          <div class="tiny">${r.direccion || ''}</div>
-          <div class="row">
-            <a class="whats" href="https://wa.me/${telClean}" target="_blank" rel="noopener">WhatsApp</a>
-            <span class="tiny">${r.telefono || ''}</span>
-          </div>
-          <div class="tiny">ID: ${r.id}</div>
-        </div>
-
-        <div class="line"></div>
-
-        <div class="actions">
-          <button class="ok" type="button" data-act="status" data-estado="confirmado" data-id="${encodeURIComponent(r.id)}">Confirmar</button>
-          <button class="ok" type="button" data-act="status" data-estado="hecho" data-id="${encodeURIComponent(r.id)}">Hecho</button>
-          <button class="warn" type="button" data-act="status" data-estado="cancelado" data-id="${encodeURIComponent(r.id)}">Cancelar</button>
-          <button class="danger" type="button" data-act="delete"
-            data-id="${encodeURIComponent(r.id)}"
-            data-fecha="${encodeURIComponent(r.fecha)}"
-            data-hora="${encodeURIComponent(r.hora)}">Borrar</button>
-        </div>
-      </div>
-    `;
-  }
-
   // Delegación de eventos para botones dentro del calendario
   document.addEventListener('click', async (ev) => {
     const btn = ev.target.closest('button');
@@ -429,7 +463,7 @@
         const res = await fetch(url);
         const data = await res.json();
         if (!data.ok) { setMsg(`⚠️ Error al borrar: ${data.error}`, true); return; }
-        setMsg(`✅ Borrado OK (vía ${data.via||'?'}, fila ${data.row||'?'})`);
+        setMsg(`✅ Borrado OK`);
         await load(); return;
       }
     }catch(e){
