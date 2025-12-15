@@ -29,7 +29,6 @@
     button:disabled{opacity:.6;cursor:not-allowed}
     a.btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid #16a34a;background:#16a34a;color:#0b1220;font-weight:900;text-decoration:none}
     a.btn:hover{filter:brightness(1.05)}
-
     #msg{margin:10px 0;color:var(--muted);white-space:pre-wrap}
 
     /* ====== Calendario 2 semanas ====== */
@@ -57,7 +56,6 @@
       -webkit-overflow-scrolling:touch;
       background:var(--card2);
     }
-
     .dayCol{border-right:1px solid var(--line);min-height:380px}
     .dayCol:last-child{border-right:none}
     .dayHead{
@@ -80,22 +78,8 @@
       box-shadow:0 10px 26px rgba(0,0,0,.25);
     }
 
-    /* ✅ 2 columnas internas: info + controles */
-    .cardGrid{
-      display:grid;
-      grid-template-columns: 1fr 220px; /* derecha fija */
-      gap:14px;
-      align-items:start;
-    }
-
-    /* En pantallas chicas: apila */
-    @media (max-width: 520px){
-      .cardGrid{ grid-template-columns: 1fr; }
-      .controls{ flex-direction:row; justify-content:flex-start; }
-    }
-
-    .info{min-width:0} /* clave para que el texto use ancho real */
-    .topLine{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+    /* ✅ todo en 1 columna: texto arriba, botones abajo */
+    .topLine{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
     .hora{font-weight:950;font-size:14px;letter-spacing:.2px}
 
     .chip{
@@ -114,27 +98,29 @@
     .chip.cancelado{border-color:var(--danger);background:rgba(239,68,68,.12);color:#fecaca}
 
     .srv{font-weight:950;font-size:16px;margin:0 0 6px}
-    .client{font-weight:950;font-size:15px;margin-bottom:8px}
+    .client{font-weight:950;font-size:15px;margin-bottom:10px}
 
     .sub{font-size:13px;color:var(--muted);line-height:1.35}
 
-    /* ✅ Dirección ocupa ancho y corta normal */
+    /* ✅ Texto ocupa el ancho y NO se rompe en letras */
     .addr{
       white-space: normal;
-      overflow-wrap: break-word;
       word-break: normal;
-      line-height: 1.35;
+      overflow-wrap: normal;   /* importante: no lo parte de cualquier lado */
+      line-height: 1.4;
     }
 
     .phoneRow{margin-top:10px; display:flex; align-items:center; gap:8px}
-    .phoneIcon{font-size:14px}
 
-    .controls{
+    .actionsBar{
+      margin-top:14px;
+      padding-top:12px;
+      border-top:1px solid rgba(255,255,255,.06);
       display:flex;
-      flex-direction:column;
       gap:10px;
-      align-items:stretch;
-      justify-content:flex-start;
+      align-items:center;
+      justify-content:flex-end;
+      flex-wrap:wrap;
     }
 
     a.whats{
@@ -148,13 +134,11 @@
       font-size:13px;
       line-height:1;
       white-space:nowrap;
-      text-align:center;
     }
     a.whats:hover{filter:brightness(1.06)}
 
-    .menuWrap{position:relative;display:block}
+    .menuWrap{position:relative;display:inline-block}
     .menuBtn{
-      width:100%;
       padding:10px 12px;
       border-radius:14px;
       border:1px solid var(--line);
@@ -295,6 +279,18 @@
       .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
+  // ✅ Inserta "cortes suaves" para palabras pegadas:
+  // - antes de MAYÚSCULAS en medio de palabra (RodriguezMathoos -> Rodriguez​Mathoos)
+  // - entre letras y números (Mathoos770 -> Mathoos​770)
+  function softWrapText(s){
+    if (!s) return '';
+    const ZWSP = '\u200B';
+    return String(s)
+      .replace(/([a-záéíóúñ])([A-ZÁÉÍÓÚÑ])/g, `$1${ZWSP}$2`)
+      .replace(/([A-Za-zÁÉÍÓÚÑáéíóúñ])([0-9])/g, `$1${ZWSP}$2`)
+      .replace(/([0-9])([A-Za-zÁÉÍÓÚÑáéíóúñ])/g, `$1${ZWSP}$2`);
+  }
+
   async function load(){
     try{
       setMsg('Cargando…');
@@ -331,47 +327,45 @@
     const chipCls = ['pendiente','confirmado','hecho','cancelado'].includes(estado) ? estado : '';
     const telClean = cleanPhone(r.telefono);
 
-    const dirHTML = r.direccion ? esc(r.direccion).replace(/,\s*/g,'<br>') : '';
+    // ✅ dirección: primero soft-wrap, luego escape, luego comas a <br>
+    const dirRaw = r.direccion ? softWrapText(r.direccion) : '';
+    const dirHTML = dirRaw ? esc(dirRaw).replace(/,\s*/g,'<br>') : '';
 
     return `
       <div class="slotCard">
-        <div class="cardGrid">
-          <div class="info">
-            <div class="topLine">
-              <div class="hora">${esc(r.hora||'—')}</div>
-              <span class="chip ${chipCls}">${esc(r.estado||'—')}</span>
-            </div>
+        <div class="topLine">
+          <div class="hora">${esc(r.hora||'—')}</div>
+          <span class="chip ${chipCls}">${esc(r.estado||'—')}</span>
+        </div>
 
-            <div class="srv">${esc(r.servicio||'Servicio')}</div>
-            <div class="client">${esc(r.nombre||'Cliente')}</div>
+        <div class="srv">${esc(r.servicio||'Servicio')}</div>
+        <div class="client">${esc(r.nombre||'Cliente')}</div>
 
-            ${r.direccion ? `<div class="sub addr">${dirHTML}</div>` : ``}
+        ${r.direccion ? `<div class="sub addr">${dirHTML}</div>` : ``}
 
-            ${r.telefono ? `
-              <div class="phoneRow sub">
-                <span class="phoneIcon">📞</span>
-                <span>${esc(r.telefono)}</span>
-              </div>
-            ` : ``}
+        ${r.telefono ? `
+          <div class="phoneRow sub">
+            <span>📞</span>
+            <span>${esc(r.telefono)}</span>
           </div>
+        ` : ``}
 
-          <div class="controls">
-            <a class="whats" href="https://wa.me/${telClean}" target="_blank" rel="noopener">WhatsApp</a>
+        <div class="actionsBar">
+          <a class="whats" href="https://wa.me/${telClean}" target="_blank" rel="noopener">WhatsApp</a>
 
-            <div class="menuWrap">
-              <button class="menuBtn" type="button" data-act="menu" data-id="${encodeURIComponent(r.id)}">
-                Acciones ▾
-              </button>
+          <div class="menuWrap">
+            <button class="menuBtn" type="button" data-act="menu" data-id="${encodeURIComponent(r.id)}">
+              Acciones ▾
+            </button>
 
-              <div class="menu" data-menu-for="${encodeURIComponent(r.id)}">
-                <button class="menuItem ok" type="button" data-act="status" data-estado="confirmado" data-id="${encodeURIComponent(r.id)}">✅ Confirmar</button>
-                <button class="menuItem ok" type="button" data-act="status" data-estado="hecho" data-id="${encodeURIComponent(r.id)}">🏁 Marcar Hecho</button>
-                <button class="menuItem warn" type="button" data-act="status" data-estado="cancelado" data-id="${encodeURIComponent(r.id)}">⚠️ Cancelar</button>
-                <button class="menuItem danger" type="button" data-act="delete"
-                  data-id="${encodeURIComponent(r.id)}"
-                  data-fecha="${encodeURIComponent(r.fecha)}"
-                  data-hora="${encodeURIComponent(r.hora)}">🗑️ Borrar</button>
-              </div>
+            <div class="menu" data-menu-for="${encodeURIComponent(r.id)}">
+              <button class="menuItem ok" type="button" data-act="status" data-estado="confirmado" data-id="${encodeURIComponent(r.id)}">✅ Confirmar</button>
+              <button class="menuItem ok" type="button" data-act="status" data-estado="hecho" data-id="${encodeURIComponent(r.id)}">🏁 Marcar Hecho</button>
+              <button class="menuItem warn" type="button" data-act="status" data-estado="cancelado" data-id="${encodeURIComponent(r.id)}">⚠️ Cancelar</button>
+              <button class="menuItem danger" type="button" data-act="delete"
+                data-id="${encodeURIComponent(r.id)}"
+                data-fecha="${encodeURIComponent(r.fecha)}"
+                data-hora="${encodeURIComponent(r.hora)}">🗑️ Borrar</button>
             </div>
           </div>
         </div>
