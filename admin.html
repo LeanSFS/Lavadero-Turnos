@@ -87,9 +87,6 @@
       border-radius:14px;
       padding:12px;
       box-shadow:0 8px 22px rgba(0,0,0,.22);
-      /* si querés todas con altura parecida, descomentá:
-      min-height:240px;
-      */
     }
 
     .cardHeader{
@@ -247,7 +244,6 @@
   const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyDd--FDaQPnqG_LQ4MzLuRmIQc99Y0WK1Axpwh3Tc4GX1DLCHn77XTr2-wBZUVCuVO/exec';
 
   const state = { rows: [], startISO: '' };
-
   const pad = n => String(n).padStart(2,'0');
 
   function isoFromDate(dt){
@@ -291,6 +287,10 @@
     return String(p||'').replace(/[^0-9+]/g,'');
   }
 
+  function escAttr(s){
+    return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
   async function load(){
     try{
       setMsg('Cargando…');
@@ -331,19 +331,19 @@
     const telClean = cleanPhone(r.telefono);
 
     return `
-      <div class="slotCard" data-id="${encodeURIComponent(r.idnd;r.id)}">
+      <div class="slotCard" data-id="${encodeURIComponent(r.id)}">
         <div class="cardHeader">
           <div class="titleBlock">
             <div class="topLine">
-              <div class="hora">${r.hora || '—'}</div>
-              <span class="chip ${chipCls}">${r.estado || '—'}</span>
+              <div class="hora">${escAttr(r.hora || '—')}</div>
+              <span class="chip ${chipCls}">${escAttr(r.estado || '—')}</span>
             </div>
 
-            <div class="srv">${r.servicio || 'Servicio'}</div>
-            <div class="client" title="${(r.nombre||'').replace(/"/g,'&quot;')}">${r.nombre || 'Cliente'}</div>
+            <div class="srv">${escAttr(r.servicio || 'Servicio')}</div>
+            <div class="client" title="${escAttr(r.nombre||'')}">${escAttr(r.nombre || 'Cliente')}</div>
 
-            ${r.direccion ? `<div class="sub" title="${(r.direccion||'').replace(/"/g,'&quot;')}">${r.direccion}</div>` : ``}
-            ${r.telefono ? `<div class="sub">📞 ${r.telefono}</div>` : ``}
+            ${r.direccion ? `<div class="sub" title="${escAttr(r.direccion)}">${escAttr(r.direccion)}</div>` : ``}
+            ${r.telefono ? `<div class="sub">📞 ${escAttr(r.telefono)}</div>` : ``}
           </div>
 
           <div class="badgeRow">
@@ -367,68 +367,70 @@
   }
 
   function render(){
-    const calGrid = document.getElementById('calGrid');
+    try{
+      const calGrid = document.getElementById('calGrid');
 
-    const startISO = document.getElementById('f-fecha').value || state.startISO;
-    if (startISO && startISO !== state.startISO){
-      setStart(startISO);
-    }
+      const startISO = document.getElementById('f-fecha').value || state.startISO;
+      if (startISO && startISO !== state.startISO){
+        setStart(startISO);
+      }
 
-    const start = dateFromISO(state.startISO);
-    const end = addDays(start, 14); // exclusive
-    const startT = start.getTime();
-    const endT = end.getTime();
+      const start = dateFromISO(state.startISO);
+      const end = addDays(start, 14); // exclusive
+      const startT = start.getTime();
+      const endT = end.getTime();
 
-    const rows = getFilteredRows().filter(r => {
-      if (!r.fecha) return false;
-      const t = dateFromISO(r.fecha).getTime();
-      return t >= startT && t < endT;
-    });
+      const rows = getFilteredRows().filter(r => {
+        if (!r.fecha) return false;
+        const t = dateFromISO(r.fecha).getTime();
+        return t >= startT && t < endT;
+      });
 
-    // orden por fecha + hora
-    rows.sort((a,b) => {
-      if ((a.fecha||'') !== (b.fecha||'')) return (a.fecha||'').localeCompare(b.fecha||'');
-      return (a.hora||'').localeCompare(b.hora||'');
-    });
+      rows.sort((a,b) => {
+        if ((a.fecha||'') !== (b.fecha||'')) return (a.fecha||'').localeCompare(b.fecha||'');
+        return (a.hora||'').localeCompare(b.hora||'');
+      });
 
-    document.getElementById('count').textContent = `${rows.length} turno(s) en estas 2 semanas`;
-    document.getElementById('hint').textContent = rows.length ? 'Usá los botones para actualizar estado o borrar.' : '';
+      document.getElementById('count').textContent = `${rows.length} turno(s) en estas 2 semanas`;
+      document.getElementById('hint').textContent = rows.length ? 'Usá los botones para actualizar estado o borrar.' : '';
 
-    // agrupar por fecha
-    const byDate = new Map();
-    for (const r of rows){
-      if (!byDate.has(r.fecha)) byDate.set(r.fecha, []);
-      byDate.get(r.fecha).push(r);
-    }
+      const byDate = new Map();
+      for (const r of rows){
+        if (!byDate.has(r.fecha)) byDate.set(r.fecha, []);
+        byDate.get(r.fecha).push(r);
+      }
 
-    // crear 14 columnas
-    const cols = [];
-    for (let i=0;i<14;i++){
-      const d = addDays(start, i);
-      const iso = isoFromDate(d);
-      const list = byDate.get(iso) || [];
+      const cols = [];
+      for (let i=0;i<14;i++){
+        const d = addDays(start, i);
+        const iso = isoFromDate(d);
+        const list = byDate.get(iso) || [];
 
-      const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-      const headDow = dias[d.getDay()];
-      const headDate = `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
+        const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+        const headDow = dias[d.getDay()];
+        const headDate = `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
 
-      const cards = list.length ? list.map(r => cardHTML(r)).join('') : `<div class="empty">Sin turnos</div>`;
+        const cards = list.length ? list.map(r => cardHTML(r)).join('') : `<div class="empty">Sin turnos</div>`;
 
-      cols.push(`
-        <div class="dayCol" data-day="${iso}">
-          <div class="dayHead">
-            <div class="dow">${headDow}</div>
-            <div class="date">${headDate}</div>
-            <div class="meta">${list.length} turno(s)</div>
+        cols.push(`
+          <div class="dayCol" data-day="${iso}">
+            <div class="dayHead">
+              <div class="dow">${headDow}</div>
+              <div class="date">${headDate}</div>
+              <div class="meta">${list.length} turno(s)</div>
+            </div>
+            <div class="dayBody">
+              ${cards}
+            </div>
           </div>
-          <div class="dayBody">
-            ${cards}
-          </div>
-        </div>
-      `);
-    }
+        `);
+      }
 
-    calGrid.innerHTML = cols.join('');
+      calGrid.innerHTML = cols.join('');
+    }catch(e){
+      console.error(e);
+      setMsg('⚠️ Render error: ' + e.message, true);
+    }
   }
 
   // Delegación de eventos para botones dentro del calendario
