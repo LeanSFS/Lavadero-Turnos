@@ -1,39 +1,171 @@
 <!doctype html>
 <html lang="es">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Agenda – Admin</title>
-<style>
-  :root{--bg:#0f172a;--card:#111827;--muted:#9ca3af;--pri:#22c55e;--line:#1f2937}
-  body{font-family:system-ui,Arial;background:var(--bg);color:#fff;min-height:100vh;margin:0}
-  .wrap{max-width:1100px;margin:0 auto;padding:24px}
-  h1{margin:0 0 14px;font-size:28px}
-  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
-  .toolbar-spacer{flex:1 1 auto}
-  input,select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0b1220;color:#fff}
-  button{padding:10px 14px;border-radius:10px;border:1px solid #16a34a;background:#16a34a;color:#0b1220;font-weight:600;cursor:pointer}
-  /* Link con estilo de botón */
-  a.btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid #16a34a;background:#16a34a;color:#0b1220;font-weight:600;text-decoration:none}
-  a.btn:hover{filter:brightness(1.05)}
-  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-  th,td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
-  th{background:#0b1220;text-align:left}
-  tr:last-child td{border-bottom:none}
-  .chip{padding:6px 10px;border-radius:999px;border:1px solid var(--line);display:inline-block}
-  a.whats{padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#0b1220;color:#e5e7eb;text-decoration:none}
-  .muted{color:#9ca3af}
-  .ok{border-color:#22c55e;background:#22c55e;color:#0b1220}
-  .warn{border-color:#f59e0b;background:#f59e0b;color:#0b1220}
-  .danger{border-color:#ef4444;background:#ef4444;color:#0b1220}
-  .tiny{font-size:11px;color:#9ca3af}
-  #msg{margin:10px 0;color:#9ca3af;white-space:pre-wrap}
-  .actions{display:flex;flex-wrap:wrap;gap:6px}
-</style>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Agenda – Admin</title>
+  <style>
+    :root{
+      --bg:#0f172a;
+      --card:#0b1220;
+      --card2:#111827;
+      --muted:#9ca3af;
+      --pri:#22c55e;
+      --line:#1f2937;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+    }
+    *{box-sizing:border-box}
+    body{font-family:system-ui,Arial;background:var(--bg);color:#fff;min-height:100vh;margin:0}
+    .wrap{max-width:1180px;margin:0 auto;padding:24px}
+    h1{margin:0 0 14px;font-size:28px}
 
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+    .toolbar-spacer{flex:1 1 auto}
+    input,select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:#fff}
+    button{padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:#fff;font-weight:650;cursor:pointer}
+    button:hover{filter:brightness(1.05)}
+    button:disabled{opacity:.6;cursor:not-allowed}
+    a.btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid #16a34a;background:#16a34a;color:#0b1220;font-weight:700;text-decoration:none}
+    a.btn:hover{filter:brightness(1.05)}
+
+    .ok{border-color:var(--pri);background:var(--pri);color:#0b1220}
+    .warn{border-color:var(--warn);background:var(--warn);color:#0b1220}
+    .danger{border-color:var(--danger);background:var(--danger);color:#0b1220}
+
+    #msg{margin:10px 0;color:var(--muted);white-space:pre-wrap}
+
+    /* ====== Calendario 2 semanas ====== */
+    .calWrap{
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0));
+      border:1px solid var(--line);
+      border-radius:16px;
+      overflow:hidden;
+    }
+    .calTop{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:12px;
+      background:rgba(0,0,0,.18);
+      border-bottom:1px solid var(--line);
+    }
+    .calTitle{
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .calNav{display:flex;gap:8px;align-items:center}
+    .ghost{background:transparent}
+    .calGrid{
+      display:grid;
+      grid-template-columns: repeat(14, minmax(180px, 1fr));
+      gap:0;
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+      background:var(--card2);
+    }
+    .dayCol{
+      border-right:1px solid var(--line);
+      min-height:380px;
+    }
+    .dayCol:last-child{border-right:none}
+    .dayHead{
+      position:sticky;
+      top:0;
+      z-index:2;
+      padding:10px 10px 8px;
+      background:var(--card);
+      border-bottom:1px solid var(--line);
+    }
+    .dayHead .dow{font-size:12px;color:var(--muted);font-weight:700}
+    .dayHead .date{font-size:14px;font-weight:900;margin-top:2px}
+    .dayHead .meta{font-size:11px;color:var(--muted);margin-top:2px}
+    .dayBody{padding:10px; display:flex; flex-direction:column; gap:10px}
+
+    .slotCard{
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px;
+      box-shadow:0 8px 22px rgba(0,0,0,.22);
+    }
+    .slotTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:6px;
+    }
+    .hora{
+      font-weight:950;
+      font-size:14px;
+      letter-spacing:.2px;
+    }
+    .chip{
+      padding:5px 9px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:12px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+    .chip.pendiente{border-color:#64748b;color:#e5e7eb}
+    .chip.confirmado{border-color:var(--pri);background:rgba(34,197,94,.14);color:#bbf7d0}
+    .chip.hecho{border-color:#38bdf8;background:rgba(56,189,248,.12);color:#bae6fd}
+    .chip.cancelado{border-color:var(--danger);background:rgba(239,68,68,.12);color:#fecaca}
+
+    .srv{font-weight:850; margin:2px 0 6px}
+    .line{height:1px;background:var(--line);opacity:.9;margin:8px 0}
+
+    .tiny{font-size:11px;color:var(--muted)}
+    .muted{color:var(--muted)}
+    .kv{display:grid;grid-template-columns: 1fr; gap:4px}
+    .kv b{font-weight:850}
+    .row{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:8px;
+    }
+    a.whats{
+      padding:8px 10px;
+      border-radius:10px;
+      border:1px solid var(--line);
+      background:var(--card);
+      color:#e5e7eb;
+      text-decoration:none;
+      font-weight:800;
+    }
+    a.whats:hover{filter:brightness(1.06)}
+
+    .actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .actions button{padding:8px 10px;border-radius:10px;font-weight:900}
+
+    .empty{
+      border:1px dashed rgba(148,163,184,.35);
+      border-radius:14px;
+      padding:10px;
+      color:rgba(148,163,184,.9);
+      font-size:12px;
+      text-align:center;
+    }
+
+    /* Footer */
+    .footerBar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px;color:var(--muted)}
+  </style>
+</head>
+
+<body>
 <div class="wrap">
   <h1>Agenda – Admin</h1>
+
   <div class="toolbar">
-    <label>Fecha <input type="date" id="f-fecha"></label>
+    <label>Inicio <input type="date" id="f-fecha"></label>
+
     <label>Estado
       <select id="f-estado">
         <option value="">(todos)</option>
@@ -43,132 +175,297 @@
         <option value="cancelado">cancelado</option>
       </select>
     </label>
+
     <input id="f-q" placeholder="Buscar (cliente / dir / tel)" style="flex:1 1 320px">
     <button id="btnReload" class="ok" type="button">Actualizar</button>
 
-    <!-- empuja el botón a la derecha -->
     <span class="toolbar-spacer"></span>
-
-    <!-- Botón para ir a Caja -->
     <a href="caja.html" class="btn" id="btnCaja" target="_self" title="Ir a Caja (registro económico)">💵 Ir a Caja</a>
   </div>
 
   <div id="msg"></div>
 
-  <table id="tbl">
-    <thead>
-      <tr>
-        <th>Fecha</th><th>Hora</th><th>Servicio</th><th>Cliente</th>
-        <th>Teléfono</th><th>Dirección</th><th>Estado</th><th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody id="tbody"></tbody>
-  </table>
+  <div class="calWrap">
+    <div class="calTop">
+      <div class="calNav">
+        <button id="btnPrev" class="ghost" type="button">←</button>
+        <button id="btnToday" class="ghost" type="button">Hoy</button>
+        <button id="btnNext" class="ghost" type="button">→</button>
+      </div>
+      <div class="calTitle" id="rangeTitle"></div>
+      <div class="toolbar-spacer"></div>
+      <div class="tiny">Tip: podés scrollear horizontal para ver las 2 semanas completas.</div>
+    </div>
 
-  <div class="muted" id="count" style="margin-top:8px"></div>
+    <div id="calGrid" class="calGrid"></div>
+  </div>
+
+  <div class="footerBar">
+    <div id="count"></div>
+    <div class="tiny" id="hint"></div>
+  </div>
 </div>
 
 <script>
-// TU WebApp (el que me pasaste)
-const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyDd--FDaQPnqG_LQ4MzLuRmIQc99Y0WK1Axpwh3Tc4GX1DLCHn77XTr2-wBZUVCuVO/exec';
+  // TU WebApp
+  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyDd--FDaQPnqG_LQ4MzLuRmIQc99Y0WK1Axpwh3Tc4GX1DLCHn77XTr2-wBZUVCuVO/exec';
 
-const state = { rows: [] };
-const pad = n => String(n).padStart(2,'0');
-function niceFecha(iso){ if(!iso) return ''; const [y,m,d]=iso.split('-').map(Number); const dt=new Date(y,(m||1)-1,d||1); const dias=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']; return `${dias[dt.getDay()]} ${pad(dt.getDate())}/${pad(dt.getMonth()+1)}/${pad(dt.getFullYear())}`; }
-function setMsg(t, isErr=false){ const el=document.getElementById('msg'); el.textContent=t||''; el.style.color=isErr?'#fca5a5':'#9ca3af'; }
+  const state = {
+    rows: [],
+    startISO: '', // inicio de la ventana de 14 días
+  };
 
-async function load(){
-  try{
-    setMsg('Cargando…');
-    const r = await fetch(`${WEBAPP_URL}?action=list&t=${Date.now()}`);
-    const j = await r.json();
-    if (!j.ok) throw new Error(j.error||'Error al listar');
-    state.rows = j.rows || [];
+  const pad = n => String(n).padStart(2,'0');
+
+  function isoFromDate(dt){
+    return `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}`;
+  }
+  function dateFromISO(iso){
+    const [y,m,d] = (iso||'').split('-').map(Number);
+    return new Date(y,(m||1)-1,d||1);
+  }
+  function addDays(dt, n){
+    const x = new Date(dt);
+    x.setDate(x.getDate()+n);
+    x.setHours(0,0,0,0);
+    return x;
+  }
+
+  function niceFechaShort(iso){
+    const dt = dateFromISO(iso);
+    const dias=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+    return `${dias[dt.getDay()]} ${pad(dt.getDate())}/${pad(dt.getMonth()+1)}`;
+  }
+  function niceRangeTitle(startISO){
+    const a = dateFromISO(startISO);
+    const b = addDays(a, 13);
+    return `${niceFechaShort(isoFromDate(a))}  →  ${niceFechaShort(isoFromDate(b))}`;
+  }
+
+  function setMsg(t, isErr=false){
+    const el=document.getElementById('msg');
+    el.textContent=t||'';
+    el.style.color=isErr?'#fca5a5':'#9ca3af';
+  }
+
+  function setStart(iso){
+    state.startISO = iso;
+    document.getElementById('f-fecha').value = iso;
+    document.getElementById('rangeTitle').textContent = niceRangeTitle(iso);
+  }
+
+  async function load(){
+    try{
+      setMsg('Cargando…');
+      const r = await fetch(`${WEBAPP_URL}?action=list&t=${Date.now()}`);
+      const j = await r.json();
+      if (!j.ok) throw new Error(j.error||'Error al listar');
+      state.rows = j.rows || [];
+      render();
+      setMsg('');
+    }catch(e){
+      setMsg('⚠️ '+e.message,true);
+      console.error(e);
+    }
+  }
+
+  function getFilteredRows(){
+    const fEstado = document.getElementById('f-estado').value.trim().toLowerCase();
+    const fQ = document.getElementById('f-q').value.trim().toLowerCase();
+
+    let rows = state.rows.slice();
+
+    if (fEstado){
+      rows = rows.filter(r => (r.estado||'').toLowerCase() === fEstado);
+    }
+    if (fQ){
+      rows = rows.filter(r =>
+        (r.nombre||'').toLowerCase().includes(fQ) ||
+        (r.direccion||'').toLowerCase().includes(fQ) ||
+        (r.telefono||'').toLowerCase().includes(fQ)
+      );
+    }
+    return rows;
+  }
+
+  function render(){
+    const calGrid = document.getElementById('calGrid');
+
+    const startISO = document.getElementById('f-fecha').value || state.startISO;
+    if (startISO && startISO !== state.startISO){
+      setStart(startISO);
+    }
+
+    const start = dateFromISO(state.startISO);
+    const end = addDays(start, 14); // exclusive
+    const startT = start.getTime();
+    const endT = end.getTime();
+
+    const rows = getFilteredRows().filter(r => {
+      // filtra por ventana 14 días
+      if (!r.fecha) return false;
+      const t = dateFromISO(r.fecha).getTime();
+      return t >= startT && t < endT;
+    });
+
+    // orden por fecha + hora
+    rows.sort((a,b) => {
+      if ((a.fecha||'') !== (b.fecha||'')) return (a.fecha||'').localeCompare(b.fecha||'');
+      return (a.hora||'').localeCompare(b.hora||'');
+    });
+
+    document.getElementById('count').textContent = `${rows.length} turno(s) en estas 2 semanas`;
+    document.getElementById('hint').textContent = rows.length ? 'Click en botones para actualizar estado o borrar.' : '';
+
+    // agrupar por fecha
+    const byDate = new Map();
+    for (const r of rows){
+      if (!byDate.has(r.fecha)) byDate.set(r.fecha, []);
+      byDate.get(r.fecha).push(r);
+    }
+
+    // crear 14 columnas
+    const cols = [];
+    for (let i=0;i<14;i++){
+      const d = addDays(start, i);
+      const iso = isoFromDate(d);
+      const list = byDate.get(iso) || [];
+
+      const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+      const headDow = dias[d.getDay()];
+      const headDate = `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
+
+      const cards = list.length ? list.map(r => cardHTML(r)).join('') : `<div class="empty">Sin turnos</div>`;
+
+      cols.push(`
+        <div class="dayCol" data-day="${iso}">
+          <div class="dayHead">
+            <div class="dow">${headDow}</div>
+            <div class="date">${headDate}</div>
+            <div class="meta">${list.length} turno(s)</div>
+          </div>
+          <div class="dayBody">
+            ${cards}
+          </div>
+        </div>
+      `);
+    }
+
+    calGrid.innerHTML = cols.join('');
+  }
+
+  function cleanPhone(p){
+    return String(p||'').replace(/[^0-9+]/g,'');
+  }
+
+  function cardHTML(r){
+    const estado = (r.estado||'').toLowerCase();
+    const chipCls = ['pendiente','confirmado','hecho','cancelado'].includes(estado) ? estado : '';
+    const telClean = cleanPhone(r.telefono);
+
+    return `
+      <div class="slotCard" data-id="${encodeURIComponent(r.id)}">
+        <div class="slotTop">
+          <div class="hora">${r.hora || '—'}</div>
+          <span class="chip ${chipCls}">${r.estado || '—'}</span>
+        </div>
+
+        <div class="srv">${r.servicio || 'Servicio'}</div>
+
+        <div class="kv">
+          <div><b>${r.nombre || 'Cliente'}</b></div>
+          <div class="tiny">${r.direccion || ''}</div>
+          <div class="row">
+            <a class="whats" href="https://wa.me/${telClean}" target="_blank" rel="noopener">WhatsApp</a>
+            <span class="tiny">${r.telefono || ''}</span>
+          </div>
+          <div class="tiny">ID: ${r.id}</div>
+        </div>
+
+        <div class="line"></div>
+
+        <div class="actions">
+          <button class="ok" type="button" data-act="status" data-estado="confirmado" data-id="${encodeURIComponent(r.id)}">Confirmar</button>
+          <button class="ok" type="button" data-act="status" data-estado="hecho" data-id="${encodeURIComponent(r.id)}">Hecho</button>
+          <button class="warn" type="button" data-act="status" data-estado="cancelado" data-id="${encodeURIComponent(r.id)}">Cancelar</button>
+          <button class="danger" type="button" data-act="delete"
+            data-id="${encodeURIComponent(r.id)}"
+            data-fecha="${encodeURIComponent(r.fecha)}"
+            data-hora="${encodeURIComponent(r.hora)}">Borrar</button>
+        </div>
+      </div>
+    `;
+  }
+
+  // Delegación de eventos para botones dentro del calendario
+  document.addEventListener('click', async (ev) => {
+    const btn = ev.target.closest('button');
+    if (!btn) return;
+
+    const act = btn.dataset.act;
+    if (!act) return;
+
+    btn.disabled = true;
+
+    try{
+      if (act === 'status') {
+        const id = decodeURIComponent(btn.dataset.id||'');
+        const estado = btn.dataset.estado || '';
+        const url = `${WEBAPP_URL}?action=status&id=${encodeURIComponent(id)}&estado=${encodeURIComponent(estado)}&t=${Date.now()}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (!data.ok) { setMsg(`⚠️ ${data.error||'Error al cambiar estado'}`, true); return; }
+        await load(); return;
+      }
+
+      if (act === 'delete') {
+        if (!confirm('¿Borrar definitivamente este turno?')) return;
+
+        const id  = decodeURIComponent(btn.dataset.id||'');
+        const f   = decodeURIComponent(btn.dataset.fecha||'');
+        const h   = decodeURIComponent(btn.dataset.hora||'');
+
+        const url = `${WEBAPP_URL}?action=delete&id=${encodeURIComponent(id)}&fecha=${encodeURIComponent(f)}&hora=${encodeURIComponent(h)}&t=${Date.now()}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (!data.ok) { setMsg(`⚠️ Error al borrar: ${data.error}`, true); return; }
+        setMsg(`✅ Borrado OK (vía ${data.via||'?'}, fila ${data.row||'?'})`);
+        await load(); return;
+      }
+    }catch(e){
+      setMsg('⚠️ '+e.message,true);
+      console.error(e);
+    }finally{
+      btn.disabled = false;
+    }
+  });
+
+  // Navegación 2 semanas
+  document.getElementById('btnPrev').onclick = () => {
+    const s = dateFromISO(state.startISO);
+    setStart(isoFromDate(addDays(s, -14)));
     render();
-    setMsg('');
-  }catch(e){ setMsg('⚠️ '+e.message,true); console.error(e); }
-}
+  };
+  document.getElementById('btnNext').onclick = () => {
+    const s = dateFromISO(state.startISO);
+    setStart(isoFromDate(addDays(s, 14)));
+    render();
+  };
+  document.getElementById('btnToday').onclick = () => {
+    const today = new Date(); today.setHours(0,0,0,0);
+    setStart(isoFromDate(today));
+    render();
+  };
 
-function render(){
-  const tbody = document.getElementById('tbody');
-  const fFecha  = document.getElementById('f-fecha').value;
-  const fEstado = document.getElementById('f-estado').value.trim().toLowerCase();
-  const fQ      = document.getElementById('f-q').value.trim().toLowerCase();
+  document.getElementById('btnReload').onclick = load;
+  document.getElementById('f-fecha').onchange = () => { setStart(document.getElementById('f-fecha').value); render(); };
+  document.getElementById('f-estado').onchange =
+  document.getElementById('f-q').oninput = render;
 
-  const rows = state.rows.filter(r =>
-    (!fFecha || r.fecha === fFecha) &&
-    (!fEstado || (r.estado||'').toLowerCase() === fEstado) &&
-    (!fQ || (
-      (r.nombre||'').toLowerCase().includes(fQ) ||
-      (r.direccion||'').toLowerCase().includes(fQ) ||
-      (r.telefono||'').toLowerCase().includes(fQ)
-    ))
-  );
-
-  document.getElementById('count').textContent = `${rows.length} turno(s) mostrados`;
-  if (!rows.length){ tbody.innerHTML = `<tr><td colspan="8" class="muted">Sin datos</td></tr>`; return; }
-
-  tbody.innerHTML = rows.map(r => `
-    <tr>
-      <td>${niceFecha(r.fecha)}<div class="tiny">ID: ${r.id}</div></td>
-      <td>${r.hora}</td>
-      <td>${r.servicio}</td>
-      <td>${r.nombre}</td>
-      <td><a class="whats" href="https://wa.me/${(r.telefono||'').replace(/[^0-9+]/g,'')}" target="_blank" rel="noopener">WhatsApp</a> <div class="tiny">${r.telefono||''}</div></td>
-      <td>${r.direccion}</td>
-      <td><span class="chip">${r.estado}</span></td>
-      <td class="actions">
-        <button class="ok"   type="button" data-act="status" data-estado="confirmado" data-id="${encodeURIComponent(r.id)}">Confirmar</button>
-        <button class="ok"   type="button" data-act="status" data-estado="hecho"       data-id="${encodeURIComponent(r.id)}">Hecho</button>
-        <button class="warn" type="button" data-act="status" data-estado="cancelado"   data-id="${encodeURIComponent(r.id)}">Cancelar</button>
-        <button class="danger" type="button" data-act="delete"
-                data-id="${encodeURIComponent(r.id)}"
-                data-fecha="${encodeURIComponent(r.fecha)}"
-                data-hora="${encodeURIComponent(r.hora)}">Borrar</button>
-      </td>
-    </tr>
-  `).join('');
-}
-
-/* Delegación de eventos con debug visible */
-document.getElementById('tbody').addEventListener('click', async (ev) => {
-  const btn = ev.target.closest('button'); if (!btn) return;
-  const act = btn.dataset.act; if (!act) return;
-  btn.disabled = true;
-
-  try{
-    if (act === 'status') {
-      const id = decodeURIComponent(btn.dataset.id||'');
-      const estado = btn.dataset.estado || '';
-      const url = `${WEBAPP_URL}?action=status&id=${encodeURIComponent(id)}&estado=${encodeURIComponent(estado)}&t=${Date.now()}`;
-      const res = await fetch(url); const data = await res.json();
-      if (!data.ok) { setMsg(`⚠️ ${data.error||'Error al cambiar estado'}`, true); return; }
-      await load(); return;
-    }
-
-    if (act === 'delete') {
-      if (!confirm('¿Borrar definitivamente este turno?')) return;
-      const id  = decodeURIComponent(btn.dataset.id||'');
-      const f   = decodeURIComponent(btn.dataset.fecha||'');
-      const h   = decodeURIComponent(btn.dataset.hora||'');
-
-      const url = `${WEBAPP_URL}?action=delete&id=${encodeURIComponent(id)}&fecha=${encodeURIComponent(f)}&hora=${encodeURIComponent(h)}&t=${Date.now()}`;
-      console.log('DELETE URL ->', url);
-      const res = await fetch(url);
-      const data = await res.json();
-      if (!data.ok) { setMsg(`⚠️ Error al borrar: ${data.error}`, true); return; }
-      setMsg(`✅ Borrado OK (vía ${data.via||'?'}, fila ${data.row||'?'})`);
-      await load(); return;
-    }
-  }catch(e){ setMsg('⚠️ '+e.message,true); console.error(e); }
-  finally{ btn.disabled = false; }
-});
-
-document.getElementById('btnReload').onclick = load;
-document.getElementById('f-fecha').onchange =
-document.getElementById('f-estado').onchange =
-document.getElementById('f-q').oninput = render;
-
-load();
+  // inicio: hoy
+  const today = new Date(); today.setHours(0,0,0,0);
+  setStart(isoFromDate(today));
+  load();
 </script>
+</body>
 </html>
