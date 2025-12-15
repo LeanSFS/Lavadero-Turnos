@@ -49,7 +49,6 @@
     .calNav{display:flex;gap:8px;align-items:center}
     .ghost{background:transparent}
 
-    /* ✅ más ancho */
     .calGrid{
       display:grid;
       grid-template-columns: repeat(14, minmax(360px, 1fr));
@@ -81,15 +80,22 @@
       box-shadow:0 10px 26px rgba(0,0,0,.25);
     }
 
-    .cardHeader{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
+    /* ✅ 2 columnas internas: info + controles */
+    .cardGrid{
+      display:grid;
+      grid-template-columns: 1fr 220px; /* derecha fija */
+      gap:14px;
+      align-items:start;
     }
-    .titleBlock{display:flex;flex-direction:column;gap:8px;min-width:0;width:100%}
 
-    .topLine{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    /* En pantallas chicas: apila */
+    @media (max-width: 520px){
+      .cardGrid{ grid-template-columns: 1fr; }
+      .controls{ flex-direction:row; justify-content:flex-start; }
+    }
+
+    .info{min-width:0} /* clave para que el texto use ancho real */
+    .topLine{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
     .hora{font-weight:950;font-size:14px;letter-spacing:.2px}
 
     .chip{
@@ -107,12 +113,12 @@
     .chip.hecho{border-color:#38bdf8;background:rgba(56,189,248,.12);color:#bae6fd}
     .chip.cancelado{border-color:var(--danger);background:rgba(239,68,68,.12);color:#fecaca}
 
-    .srv{font-weight:950;font-size:15px;margin:0}
-    .client{font-weight:950;font-size:15px}
+    .srv{font-weight:950;font-size:16px;margin:0 0 6px}
+    .client{font-weight:950;font-size:15px;margin-bottom:8px}
 
     .sub{font-size:13px;color:var(--muted);line-height:1.35}
 
-    /* ✅ Dirección legible */
+    /* ✅ Dirección ocupa ancho y corta normal */
     .addr{
       white-space: normal;
       overflow-wrap: break-word;
@@ -120,27 +126,37 @@
       line-height: 1.35;
     }
 
-    .badgeRow{display:flex;gap:8px;align-items:center;flex-shrink:0}
+    .phoneRow{margin-top:10px; display:flex; align-items:center; gap:8px}
+    .phoneIcon{font-size:14px}
+
+    .controls{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      align-items:stretch;
+      justify-content:flex-start;
+    }
 
     a.whats{
-      padding:8px 12px;
-      border-radius:12px;
+      padding:10px 12px;
+      border-radius:14px;
       border:1px solid var(--line);
       background:var(--card);
       color:#e5e7eb;
       text-decoration:none;
       font-weight:950;
-      font-size:12px;
+      font-size:13px;
       line-height:1;
       white-space:nowrap;
+      text-align:center;
     }
     a.whats:hover{filter:brightness(1.06)}
 
-    /* ====== Menú acciones ====== */
-    .menuWrap{position:relative;display:inline-block}
+    .menuWrap{position:relative;display:block}
     .menuBtn{
-      padding:8px 12px;
-      border-radius:12px;
+      width:100%;
+      padding:10px 12px;
+      border-radius:14px;
       border:1px solid var(--line);
       background:rgba(255,255,255,.04);
       color:#fff;
@@ -153,7 +169,7 @@
       position:absolute;
       right:0;
       top:calc(100% + 8px);
-      min-width:220px;
+      min-width:240px;
       background:var(--card);
       border:1px solid var(--line);
       border-radius:14px;
@@ -315,13 +331,12 @@
     const chipCls = ['pendiente','confirmado','hecho','cancelado'].includes(estado) ? estado : '';
     const telClean = cleanPhone(r.telefono);
 
-    // Dirección con saltos por coma
     const dirHTML = r.direccion ? esc(r.direccion).replace(/,\s*/g,'<br>') : '';
 
     return `
       <div class="slotCard">
-        <div class="cardHeader">
-          <div class="titleBlock">
+        <div class="cardGrid">
+          <div class="info">
             <div class="topLine">
               <div class="hora">${esc(r.hora||'—')}</div>
               <span class="chip ${chipCls}">${esc(r.estado||'—')}</span>
@@ -331,10 +346,16 @@
             <div class="client">${esc(r.nombre||'Cliente')}</div>
 
             ${r.direccion ? `<div class="sub addr">${dirHTML}</div>` : ``}
-            ${r.telefono ? `<div class="sub">📞 ${esc(r.telefono)}</div>` : ``}
+
+            ${r.telefono ? `
+              <div class="phoneRow sub">
+                <span class="phoneIcon">📞</span>
+                <span>${esc(r.telefono)}</span>
+              </div>
+            ` : ``}
           </div>
 
-          <div class="badgeRow">
+          <div class="controls">
             <a class="whats" href="https://wa.me/${telClean}" target="_blank" rel="noopener">WhatsApp</a>
 
             <div class="menuWrap">
@@ -399,7 +420,7 @@
 
         const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
         const headDow = dias[d.getDay()];
-        const headDate = `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`; // ✅ ARREGLADO: era dt
+        const headDate = `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
 
         cols.push(`
           <div class="dayCol" data-day="${iso}">
@@ -423,13 +444,13 @@
     }
   }
 
-  // Cerrar menús clickeando afuera
+  // cerrar menús clic fuera
   document.addEventListener('click', (ev) => {
     const insideMenu = ev.target.closest('.menuWrap');
     if (!insideMenu) closeAllMenus();
   });
 
-  // Delegación de eventos
+  // eventos
   document.addEventListener('click', async (ev) => {
     const el = ev.target.closest('button');
     if (!el) return;
@@ -483,7 +504,7 @@
     }
   });
 
-  // Navegación 2 semanas
+  // navegación
   document.getElementById('btnPrev').onclick = () => {
     const s = dateFromISO(state.startISO);
     setStart(isoFromDate(addDays(s, -14)));
@@ -505,7 +526,7 @@
   document.getElementById('f-estado').onchange =
   document.getElementById('f-q').oninput = render;
 
-  // inicio: hoy
+  // inicio
   const today = new Date(); today.setHours(0,0,0,0);
   setStart(isoFromDate(today));
   load();
