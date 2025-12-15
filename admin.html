@@ -49,7 +49,7 @@
     .calNav{display:flex;gap:8px;align-items:center}
     .ghost{background:transparent}
 
-    /* ✅ Más ancho: columnas y tarjetas más cómodas */
+    /* ✅ más ancho */
     .calGrid{
       display:grid;
       grid-template-columns: repeat(14, minmax(360px, 1fr));
@@ -112,7 +112,7 @@
 
     .sub{font-size:13px;color:var(--muted);line-height:1.35}
 
-    /* ✅ Dirección legible (no rompe palabras en 3 letras) */
+    /* ✅ Dirección legible */
     .addr{
       white-space: normal;
       overflow-wrap: break-word;
@@ -136,7 +136,7 @@
     }
     a.whats:hover{filter:brightness(1.06)}
 
-    /* ====== Menú desplegable acciones ====== */
+    /* ====== Menú acciones ====== */
     .menuWrap{position:relative;display:inline-block}
     .menuBtn{
       padding:8px 12px;
@@ -211,7 +211,7 @@
     </label>
 
     <input id="f-q" placeholder="Buscar (cliente / dir / tel)" style="flex:1 1 320px">
-    <button id="btnReload" class="ok" type="button">Actualizar</button>
+    <button id="btnReload" type="button">Actualizar</button>
 
     <span class="toolbar-spacer"></span>
     <a href="caja.html" class="btn" id="btnCaja" target="_self" title="Ir a Caja (registro económico)">💵 Ir a Caja</a>
@@ -241,7 +241,6 @@
 </div>
 
 <script>
-  // TU WebApp
   const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyDd--FDaQPnqG_LQ4MzLuRmIQc99Y0WK1Axpwh3Tc4GX1DLCHn77XTr2-wBZUVCuVO/exec';
 
   const state = { rows: [], startISO: '' };
@@ -316,7 +315,7 @@
     const chipCls = ['pendiente','confirmado','hecho','cancelado'].includes(estado) ? estado : '';
     const telClean = cleanPhone(r.telefono);
 
-    // ✅ Dirección con saltos de línea en comas
+    // Dirección con saltos por coma
     const dirHTML = r.direccion ? esc(r.direccion).replace(/,\s*/g,'<br>') : '';
 
     return `
@@ -400,7 +399,7 @@
 
         const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
         const headDow = dias[d.getDay()];
-        const headDate = `${pad(d.getDate())}/${pad(dt.getMonth()+1)}/${d.getFullYear()}`;
+        const headDate = `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`; // ✅ ARREGLADO: era dt
 
         cols.push(`
           <div class="dayCol" data-day="${iso}">
@@ -430,7 +429,7 @@
     if (!insideMenu) closeAllMenus();
   });
 
-  // Delegación de eventos: menú + acciones
+  // Delegación de eventos
   document.addEventListener('click', async (ev) => {
     const el = ev.target.closest('button');
     if (!el) return;
