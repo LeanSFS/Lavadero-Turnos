@@ -18,16 +18,16 @@
     }
     *{box-sizing:border-box}
     body{font-family:system-ui,Arial;background:var(--bg);color:#fff;min-height:100vh;margin:0}
-    .wrap{max-width:1180px;margin:0 auto;padding:24px}
+    .wrap{max-width:1280px;margin:0 auto;padding:24px}
     h1{margin:0 0 14px;font-size:28px}
 
     .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
     .toolbar-spacer{flex:1 1 auto}
     input,select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:#fff}
-    button{padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:#fff;font-weight:650;cursor:pointer}
+    button{padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:#fff;font-weight:700;cursor:pointer}
     button:hover{filter:brightness(1.05)}
     button:disabled{opacity:.6;cursor:not-allowed}
-    a.btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid #16a34a;background:#16a34a;color:#0b1220;font-weight:700;text-decoration:none}
+    a.btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid #16a34a;background:#16a34a;color:#0b1220;font-weight:800;text-decoration:none}
     a.btn:hover{filter:brightness(1.05)}
 
     .ok{border-color:var(--pri);background:var(--pri);color:#0b1220}
@@ -51,74 +51,61 @@
       background:rgba(0,0,0,.18);
       border-bottom:1px solid var(--line);
     }
-    .calTitle{font-weight:800;letter-spacing:.2px}
+    .calTitle{font-weight:900;letter-spacing:.2px}
     .calNav{display:flex;gap:8px;align-items:center}
     .ghost{background:transparent}
+
+    /* ✅ Más ancho: tarjetas más anchas => columnas más anchas */
     .calGrid{
       display:grid;
-      grid-template-columns: repeat(14, minmax(180px, 1fr));
+      grid-template-columns: repeat(14, minmax(290px, 1fr));
       gap:0;
       overflow:auto;
       -webkit-overflow-scrolling:touch;
       background:var(--card2);
     }
-    .dayCol{
-      border-right:1px solid var(--line);
-      min-height:380px;
-    }
+
+    .dayCol{border-right:1px solid var(--line);min-height:380px}
     .dayCol:last-child{border-right:none}
     .dayHead{
-      position:sticky;
-      top:0;
-      z-index:2;
+      position:sticky; top:0; z-index:2;
       padding:10px 10px 8px;
       background:var(--card);
       border-bottom:1px solid var(--line);
     }
-    .dayHead .dow{font-size:12px;color:var(--muted);font-weight:700}
-    .dayHead .date{font-size:14px;font-weight:900;margin-top:2px}
+    .dayHead .dow{font-size:12px;color:var(--muted);font-weight:800}
+    .dayHead .date{font-size:14px;font-weight:950;margin-top:2px}
     .dayHead .meta{font-size:11px;color:var(--muted);margin-top:2px}
     .dayBody{padding:10px;display:flex;flex-direction:column;gap:10px}
 
-    /* ====== Tarjeta compacta y ordenada ====== */
+    /* ====== Tarjeta prolija ====== */
     .slotCard{
       background:rgba(255,255,255,.03);
       border:1px solid var(--line);
-      border-radius:14px;
-      padding:12px;
-      box-shadow:0 8px 22px rgba(0,0,0,.22);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:0 10px 26px rgba(0,0,0,.25);
     }
 
     .cardHeader{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap:10px;
+      gap:12px;
     }
-    .titleBlock{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      min-width:0;
-      width:100%;
-    }
+    .titleBlock{display:flex;flex-direction:column;gap:8px;min-width:0;width:100%}
 
-    .topLine{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-    .hora{font-weight:950;font-size:13px;letter-spacing:.2px}
+    .topLine{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .hora{font-weight:950;font-size:14px;letter-spacing:.2px}
 
     .chip{
-      padding:5px 9px;
+      padding:6px 10px;
       border-radius:999px;
       border:1px solid var(--line);
       display:inline-flex;
       align-items:center;
       font-size:12px;
-      font-weight:900;
+      font-weight:950;
       white-space:nowrap;
     }
     .chip.pendiente{border-color:#64748b;color:#e5e7eb}
@@ -126,30 +113,18 @@
     .chip.hecho{border-color:#38bdf8;background:rgba(56,189,248,.12);color:#bae6fd}
     .chip.cancelado{border-color:var(--danger);background:rgba(239,68,68,.12);color:#fecaca}
 
-    .srv{font-weight:900;font-size:14px;margin:0}
-    .client{
-      font-weight:950;
-      font-size:14px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .sub{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.25;
-      display:-webkit-box;
-      -webkit-line-clamp:2;
-      -webkit-box-orient:vertical;
-      overflow:hidden;
-    }
+    .srv{font-weight:950;font-size:15px;margin:0}
+    .client{font-weight:950;font-size:15px}
+
+    .sub{font-size:13px;color:var(--muted);line-height:1.3}
+    /* ✅ Dirección completa: sin clamp, permite saltos */
+    .addr{white-space:pre-wrap; word-break:break-word;}
 
     .badgeRow{display:flex;gap:8px;align-items:center;flex-shrink:0}
 
-    /* WhatsApp chico */
     a.whats{
-      padding:6px 9px;
-      border-radius:10px;
+      padding:7px 10px;
+      border-radius:12px;
       border:1px solid var(--line);
       background:var(--card);
       color:#e5e7eb;
@@ -160,24 +135,50 @@
     }
     a.whats:hover{filter:brightness(1.06)}
 
-    .line{height:1px;background:var(--line);opacity:.7;margin:10px 0}
+    .line{height:1px;background:var(--line);opacity:.7;margin:12px 0}
 
-    /* Acciones compactas en grilla */
-    .actions{
-      display:grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap:6px;
-      margin-top:0;
-    }
-    .actions button{
-      padding:8px 8px;
-      border-radius:10px;
-      font-size:12px;
+    /* ====== Menú desplegable acciones ====== */
+    .menuWrap{position:relative;display:inline-block}
+    .menuBtn{
+      padding:9px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:#fff;
       font-weight:950;
+      cursor:pointer;
+      white-space:nowrap;
     }
-    @media (max-width: 520px){
-      .actions{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .menuBtn:hover{filter:brightness(1.06)}
+    .menu{
+      position:absolute;
+      right:0;
+      top:calc(100% + 8px);
+      min-width:200px;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:14px;
+      box-shadow:0 18px 40px rgba(0,0,0,.45);
+      padding:6px;
+      display:none;
+      z-index:50;
     }
+    .menu.open{display:block}
+    .menuItem{
+      width:100%;
+      text-align:left;
+      border:1px solid transparent;
+      background:transparent;
+      color:#fff;
+      padding:10px 10px;
+      border-radius:12px;
+      font-weight:900;
+      cursor:pointer;
+    }
+    .menuItem:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.06)}
+    .menuItem.ok{color:#bbf7d0}
+    .menuItem.warn{color:#fde68a}
+    .menuItem.danger{color:#fecaca}
 
     .empty{
       border:1px dashed rgba(148,163,184,.35);
@@ -193,72 +194,61 @@
 </head>
 
 <body>
-  <div class="wrap">
-    <h1>Agenda – Admin</h1>
+<div class="wrap">
+  <h1>Agenda – Admin</h1>
 
-    <div class="toolbar">
-      <label>Inicio <input type="date" id="f-fecha"></label>
+  <div class="toolbar">
+    <label>Inicio <input type="date" id="f-fecha"></label>
 
-      <label>Estado
-        <select id="f-estado">
-          <option value="">(todos)</option>
-          <option value="pendiente">pendiente</option>
-          <option value="confirmado">confirmado</option>
-          <option value="hecho">hecho</option>
-          <option value="cancelado">cancelado</option>
-        </select>
-      </label>
+    <label>Estado
+      <select id="f-estado">
+        <option value="">(todos)</option>
+        <option value="pendiente">pendiente</option>
+        <option value="confirmado">confirmado</option>
+        <option value="hecho">hecho</option>
+        <option value="cancelado">cancelado</option>
+      </select>
+    </label>
 
-      <input id="f-q" placeholder="Buscar (cliente / dir / tel)" style="flex:1 1 320px">
-      <button id="btnReload" class="ok" type="button">Actualizar</button>
+    <input id="f-q" placeholder="Buscar (cliente / dir / tel)" style="flex:1 1 320px">
+    <button id="btnReload" class="ok" type="button">Actualizar</button>
 
-      <span class="toolbar-spacer"></span>
-      <a href="caja.html" class="btn" id="btnCaja" target="_self" title="Ir a Caja (registro económico)">💵 Ir a Caja</a>
-    </div>
-
-    <div id="msg"></div>
-
-    <div class="calWrap">
-      <div class="calTop">
-        <div class="calNav">
-          <button id="btnPrev" class="ghost" type="button">←</button>
-          <button id="btnToday" class="ghost" type="button">Hoy</button>
-          <button id="btnNext" class="ghost" type="button">→</button>
-        </div>
-        <div class="calTitle" id="rangeTitle"></div>
-        <div class="toolbar-spacer"></div>
-        <div class="sub" style="max-width:420px">Tip: scrol horizontal para ver las 2 semanas completas.</div>
-      </div>
-
-      <div id="calGrid" class="calGrid"></div>
-    </div>
-
-    <div class="footerBar">
-      <div id="count"></div>
-      <div class="sub" id="hint"></div>
-    </div>
+    <span class="toolbar-spacer"></span>
+    <a href="caja.html" class="btn" id="btnCaja" target="_self" title="Ir a Caja (registro económico)">💵 Ir a Caja</a>
   </div>
 
+  <div id="msg"></div>
+
+  <div class="calWrap">
+    <div class="calTop">
+      <div class="calNav">
+        <button id="btnPrev" class="ghost" type="button">←</button>
+        <button id="btnToday" class="ghost" type="button">Hoy</button>
+        <button id="btnNext" class="ghost" type="button">→</button>
+      </div>
+      <div class="calTitle" id="rangeTitle"></div>
+      <div class="toolbar-spacer"></div>
+      <div class="sub" style="max-width:420px">Tip: scrol horizontal para ver las 2 semanas completas.</div>
+    </div>
+
+    <div id="calGrid" class="calGrid"></div>
+  </div>
+
+  <div class="footerBar">
+    <div id="count"></div>
+    <div class="sub" id="hint"></div>
+  </div>
+</div>
+
 <script>
-  // TU WebApp
   const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyDd--FDaQPnqG_LQ4MzLuRmIQc99Y0WK1Axpwh3Tc4GX1DLCHn77XTr2-wBZUVCuVO/exec';
 
   const state = { rows: [], startISO: '' };
   const pad = n => String(n).padStart(2,'0');
 
-  function isoFromDate(dt){
-    return `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}`;
-  }
-  function dateFromISO(iso){
-    const [y,m,d] = (iso||'').split('-').map(Number);
-    return new Date(y,(m||1)-1,d||1);
-  }
-  function addDays(dt, n){
-    const x = new Date(dt);
-    x.setDate(x.getDate()+n);
-    x.setHours(0,0,0,0);
-    return x;
-  }
+  function isoFromDate(dt){ return `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}`; }
+  function dateFromISO(iso){ const [y,m,d]=(iso||'').split('-').map(Number); return new Date(y,(m||1)-1,d||1); }
+  function addDays(dt,n){ const x=new Date(dt); x.setDate(x.getDate()+n); x.setHours(0,0,0,0); return x; }
 
   function niceFechaShort(iso){
     const dt = dateFromISO(iso);
@@ -276,19 +266,17 @@
     el.textContent=t||'';
     el.style.color=isErr?'#fca5a5':'#9ca3af';
   }
-
   function setStart(iso){
     state.startISO = iso;
     document.getElementById('f-fecha').value = iso;
     document.getElementById('rangeTitle').textContent = niceRangeTitle(iso);
   }
 
-  function cleanPhone(p){
-    return String(p||'').replace(/[^0-9+]/g,'');
-  }
-
-  function escAttr(s){
-    return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function cleanPhone(p){ return String(p||'').replace(/[^0-9+]/g,''); }
+  function esc(s){
+    return String(s||'')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
   async function load(){
@@ -309,12 +297,9 @@
   function getFilteredRows(){
     const fEstado = document.getElementById('f-estado').value.trim().toLowerCase();
     const fQ = document.getElementById('f-q').value.trim().toLowerCase();
-
     let rows = state.rows.slice();
 
-    if (fEstado){
-      rows = rows.filter(r => (r.estado||'').toLowerCase() === fEstado);
-    }
+    if (fEstado) rows = rows.filter(r => (r.estado||'').toLowerCase() === fEstado);
     if (fQ){
       rows = rows.filter(r =>
         (r.nombre||'').toLowerCase().includes(fQ) ||
@@ -331,39 +316,47 @@
     const telClean = cleanPhone(r.telefono);
 
     return `
-      <div class="slotCard" data-id="${encodeURIComponent(r.id)}">
+      <div class="slotCard">
         <div class="cardHeader">
           <div class="titleBlock">
             <div class="topLine">
-              <div class="hora">${escAttr(r.hora || '—')}</div>
-              <span class="chip ${chipCls}">${escAttr(r.estado || '—')}</span>
+              <div class="hora">${esc(r.hora||'—')}</div>
+              <span class="chip ${chipCls}">${esc(r.estado||'—')}</span>
             </div>
 
-            <div class="srv">${escAttr(r.servicio || 'Servicio')}</div>
-            <div class="client" title="${escAttr(r.nombre||'')}">${escAttr(r.nombre || 'Cliente')}</div>
+            <div class="srv">${esc(r.servicio||'Servicio')}</div>
+            <div class="client">${esc(r.nombre||'Cliente')}</div>
 
-            ${r.direccion ? `<div class="sub" title="${escAttr(r.direccion)}">${escAttr(r.direccion)}</div>` : ``}
-            ${r.telefono ? `<div class="sub">📞 ${escAttr(r.telefono)}</div>` : ``}
+            ${r.direccion ? `<div class="sub addr">${esc(r.direccion)}</div>` : ``}
+            ${r.telefono ? `<div class="sub">📞 ${esc(r.telefono)}</div>` : ``}
           </div>
 
           <div class="badgeRow">
-            <a class="whats" href="https://wa.me/${telClean}" target="_blank" rel="noopener">WA</a>
+            <a class="whats" href="https://wa.me/${telClean}" target="_blank" rel="noopener">WhatsApp</a>
+
+            <div class="menuWrap">
+              <button class="menuBtn" type="button" data-act="menu" data-id="${encodeURIComponent(r.id)}">
+                Acciones ▾
+              </button>
+
+              <div class="menu" data-menu-for="${encodeURIComponent(r.id)}">
+                <button class="menuItem ok" type="button" data-act="status" data-estado="confirmado" data-id="${encodeURIComponent(r.id)}">✅ Confirmar</button>
+                <button class="menuItem ok" type="button" data-act="status" data-estado="hecho" data-id="${encodeURIComponent(r.id)}">🏁 Marcar Hecho</button>
+                <button class="menuItem warn" type="button" data-act="status" data-estado="cancelado" data-id="${encodeURIComponent(r.id)}">⚠️ Cancelar</button>
+                <button class="menuItem danger" type="button" data-act="delete"
+                  data-id="${encodeURIComponent(r.id)}"
+                  data-fecha="${encodeURIComponent(r.fecha)}"
+                  data-hora="${encodeURIComponent(r.hora)}">🗑️ Borrar</button>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div class="line"></div>
-
-        <div class="actions">
-          <button class="ok" type="button" data-act="status" data-estado="confirmado" data-id="${encodeURIComponent(r.id)}">Confirmar</button>
-          <button class="ok" type="button" data-act="status" data-estado="hecho" data-id="${encodeURIComponent(r.id)}">Hecho</button>
-          <button class="warn" type="button" data-act="status" data-estado="cancelado" data-id="${encodeURIComponent(r.id)}">Cancelar</button>
-          <button class="danger" type="button" data-act="delete"
-            data-id="${encodeURIComponent(r.id)}"
-            data-fecha="${encodeURIComponent(r.fecha)}"
-            data-hora="${encodeURIComponent(r.hora)}">Borrar</button>
         </div>
       </div>
     `;
+  }
+
+  function closeAllMenus(){
+    document.querySelectorAll('.menu.open').forEach(m => m.classList.remove('open'));
   }
 
   function render(){
@@ -371,12 +364,10 @@
       const calGrid = document.getElementById('calGrid');
 
       const startISO = document.getElementById('f-fecha').value || state.startISO;
-      if (startISO && startISO !== state.startISO){
-        setStart(startISO);
-      }
+      if (startISO && startISO !== state.startISO) setStart(startISO);
 
       const start = dateFromISO(state.startISO);
-      const end = addDays(start, 14); // exclusive
+      const end = addDays(start, 14);
       const startT = start.getTime();
       const endT = end.getTime();
 
@@ -386,13 +377,10 @@
         return t >= startT && t < endT;
       });
 
-      rows.sort((a,b) => {
-        if ((a.fecha||'') !== (b.fecha||'')) return (a.fecha||'').localeCompare(b.fecha||'');
-        return (a.hora||'').localeCompare(b.hora||'');
-      });
+      rows.sort((a,b) => (a.fecha||'').localeCompare(b.fecha||'') || (a.hora||'').localeCompare(b.hora||''));
 
       document.getElementById('count').textContent = `${rows.length} turno(s) en estas 2 semanas`;
-      document.getElementById('hint').textContent = rows.length ? 'Usá los botones para actualizar estado o borrar.' : '';
+      document.getElementById('hint').textContent = rows.length ? 'Acciones dentro de cada tarjeta.' : '';
 
       const byDate = new Map();
       for (const r of rows){
@@ -410,8 +398,6 @@
         const headDow = dias[d.getDay()];
         const headDate = `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
 
-        const cards = list.length ? list.map(r => cardHTML(r)).join('') : `<div class="empty">Sin turnos</div>`;
-
         cols.push(`
           <div class="dayCol" data-day="${iso}">
             <div class="dayHead">
@@ -420,33 +406,53 @@
               <div class="meta">${list.length} turno(s)</div>
             </div>
             <div class="dayBody">
-              ${cards}
+              ${list.length ? list.map(cardHTML).join('') : `<div class="empty">Sin turnos</div>`}
             </div>
           </div>
         `);
       }
 
       calGrid.innerHTML = cols.join('');
+      closeAllMenus();
     }catch(e){
       console.error(e);
       setMsg('⚠️ Render error: ' + e.message, true);
     }
   }
 
-  // Delegación de eventos para botones dentro del calendario
-  document.addEventListener('click', async (ev) => {
-    const btn = ev.target.closest('button');
-    if (!btn) return;
+  // Cerrar menús clickeando afuera
+  document.addEventListener('click', (ev) => {
+    const insideMenu = ev.target.closest('.menuWrap');
+    if (!insideMenu) closeAllMenus();
+  });
 
-    const act = btn.dataset.act;
+  // Delegación de eventos: menú + acciones
+  document.addEventListener('click', async (ev) => {
+    const el = ev.target.closest('button');
+    if (!el) return;
+
+    const act = el.dataset.act;
     if (!act) return;
 
-    btn.disabled = true;
-
     try{
+      if (act === 'menu'){
+        const id = el.dataset.id || '';
+        const menu = document.querySelector(`.menu[data-menu-for="${CSS.escape(id)}"]`);
+        if (!menu) return;
+        const isOpen = menu.classList.contains('open');
+        closeAllMenus();
+        if (!isOpen) menu.classList.add('open');
+        return;
+      }
+
+      // cerrar menú antes de ejecutar
+      closeAllMenus();
+
+      el.disabled = true;
+
       if (act === 'status') {
-        const id = decodeURIComponent(btn.dataset.id||'');
-        const estado = btn.dataset.estado || '';
+        const id = decodeURIComponent(el.dataset.id||'');
+        const estado = el.dataset.estado || '';
         const url = `${WEBAPP_URL}?action=status&id=${encodeURIComponent(id)}&estado=${encodeURIComponent(estado)}&t=${Date.now()}`;
         const res = await fetch(url);
         const data = await res.json();
@@ -457,22 +463,22 @@
       if (act === 'delete') {
         if (!confirm('¿Borrar definitivamente este turno?')) return;
 
-        const id  = decodeURIComponent(btn.dataset.id||'');
-        const f   = decodeURIComponent(btn.dataset.fecha||'');
-        const h   = decodeURIComponent(btn.dataset.hora||'');
+        const id  = decodeURIComponent(el.dataset.id||'');
+        const f   = decodeURIComponent(el.dataset.fecha||'');
+        const h   = decodeURIComponent(el.dataset.hora||'');
 
         const url = `${WEBAPP_URL}?action=delete&id=${encodeURIComponent(id)}&fecha=${encodeURIComponent(f)}&hora=${encodeURIComponent(h)}&t=${Date.now()}`;
         const res = await fetch(url);
         const data = await res.json();
         if (!data.ok) { setMsg(`⚠️ Error al borrar: ${data.error}`, true); return; }
-        setMsg(`✅ Borrado OK`);
+        setMsg('✅ Borrado OK');
         await load(); return;
       }
     }catch(e){
       setMsg('⚠️ '+e.message,true);
       console.error(e);
     }finally{
-      btn.disabled = false;
+      if (el) el.disabled = false;
     }
   });
 
