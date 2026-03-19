@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>LyS Lavados – Reservas</title>
+
+  <style>
+    :root{
+      --bg:#0f172a;
+      --card:#0b1220;
+      --line:#1f2937;
+      --muted:#9ca3af;
+      --ok:#22c55e;
+      --wpp:#25D366;
+    }
+
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;
+      background:var(--bg);
+      color:#fff;
+      margin:0;
+      padding:24px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+    }
+
+    .box{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:24px;
+      max-width:420px;
+      width:100%;
+      text-align:center;
+    }
+
+    .brand__logo{
+      height:260px;
+      margin-bottom:16px;
+    }
+
+    h1{
+      font-size:20px;
+      margin-bottom:10px;
+    }
+
+    p{
+      color:var(--muted);
+      margin-bottom:20px;
+      line-height:1.4;
+    }
+
+    .btn-wpp{
+      display:block;
+      width:100%;
+      padding:14px;
+      border-radius:12px;
+      border:none;
+      background:var(--wpp);
+      color:#0b1220;
+      font-weight:800;
+      font-size:16px;
+      cursor:pointer;
+      text-decoration:none;
+    }
+
+    .btn-wpp:hover{
+      opacity:.9;
+    }
+
+    .extra{
+      margin-top:14px;
+      font-size:13px;
+      color:var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box">
+
+    <img src="logo-lys.png" alt="LyS Lavados" class="brand__logo">
+
+    <h1>Reservá tu turno</h1>
+
+    <p>
+      Por el momento estamos tomando turnos únicamente por WhatsApp<br>
+      para brindarte una atención más rápida y personalizada.
+    </p>
+
+    <a 
+      class="btn-wpp"
+      href="https://wa.me/549299XXXXXXXX?text=Hola,%20quiero%20reservar%20un%20turno"
+      target="_blank"
+    >
+      Reservar por WhatsApp
+    </a>
+
+    <div class="extra">
+      Respondemos lo antes posible 👍
+    </div>
+
+  </div>
+</body>
+</html>
