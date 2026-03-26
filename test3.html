@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>LyS Works • Estética Vehicular</title>
+  <title>LyS Works • Lavado a Domicilio</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
@@ -10,13 +10,12 @@
   <style>
     :root {
       --bg: #020617;
-      --card: rgba(15, 23, 42, 0.6);
+      --card: rgba(15, 23, 42, 0.7);
       --line: rgba(255, 255, 255, 0.08);
       --muted: #94a3b8;
       --title: #f8fafc;
       --cta: #22c55e;
       --cta-ink: #020617;
-      --accent: #10b981;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -27,16 +26,13 @@
       min-height: 100vh;
       padding: 20px 16px 100px;
       background: 
-        radial-gradient(circle at 0% 0%, rgba(34, 197, 94, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 0% 0%, rgba(34, 197, 94, 0.12) 0%, transparent 40%),
         #020617;
       font-size: 15px;
-      line-height: 1.5;
     }
 
     .wrap { max-width: 480px; margin: 0 auto; }
 
-    /* Animación de entrada de la tarjeta principal */
     .card {
       background: var(--card);
       backdrop-filter: blur(12px);
@@ -45,95 +41,77 @@
       padding: 24px 20px;
       border: 1px solid var(--line);
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: fadeIn 0.6s ease-out;
     }
 
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .brand-logo { display: block; height: 90px; margin: 0 auto 12px auto; filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.3)); }
-    .tagline { text-align: center; font-size: 10px; color: var(--cta); letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; }
-    h1 { font-size: 26px; text-align: center; font-weight: 900; color: var(--title); margin-bottom: 8px; letter-spacing: -0.02em; }
+    .brand-logo { display: block; height: 86px; margin: 0 auto 12px auto; }
+    .tagline { text-align: center; font-size: 11px; color: var(--cta); letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+    h1 { font-size: 24px; text-align: center; font-weight: 900; color: var(--title); margin-bottom: 6px; }
     .hero-lead { font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 20px; }
 
-    /* Chips con brillo */
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px; }
-    .chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); font-size: 11px; color: #e2e8f0; background: rgba(255,255,255,0.03); display: flex; align-items: center; gap: 6px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 24px; }
+    .chip { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); font-size: 11px; color: #e2e8f0; background: rgba(255,255,255,0.03); }
 
     /* Selector de Vehículos */
     .veh-toggle { 
       margin-bottom: 20px; padding: 16px; border-radius: 20px; 
-      background: rgba(0,0,0,0.2); border: 1px solid rgba(34,197,94,0.2);
+      background: rgba(0,0,0,0.3); border: 1px solid rgba(34,197,94,0.3);
     }
-    .veh-label { font-size: 13px; font-weight: 700; color: var(--title); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .veh-label { font-size: 14px; font-weight: 700; color: var(--cta); margin-bottom: 12px; text-align: center; }
     .veh-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .veh-btn { 
-      padding: 12px 8px; border-radius: 14px; border: 1px solid var(--line); 
+      padding: 12px 6px; border-radius: 16px; border: 1px solid var(--line); 
       background: rgba(255,255,255,0.05); color: #94a3b8; font-size: 12px; font-weight: 600;
-      cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 4px;
     }
     .veh-btn span { font-size: 20px; }
-    .veh-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
     .veh-btn.active { 
       background: var(--cta); color: var(--cta-ink); border-color: var(--cta);
-      transform: scale(1.05); box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+      transform: scale(1.05); font-weight: 800;
     }
 
     /* Contenedor de Servicios */
-    #servicios-container { display: none; }
-    .svc-title-label { font-size: 12px; color: var(--muted); margin: 24px 0 12px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
+    #servicios-container, .sticky-cta { display: none; }
+    .svc-title-label { font-size: 12px; color: var(--muted); margin: 24px 0 12px; text-transform: uppercase; font-weight: 700; text-align: center; }
     
     .svc { 
       border: 1px solid var(--line); background: rgba(255,255,255,0.02); 
-      border-radius: 18px; padding: 16px; margin-bottom: 12px;
-      transition: transform 0.2s ease;
-      animation: fadeInItem 0.5s ease forwards; opacity: 0;
+      border-radius: 18px; padding: 14px; margin-bottom: 10px;
+      animation: slideIn 0.4s ease forwards; opacity: 0;
     }
-    @keyframes fadeInItem {
-      from { opacity: 0; transform: translateX(-10px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    .svc:hover { border-color: rgba(34, 197, 94, 0.3); background: rgba(34, 197, 94, 0.02); }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
 
-    .svc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-    .svc-title { font-weight: 700; color: var(--title); font-size: 16px; }
-    
-    .pill { 
-      font-size: 12px; font-weight: 800; padding: 5px 12px; border-radius: 999px; 
-      background: var(--cta); color: var(--cta-ink);
-    }
+    .svc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+    .svc-title { font-weight: 700; color: var(--title); font-size: 15px; }
+    .pill { font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 999px; background: var(--cta); color: var(--cta-ink); }
+    .svc-desc { color: var(--muted); font-size: 12.5px; line-height: 1.4; }
 
-    .svc-desc { color: var(--muted); font-size: 13px; line-height: 1.4; }
-
-    .socials { display: flex; gap: 10px; margin-top: 20px; }
+    /* Redes Sociales */
+    .socials { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 20px; }
     .social-btn { 
-      flex: 1; padding: 12px; border-radius: 14px; border: 1px solid var(--line); 
-      background: rgba(255,255,255,0.05); color: #fff; font-size: 12px; 
-      display: flex; align-items: center; justify-content: center; gap: 8px; 
+      padding: 10px; border-radius: 12px; border: 1px solid var(--line); 
+      background: rgba(255,255,255,0.05); color: #fff; font-size: 11px; 
+      display: flex; flex-direction: column; align-items: center; gap: 4px; 
       text-decoration: none; font-weight: 600; transition: 0.3s;
     }
-    .social-btn:hover { background: #fff; color: #000; }
+    .social-btn:hover { background: rgba(255,255,255,0.1); }
 
-    /* CTA Flotante animado */
+    /* Botón Flotante */
     .sticky-cta { 
-      position: fixed; left: 0; right: 0; bottom: 0; padding: 20px 16px 24px; 
-      background: linear-gradient(to top, var(--bg) 60%, transparent);
-      display: none; justify-content: center; z-index: 50;
-      animation: slideUp 0.4s ease-out;
+      position: fixed; left: 0; right: 0; bottom: 0; padding: 20px 16px; 
+      background: linear-gradient(to top, var(--bg) 70%, transparent);
+      justify-content: center; z-index: 50;
     }
     .cta-main { 
       width: 100%; max-width: 440px; background: var(--cta); color: var(--cta-ink); 
-      text-align: center; padding: 16px; border-radius: 16px; text-decoration: none; 
-      font-weight: 800; font-size: 16px; box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
-      transition: transform 0.2s;
+      text-align: center; padding: 15px; border-radius: 16px; text-decoration: none; 
+      font-weight: 800; font-size: 16px; box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4);
     }
-    .cta-main:active { transform: scale(0.96); }
 
-    footer { margin-top: 24px; text-align: center; color: var(--muted); font-size: 11px; opacity: 0.7; }
-    .mate-link { color: var(--cta); text-decoration: none; font-weight: 600; }
+    footer { margin-top: 24px; text-align: center; color: var(--muted); font-size: 10px; }
+    .mate-link { cursor: pointer; color: transparent; } /* Oculto pero funcional */
   </style>
 </head>
 <body>
@@ -141,18 +119,18 @@
 <main class="wrap">
   <section class="card">
     <img src="logo-lys.png" alt="LyS Works" class="brand-logo">
-    <div class="tagline">Detailing a domicilio</div>
-    <h1>Estética Vehicular</h1>
-    <p class="hero-lead">Seleccioná tu vehículo para ver el presupuesto.</p>
+    <div class="tagline">Servicio a Domicilio</div>
+    <h1>Lavado de Autos</h1>
+    <p class="hero-lead">Elegí tu vehículo para ver los precios:</p>
 
     <div class="chips">
-      <div class="chip">✨ Premium</div>
       <div class="chip">📍 Cipolletti</div>
-      <div class="chip">🏡 A domicilio</div>
+      <div class="chip">🧽 Detailing Real</div>
+      <div class="chip">🚿 Sin moverte</div>
     </div>
 
     <div class="veh-toggle">
-      <p class="veh-label">¿Qué vehículo tenés?</p>
+      <p class="veh-label">¿Qué vehículo limpiamos?</p>
       <div class="veh-buttons">
         <button class="veh-btn" data-type="auto"><span>🚗</span>Auto</button>
         <button class="veh-btn" data-type="suv"><span>🚙</span>SUV</button>
@@ -161,7 +139,7 @@
     </div>
 
     <div id="servicios-container">
-        <div class="svc-title-label">Servicios Disponibles</div>
+        <div class="svc-title-label">Nuestros Trabajos</div>
 
         <div class="svc" style="animation-delay: 0.1s">
           <div class="svc-head">
@@ -181,13 +159,21 @@
 
         <div class="svc" style="animation-delay: 0.3s">
           <div class="svc-head">
+            <span class="svc-title">Limpieza de Techos</span>
+            <span class="pill">$10.000</span>
+          </div>
+          <p class="svc-desc">Técnica manual con microfibras. Sacamos manchas de roce y suciedad cuidando el pegamento original.</p>
+        </div>
+
+        <div class="svc" style="animation-delay: 0.4s">
+          <div class="svc-head">
             <span class="svc-title">Tapizados de Tela</span>
             <span class="pill" id="p-tela">--</span>
           </div>
           <p class="svc-desc" id="desc-tela"></p>
         </div>
 
-        <div class="svc" style="animation-delay: 0.4s">
+        <div class="svc" style="animation-delay: 0.5s">
           <div class="svc-head">
             <span class="svc-title">Tapizados de Cuero</span>
             <span class="pill" id="p-cuero">--</span>
@@ -196,19 +182,20 @@
         </div>
 
         <div class="socials">
-          <a class="social-btn" href="https://wa.me/2995760611" target="_blank">WhatsApp</a>
-          <a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank">Instagram</a>
+          <a class="social-btn" href="https://wa.me/2995760611" target="_blank"><span>💬</span> WhatsApp</a>
+          <a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank"><span>📸</span> Instagram</a>
+          <a class="social-btn" href="https://facebook.com/..." target="_blank"><span>📘</span> Facebook</a>
         </div>
     </div>
   </section>
 
   <footer>
-    © <span id="y"></span> LyS Works • <span id="mateLink" class="mate-link">Panel Admin</span>
+    © <span id="y"></span> LyS Works — Hecho con <span id="mateLink" class="mate-link">mate</span>.
   </footer>
 </main>
 
 <div class="sticky-cta" id="floating-cta">
-  <a class="cta-main" href="reserva.html">🗓️ Reservar turno online</a>
+  <a class="cta-main" href="reserva.html">🗓️ Reservar mi turno</a>
 </div>
 
 <script>
@@ -222,22 +209,22 @@
   
   const DESCRIPCIONES = {
     auto: {
-      ext: "Lavado artesanal con cera rápida. Ideal para mantenimiento semanal.",
-      int: "Aspirado técnico y restauración de plásticos con acabado natural mate.",
-      tela: "Limpieza profunda con sistema de extracción. Eliminamos manchas y olores.",
-      cuero: "Limpieza de poros y aplicación de cremas nutritivas con protección UV."
+      ext: "Lavado artesanal con cera rápida. Realza el brillo y protege la pintura.",
+      int: "Aspirado detallado y restauración de plásticos. Terminación mate original.",
+      tela: "Inyección y extracción profunda. Chau manchas y olores.",
+      cuero: "Limpieza profunda y nutrición para evitar que se cuartee por el sol."
     },
     suv: {
-      ext: "Limpieza detallada de carrocería y llantas de gran porte.",
-      int: "Aspirado intensivo de habitáculo y zona de carga/baúl.",
-      tela: "Desinfección total de plazas familiares y remoción de manchas rebeldes.",
-      cuero: "Tratamiento hidratante para proteger el cuero del calor del valle."
+      ext: "Lavado completo de carrocería y llantas grandes con terminación premium.",
+      int: "Aspirado de habitáculo y baúl. Tratamiento de plásticos con protección UV.",
+      tela: "Ideal para familias. Desinfección total de butacas y remoción de manchas.",
+      cuero: "Hidratación técnica para proteger el cuero del desgaste diario."
     },
     pickup: {
-      ext: "Lavado técnico reforzado. Incluye limpieza de caja y retiro de barro.",
-      int: "Limpieza profunda de alfombras y plásticos sometidos a trato rudo.",
-      tela: "Extracción industrial de polvo de tierra y manchas de trabajo.",
-      cuero: "Nutrición extrema para evitar que el cuero se reseque o quiebre."
+      ext: "Lavado técnico reforzado. Incluimos limpieza de caja y sacamos el barro del Valle.",
+      int: "Aspirado y limpieza profunda de alfombras y plásticos sometidos a trato rudo.",
+      tela: "Extracción industrial de polvo y tierra incrustada. Renovación total.",
+      cuero: "Limpieza y acondicionador premium. Protege de la sequedad del clima seco."
     }
   };
 
@@ -259,9 +246,6 @@
     btn.addEventListener('click', () => {
       const type = btn.dataset.type;
       
-      // Reset de animaciones para que vuelvan a "entrar" al cambiar de vehículo
-      container.style.display = 'none';
-      void container.offsetWidth; // Trigger reflow
       container.style.display = 'block';
       cta.style.display = 'flex';
 
@@ -281,7 +265,7 @@
   });
 
   document.getElementById('mateLink').addEventListener('click', () => {
-    const clave = prompt('Password:');
+    const clave = prompt('Acceso Admin:');
     if (clave === 'yerba') window.open('admin.html', '_blank');
   });
 </script>
