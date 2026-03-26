@@ -2,166 +2,243 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>LyS Works • Estética Vehicular</title>
+  <title>LyS Lavados • Lavado a domicilio en Cipolletti</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="LyS Lavados a domicilio en Cipolletti. Estética vehicular profesional. Elegí tu tipo de vehículo y reservá tu turno online.">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
       --bg:#020817; --card:#050815; --line:#111827; --muted:#9ca3af;
       --title:#e5e7eb; --cta:#22c55e; --cta-ink:#020817;
+      --ring:0 0 0 4px rgba(34,197,94,.22);
     }
     *{ box-sizing:border-box; margin:0; padding:0; }
     body{
-      font-family:"Inter",sans-serif; color:#fff; background:var(--bg);
-      padding:20px 15px 100px; font-size:15px;
+      font-family:"Inter",system-ui,-apple-system,sans-serif;
+      color:#fff; min-height:100vh; padding:18px 12px 80px;
+      background: radial-gradient(900px 600px at 0% 0%, rgba(34,197,94,0.10), transparent),
+                  radial-gradient(700px 500px at 100% 0%, rgba(56,189,248,0.06), transparent), #020817;
+      font-size:15px;
     }
-    .wrap{ max-width:500px; margin:0 auto; }
+    .wrap{ max-width:520px; margin:0 auto; }
     .card{
-      background:var(--card); border-radius:24px; padding:20px;
-      border:1px solid rgba(255,255,255,0.08); box-shadow:0 20px 40px rgba(0,0,0,0.5);
+      background:var(--card); border-radius:20px; padding:18px 16px 16px;
+      border:1px solid rgba(148,163,253,0.12); box-shadow:0 18px 40px rgba(0,0,0,0.6);
     }
-    .brand{ text-align:center; margin-bottom:20px; }
-    .logo-text{ font-weight:800; font-size:28px; color:var(--cta); letter-spacing:-1px; }
+    .brand-logo{ display:block; height:84px; margin:0 auto 8px auto; }
+    .tagline{ text-align:center; font-size:11px; color:var(--muted); letter-spacing:0.14em; text-transform:uppercase; margin-bottom:6px; }
+    h1{ font-size:24px; text-align:center; font-weight:800; color:var(--title); margin-bottom:6px; }
+    .hero-lead{ font-size:14px; color:#e5e7eb; text-align:center; margin-bottom:12px; line-height:1.4; }
+    .chips{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:14px; }
+    .chip{ padding:6px 9px; border-radius:999px; border:1px solid var(--line); font-size:11px; color:#e5e7eb; background:#020817; display:flex; align-items:center; gap:4px; }
     
-    /* Selector de Vehículo */
-    .veh-selector{
-      background:#0a101f; border:1px solid var(--cta); border-radius:18px;
-      padding:15px; margin-bottom:20px;
-    }
-    .veh-selector p{ font-size:13px; font-weight:600; color:#bbf7d0; margin-bottom:10px; text-align:center; }
-    .btns{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-    .btn{
-      background:#020817; border:1px solid #1e293b; color:#cbd5e1;
-      padding:10px 5px; border-radius:12px; font-size:11px; cursor:pointer;
-      display:flex; flex-direction:column; align-items:center; gap:4px;
-    }
-    .btn.active{ background:var(--cta); color:var(--cta-ink); border-color:#16a34a; font-weight:700; }
+    .veh-toggle{ margin-bottom:14px; padding:12px 10px 10px; border-radius:16px; background:#020817; border:1px solid rgba(34,197,94,0.45); box-shadow:0 0 18px rgba(34,197,94,0.16); }
+    .veh-label{ display:flex; align-items:flex-start; gap:8px; font-size:14px; font-weight:600; color:#22c55e; margin-bottom:8px; }
+    .veh-label .txt{ color:#bbf7d0; line-height:1.4; }
+    .veh-buttons{ display:grid; grid-template-columns:1fr; gap:8px; }
+    @media (min-width:520px){ .veh-buttons{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
+    .veh-btn{ width:100%; padding:9px 10px; border-radius:999px; border:1px solid #293548; background:#020817; color:#e5e7eb; font-size:12px; cursor:pointer; display:flex; align-items:flex-start; gap:8px; transition:all .16s ease; text-align:left; }
+    .veh-btn small{ display:block; font-size:10px; color:#9ca3af; }
+    .veh-btn:hover{ border-color:#22c55e; transform:translateY(-1px); }
+    .veh-btn-init{ border-color:rgba(34,197,94,0.42); animation:pulseSoft 1.4s ease-in-out infinite; }
+    .veh-btn.active{ background:var(--cta); color:var(--cta-ink); border-color:#16a34a; box-shadow:var(--ring); font-weight:700; transform:translateY(-1px); animation:none; }
 
-    /* Lista de Servicios */
-    .svc{
-      background:#020817; border:1px solid var(--line);
-      border-radius:16px; padding:15px; margin-bottom:10px;
-    }
-    .svc-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
-    .svc-name{ font-weight:700; color:var(--title); }
-    .pill{
-      font-size:12px; font-weight:700; padding:4px 10px; border-radius:99px;
-      background:rgba(34,197,94,0.1); color:var(--cta); border:1px solid rgba(34,197,94,0.3);
-    }
-    .pill.ready{ background:var(--cta); color:var(--cta-ink); }
-    .svc-desc{ color:var(--muted); font-size:12px; line-height:1.4; padding-left:5px; border-left:2px solid #1e293b; }
+    @keyframes pulseSoft{ 0%{ box-shadow:0 0 6px rgba(34,197,94,0.16); } 50%{ box-shadow:0 0 16px rgba(34,197,94,0.40); } 100%{ box-shadow:0 0 6px rgba(34,197,94,0.16); } }
 
-    .note{ font-size:11px; color:#64748b; text-align:center; margin-top:20px; line-height:1.5; }
+    .svc-title-label{ font-size:13px; color:var(--muted); margin:4px 0 6px; }
+    .svc{ border:1px solid var(--line); background:#020817; border-radius:14px; padding:9px 10px 8px; margin-bottom:8px; }
+    .svc-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px; }
+    .svc-title{ font-weight:700; color:#e5e7eb; font-size:15px; }
+    .price-wrap{ display:flex; align-items:center; gap:4px; }
+    .price-label{ font-size:10px; color:var(--muted); }
+    .price-wrap.price-active .price-label{ color:#cbd5e1; }
+    .pill{ font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px; white-space:nowrap; transition:all .18s ease; }
+    .pill-init{ color:#bbf7d0; background:rgba(34,197,94,0.14); border:1px solid rgba(34,197,94,0.38); animation:pulseSoft 1.4s ease-in-out infinite; }
+    .pill-visible{ color:#020817; background:#22c55e; border:1px solid #16a34a; animation:none; }
+    .svc-list{ margin:0; padding-left:16px; color:#d1d5db; font-size:12px; line-height:1.5; list-style:disc; }
+    .note{ color:#9ca3af; font-size:10px; margin-top:6px; line-height:1.5; }
+
+    .socials{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .social-btn{ flex:1; padding:8px 10px; border-radius:999px; border:1px solid #22c55e; background:#0b1726; color:#e5e7eb; font-size:11px; display:flex; align-items:center; justify-content:center; gap:6px; text-decoration:none; font-weight:600; transition:all .16s ease; }
+    .social-btn:hover{ background:#22c55e; color:#020817; transform:translateY(-1px); }
+
+    .sticky-cta{ position:fixed; left:0; right:0; bottom:0; padding:10px 12px 12px; background:linear-gradient(to top, rgba(2,8,23,0.98), rgba(2,8,23,0.9)); display:flex; justify-content:center; z-index:40; }
+    .cta-main{ display:flex; align-items:center; justify-content:center; gap:8px; padding:11px 20px; border-radius:999px; border:1px solid #16a34a; background:var(--cta); color:var(--cta-ink); font-weight:800; font-size:15px; text-decoration:none; box-shadow:0 10px 26px rgba(22,163,74,0.7); width:100%; max-width:520px; transition:all .14s ease; }
     
-    .sticky{
-      position:fixed; bottom:0; left:0; right:0; padding:15px;
-      background:linear-gradient(transparent, var(--bg) 30%);
-      display:flex; justify-content:center;
-    }
-    .cta{
-      background:var(--cta); color:var(--cta-ink); padding:14px 30px;
-      border-radius:99px; text-decoration:none; font-weight:800; width:100%;
-      max-width:400px; text-align:center; box-shadow:0 10px 20px rgba(34,197,94,0.3);
-    }
+    footer{ margin-top:12px; text-align:center; color:#6b7280; font-size:10px; }
+    .mate-link{ cursor:pointer; }
   </style>
 </head>
 <body>
+<main class="wrap">
+  <section class="card">
+    <img src="logo-lys.png" alt="LyS Lavados" class="brand-logo">
+    <div class="tagline">LAVADO A DOMICILIO • CIPOLLETTI</div>
+    <h1>Tu auto limpio sin moverte de casa.</h1>
+    <p class="hero-lead">Elegí tu vehículo para actualizar los precios. Vamos a tu domicilio con todo lo necesario.</p>
 
-<div class="wrap">
-  <div class="card">
-    <div class="brand">
-      <div class="logo-text">LyS WORKS</div>
-      <p style="font-size:12px; color:var(--muted); margin-top:4px;">ESTÉTICA VEHICULAR A DOMICILIO</p>
+    <div class="chips">
+      <div class="chip">🧽 Detailing profesional</div>
+      <div class="chip">📍 Cipolletti y alrededores</div>
+      <div class="chip">⏱️ Turnos puntuales</div>
+      <div class="chip">🚿🔌 Solo canilla y enchufe</div>
     </div>
 
-    <div class="veh-selector">
-      <p>1. Elegí el tamaño de tu vehículo:</p>
-      <div class="btns">
-        <button class="btn" data-type="auto"><span>🚗</span>Auto</button>
-        <button class="btn" data-type="suv"><span>🚙</span>SUV</button>
-        <button class="btn" data-type="pickup"><span>🛻</span>Pickup</button>
+    <div class="veh-toggle">
+      <p id="veh-label" class="veh-label">
+        <span class="icon">🚘</span>
+        <span class="txt">Seleccioná tu tipo de vehículo:</span>
+      </p>
+      <div class="veh-buttons">
+        <button type="button" class="veh-btn veh-btn-init" data-type="auto">
+          <span>🚗</span><div>Auto Chico / Mediano<small>Clio, Gol, Cronos, etc.</small></div>
+        </button>
+        <button type="button" class="veh-btn veh-btn-init" data-type="suv">
+          <span>🚙</span><div>SUV / Utilitario<small>Duster, EcoSport, Kangoo, etc.</small></div>
+        </button>
+        <button type="button" class="veh-btn veh-btn-init" data-type="pickup">
+          <span>🛻</span><div>Pickup / Grande<small>Hilux, Amarok, RAM, etc.</small></div>
+        </button>
       </div>
     </div>
 
-    <p style="font-size:13px; color:var(--muted); margin-bottom:10px; font-weight:600;">2. Servicios disponibles:</p>
+    <div class="svc-title-label">Servicios individuales:</div>
 
     <div class="svc">
       <div class="svc-head">
-        <span class="svc-name">Lavado Exterior Premium</span>
-        <span class="pill" data-base="15000" data-scale="true">---</span>
+        <div class="svc-title">Exterior Premium</div>
+        <div class="price-wrap">
+          <span class="price-label">Precio:</span>
+          <span class="pill pill-init" data-base="15000">Elegí vehículo ↑</span>
+        </div>
       </div>
-      <div class="svc-desc">Snow Foam, detallado de llantas y secado seguro sin rayas.</div>
+      <ul class="svc-list">
+        <li>Prelavado con Snow Foam.</li>
+        <li>Lavado detallado de llantas y pasaruedas.</li>
+        <li>Secado seguro con microfibra.</li>
+      </ul>
     </div>
 
     <div class="svc">
       <div class="svc-head">
-        <span class="svc-name">Limpieza Interior Técnica</span>
-        <span class="pill" data-base="20000" data-scale="false">---</span>
+        <div class="svc-title">Interior Detallado</div>
+        <div class="price-wrap">
+          <span class="price-label">Precio:</span>
+          <span class="pill pill-init" data-base="20000">Elegí vehículo ↑</span>
+        </div>
       </div>
-      <div class="svc-desc">Aspirado profundo, limpieza de plásticos y pantallas con protección UV.</div>
+      <ul class="svc-list">
+        <li>Aspirado profundo industrial.</li>
+        <li>Limpieza de torpedos y plásticos (pH neutro).</li>
+        <li>Vidrios internos sin vetas.</li>
+      </ul>
     </div>
 
     <div class="svc">
       <div class="svc-head">
-        <span class="svc-name">Sanitización a Vapor</span>
-        <span class="pill" data-base="15000" data-scale="false">---</span>
+        <div class="svc-title">Sanitización a Vapor</div>
+        <div class="price-wrap">
+          <span class="price-label">Precio:</span>
+          <span class="pill pill-init" data-base="15000">Elegí vehículo ↑</span>
+        </div>
       </div>
-      <div class="svc-desc">Desinfección de ductos de A/C y superficies a 105°C. Elimina olores.</div>
+      <ul class="svc-list">
+        <li>Desinfección de ductos de aire acondicionado.</li>
+        <li>Eliminación de olores y bacterias a 105°C.</li>
+      </ul>
     </div>
 
     <div class="svc">
       <div class="svc-head">
-        <span class="svc-name">Limpieza de Tapizados (Tela)</span>
-        <span class="pill" data-base="35000" data-scale="true">---</span>
+        <div class="svc-title">Limpieza Tapizados (Tela)</div>
+        <div class="price-wrap">
+          <span class="price-label">Precio:</span>
+          <span class="pill pill-init" data-base="35000">Elegí vehículo ↑</span>
+        </div>
       </div>
-      <div class="svc-desc">Inyección y extracción de suciedad profunda y manchas difíciles.</div>
+      <ul class="svc-list">
+        <li>Extracción profunda de suciedad y manchas.</li>
+        <li>Eliminación de ácaros y malos olores.</li>
+      </ul>
     </div>
 
     <div class="svc">
       <div class="svc-head">
-        <span class="svc-name">Limpieza y Nutrición (Cuero)</span>
-        <span class="pill" data-base="15000" data-scale="true">---</span>
+        <div class="svc-title">Nutrición de Cuero</div>
+        <div class="price-wrap">
+          <span class="price-label">Precio:</span>
+          <span class="pill pill-init" data-base="15000">Elegí vehículo ↑</span>
+        </div>
       </div>
-      <div class="svc-desc">Tratamiento con pH neutro y acondicionador para evitar grietas.</div>
+      <ul class="svc-list">
+        <li>Limpieza técnica con productos específicos.</li>
+        <li>Acondicionado para evitar grietas y resecamiento.</li>
+      </ul>
     </div>
 
-    <div class="note">
-      * Exterior y Tapizados varían por tamaño del vehículo.<br>
-      * Interior y Vapor tienen precio fijo.<br>
-      📍 Servicio en Cipolletti, Neuquén y alrededores.
-    </div>
-  </div>
-</div>
+    <p class="note">
+      * Exterior y Tapizados ajustan según tamaño: SUV (+$5.000) / Pickup (+$15.000).<br>
+      * Interior y Vapor mantienen precio fijo.
+    </p>
 
-<div class="sticky">
-  <a href="https://wa.me/2995760611" class="cta">RESERVAR TURNO POR WHATSAPP</a>
+    <div class="socials">
+      <a class="social-btn" href="https://wa.me/2995760611" target="_blank">💬 WhatsApp</a>
+      <a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank">📸 Instagram</a>
+    </div>
+  </section>
+
+  <footer>
+    © <span id="y"></span> LyS Lavados — Hecho con <span id="mateLink" class="mate-link">mate</span>.
+  </footer>
+</main>
+
+<div class="sticky-cta">
+  <a class="cta-main" href="reserva.html">🗓️ Reservar turno online</a>
 </div>
 
 <script>
-  const extras = { auto:0, suv:5000, pickup:15000 };
-  const btns = document.querySelectorAll('.btn');
-  const pills = document.querySelectorAll('.pill');
+  document.getElementById('y').textContent = new Date().getFullYear();
 
-  btns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      btns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+  const TYPE_EXTRA = { auto:0, suv:5000, pickup:15000 };
+  const pillEls = document.querySelectorAll('.pill');
+  const vehButtons = document.querySelectorAll('.veh-btn');
+  const vehLabel = document.getElementById('veh-label');
+
+  function actualizarPills(tipo){
+    const extra = TYPE_EXTRA[tipo] || 0;
+    pillEls.forEach(pill => {
+      const base = Number(pill.dataset.base);
+      const svc = pill.closest('.svc');
+      const title = svc?.querySelector('.svc-title')?.textContent || '';
       
-      const type = btn.dataset.type;
-      const extra = extras[type];
+      // Lógica: Interior y Vapor NO suman extra por tamaño.
+      const esFijo = (title.includes('Interior') && !title.includes('Exterior')) || title.includes('Vapor');
+      const final = esFijo ? base : base + extra;
 
-      pills.forEach(pill => {
-        const base = parseInt(pill.dataset.base);
-        const escala = pill.dataset.scale === "true";
-        const final = escala ? (base + extra) : base;
-        
-        pill.textContent = '$' + final.toLocaleString('es-AR');
-        pill.classList.add('ready');
-      });
+      pill.textContent = '$' + final.toLocaleString('es-AR');
+      pill.classList.remove('pill-init');
+      pill.classList.add('pill-visible');
+      pill.closest('.price-wrap')?.classList.add('price-active');
+    });
+  }
+
+  vehButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tipo = btn.dataset.type;
+      vehButtons.forEach(b => b.classList.remove('active','veh-btn-init'));
+      btn.classList.add('active');
+      actualizarPills(tipo);
     });
   });
-</script>
 
+  const mate = document.getElementById('mateLink');
+  mate.addEventListener('click', () => {
+    const clave = prompt('Ingresá la contraseña:');
+    if ((clave || '').trim() === 'yerba') window.open('admin.html', '_blank');
+  });
+</script>
 </body>
 </html>
