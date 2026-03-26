@@ -15,7 +15,7 @@
     *{ box-sizing:border-box; margin:0; padding:0; }
     body{
       font-family:"Inter", sans-serif; color:#fff; min-height:100vh;
-      padding:18px 12px 180px; /* Más espacio para el total bar */
+      padding:18px 12px 180px; 
       background: radial-gradient(900px 600px at 0% 0%, rgba(34,197,94,0.08), transparent), #020817;
     }
     .wrap{ max-width:520px; margin:0 auto; }
@@ -89,7 +89,7 @@
             <span class="svc-title">Lavado Exterior</span>
             <span class="price-pill" id="p-ext">$15.000</span>
           </div>
-          <p class="svc-desc" id="desc-ext">Limpieza profunda de llantas, pasaruedas y carrocería. Incluye cera rápida y revividor natural.</p>
+          <p class="svc-desc" id="desc-ext">Limpieza profunda de ruedas, llantas y pasaruedas (clave en camionetas), más lavado completo de la carrocería. Se aplica cera rápida que aporta brillo y protección ligera, y revividor en cubiertas y plásticos para un acabado más renovado.</p>
         </div>
       </label>
 
@@ -100,18 +100,18 @@
             <span class="svc-title">Limpieza Interior</span>
             <span class="price-pill">$20.000</span>
           </div>
-          <p class="svc-desc">Aspirado detallado, limpieza de plásticos y rejillas. Aplicación de protector UV con acabado natural.</p>
+          <p class="svc-desc">Aspirado profundo y detallado de todo el habitáculo. Se trabaja con herramientas de detailing para llegar a zonas difíciles. Aplicación de restaurador de plásticos con protección UV. Acabado natural.</p>
         </div>
       </label>
 
       <label class="svc" for="check-steam">
-        <input type="checkbox" class="svc-check" id="check-steam" data-base="8000" data-scale="false">
+        <input type="checkbox" class="svc-check" id="check-steam" data-base="15000" data-scale="false">
         <div class="svc-info">
           <div class="svc-head">
             <span class="svc-title">Sanitización a Vapor</span>
-            <span class="price-pill">$8.000</span>
+            <span class="price-pill">$15.000</span>
           </div>
-          <p class="svc-desc">Desinfección profunda de conductos de aire y superficies. Elimina bacterias y olores. (Requiere Limpieza Interior)</p>
+          <p class="svc-desc">Desinfección profunda de conductos de aire y superficies a 105°C. Elimina bacterias y ácaros. (Requiere Limpieza Interior)</p>
         </div>
       </label>
 
@@ -122,16 +122,16 @@
             <span class="svc-title">Tapizados de Tela</span>
             <span class="price-pill" id="p-tela">$35.000</span>
           </div>
-          <p class="svc-desc">Limpieza profunda con máquina extractora. Quita manchas y renueva el color de las butacas.</p>
+          <p class="svc-desc">Limpieza profunda con sistema de extracción y vapor. Remueve manchas y desinfecta la superficie de las butacas. Renueva el color de las butacas.</p>
         </div>
       </label>
 
       <label class="svc" for="check-cuero">
-        <input type="checkbox" class="svc-check" id="check-cuero" data-base="30000" data-scale="true">
+        <input type="checkbox" class="svc-check" id="check-cuero" data-base="15000" data-scale="true">
         <div class="svc-info">
           <div class="svc-head">
             <span class="svc-title">Tapizados de Cuero</span>
-            <span class="price-pill" id="p-cuero">$30.000</span>
+            <span class="price-pill" id="p-cuero">$15.000</span>
           </div>
           <p class="svc-desc">Limpieza técnica y nutrición profunda para evitar grietas y devolver la suavidad original.</p>
         </div>
@@ -144,7 +144,7 @@
             <span class="svc-title">Limpieza de Techo</span>
             <span class="price-pill">$10.000</span>
           </div>
-          <p class="svc-desc">Técnica manual con microfibras. Remueve manchas de roce y suciedad acumulada.</p>
+          <p class="svc-desc">Técnica manual con microfibras. Remueve manchas de roce y suciedad acumulada preservando el pegamento original.</p>
         </div>
       </label>
     </div>
@@ -179,15 +179,15 @@
       checkInt.checked = true;
     }
 
-    // Descripción dinámica del Exterior
+    // Descripción dinámica
     descExt.textContent = (currentType === 'pickup') 
       ? "Limpieza profunda de llantas, pasaruedas, carrocería y CAJA DE CARGA. Incluye cera rápida y revividor natural."
       : "Limpieza profunda de llantas, pasaruedas y carrocería. Incluye cera rápida y revividor natural.";
 
-    // Precios visuales
+    // Sincronización de precios visuales en las tarjetas
     document.getElementById('p-ext').textContent = '$' + (15000 + extra).toLocaleString('es-AR');
     document.getElementById('p-tela').textContent = '$' + (35000 + extra).toLocaleString('es-AR');
-    document.getElementById('p-cuero').textContent = '$' + (30000 + extra).toLocaleString('es-AR');
+    document.getElementById('p-cuero').textContent = '$' + (15000 + extra).toLocaleString('es-AR');
 
     checkboxes.forEach(cb => {
       if (cb.checked) {
@@ -201,9 +201,10 @@
     totalVal.textContent = '$' + total.toLocaleString('es-AR');
 
     const msg = encodeURIComponent(
-      `¡Hola LyS Works! 🧼 Consulto por mi ${currentType.toUpperCase()}:\n\n` +
+      `¡Hola Works! 🧼 Consulto por mi ${currentType.toUpperCase()}:\n\n` +
       `Servicios:\n- ${selectedNames.join('\n- ')}\n\n` +
-      `Presupuesto: $${total.toLocaleString('es-AR')}`
+      `Presupuesto estimado: $${total.toLocaleString('es-AR')}\n` +
+      `*(Sujeto a revisión visual)*`
     );
     btnWs.href = `https://wa.me/2995760611?text=${msg}`;
   }
