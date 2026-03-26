@@ -24,11 +24,10 @@
       font-family: "Inter", sans-serif;
       color: #fff;
       min-height: 100vh;
-      padding: 20px 16px 160px; /* Espacio extra para la barra totalizadora */
+      padding: 20px 16px 160px;
       background: 
         radial-gradient(circle at 0% 0%, rgba(34, 197, 94, 0.12) 0%, transparent 40%),
         #020617;
-      font-size: 15px;
     }
 
     .wrap { max-width: 480px; margin: 0 auto; }
@@ -36,22 +35,20 @@
     .card {
       background: var(--card);
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       border-radius: 24px;
       padding: 24px 20px;
       border: 1px solid var(--line);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       animation: fadeIn 0.6s ease-out;
     }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .brand-logo { display: block; height: 70px; margin: 0 auto 12px auto; }
-    h1 { font-size: 20px; text-align: center; font-weight: 900; color: var(--title); margin-bottom: 20px; letter-spacing: -0.02em; }
+    .brand-logo { display: block; height: 60px; margin: 0 auto 12px auto; }
+    h1 { font-size: 20px; text-align: center; font-weight: 900; color: var(--title); margin-bottom: 20px; }
 
-    /* Selector de Vehículos (Igual al Index) */
+    /* Selector de Vehículos */
     .veh-toggle { 
-      margin-bottom: 24px; padding: 16px; border-radius: 20px; 
+      margin-bottom: 20px; padding: 16px; border-radius: 20px; 
       background: rgba(0,0,0,0.3); border: 1px solid rgba(34,197,94,0.3);
     }
     .veh-label { font-size: 13px; font-weight: 700; color: var(--cta); margin-bottom: 12px; text-align: center; text-transform: uppercase; }
@@ -67,40 +64,39 @@
       transform: scale(1.05); font-weight: 800;
     }
 
-    /* Items de Servicio (Estilo Checkbox) */
-    .svc-container { display: flex; flex-direction: column; gap: 10px; }
+    /* Contenedor de Servicios (Oculto al inicio) */
+    #svc-container { display: none; margin-top: 20px; }
+    .svc-title-label { font-size: 12px; color: var(--muted); margin-bottom: 12px; text-transform: uppercase; font-weight: 700; text-align: center; }
+
     .svc { 
       border: 1px solid var(--line); background: rgba(255,255,255,0.02); 
-      border-radius: 18px; padding: 16px; display: flex; align-items: flex-start; gap: 14px;
-      cursor: pointer; transition: 0.3s; animation: slideIn 0.4s ease forwards; opacity: 0;
+      border-radius: 18px; padding: 14px; display: flex; align-items: flex-start; gap: 14px;
+      cursor: pointer; margin-bottom: 10px; transition: 0.3s; 
+      animation: slideIn 0.4s ease forwards;
     }
     @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
     
-    .svc:hover { border-color: rgba(34, 197, 94, 0.4); background: rgba(34, 197, 94, 0.03); }
-    .svc-check { width: 22px; height: 22px; accent-color: var(--cta); margin-top: 2px; }
+    .svc:hover { border-color: rgba(34, 197, 94, 0.4); }
+    .svc-check { width: 20px; height: 20px; accent-color: var(--cta); margin-top: 2px; }
     .svc-info { flex: 1; }
-    .svc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-    .svc-title { font-weight: 700; font-size: 15px; color: var(--title); }
-    .price-pill { font-size: 12px; font-weight: 800; color: var(--cta); background: rgba(34,197,94,0.1); padding: 3px 10px; border-radius: 8px; }
-    .svc-desc { color: var(--muted); font-size: 12px; line-height: 1.4; }
+    .svc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+    .svc-title { font-weight: 700; font-size: 14.5px; color: var(--title); }
+    .price-pill { font-size: 11px; font-weight: 800; color: var(--cta); background: rgba(34,197,94,0.1); padding: 2px 8px; border-radius: 6px; }
+    .svc-desc { color: var(--muted); font-size: 11.5px; line-height: 1.4; }
 
-    /* Barra de Total Flotante */
+    /* Barra Totalizadora */
     .total-bar {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: linear-gradient(to top, var(--bg) 80%, transparent);
       padding: 20px 16px 30px;
-      display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 100;
-      animation: fadeIn 0.8s ease-out;
+      display: none; flex-direction: column; align-items: center; gap: 10px; z-index: 100;
     }
-    .total-text { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-    .total-amount { color: var(--cta); font-size: 32px; font-weight: 900; text-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
+    .total-amount { color: var(--cta); font-size: 32px; font-weight: 900; }
     .cta-whatsapp {
       width: 100%; max-width: 440px; background: var(--cta); color: var(--cta-ink);
       text-align: center; padding: 16px; border-radius: 16px;
       text-decoration: none; font-weight: 800; font-size: 16px;
-      box-shadow: 0 10px 25px rgba(34,197,94,0.4); transition: 0.2s;
     }
-    .cta-whatsapp:active { transform: scale(0.98); }
   </style>
 </head>
 <body>
@@ -111,179 +107,144 @@
     <h1>Cotizá tu Lavado</h1>
 
     <div class="veh-toggle">
-      <p class="veh-label">Tipo de vehículo</p>
+      <p class="veh-label">1. Elegí tu vehículo</p>
       <div class="veh-buttons">
-        <button class="veh-btn active" data-type="auto"><span>🚗</span>Auto</button>
+        <button class="veh-btn" data-type="auto"><span>🚗</span>Auto</button>
         <button class="veh-btn" data-type="suv"><span>🚙</span>SUV</button>
         <button class="veh-btn" data-type="pickup"><span>🛻</span>Pickup</button>
       </div>
     </div>
 
-    <div class="svc-container">
-      <label class="svc" for="check-ext" style="animation-delay: 0.1s">
-        <input type="checkbox" class="svc-check" id="check-ext">
-        <div class="svc-info">
-          <div class="svc-head">
-            <span class="svc-title">Lavado Exterior</span>
-            <span class="price-pill" id="p-ext">--</span>
-          </div>
-          <p class="svc-desc" id="desc-ext">Cera rápida y detallado de llantas.</p>
-        </div>
-      </label>
+    <div id="svc-container">
+        <div class="svc-title-label">2. Seleccioná los servicios</div>
 
-      <label class="svc" for="check-int" style="animation-delay: 0.2s">
-        <input type="checkbox" class="svc-check" id="check-int">
-        <div class="svc-info">
-          <div class="svc-head">
-            <span class="svc-title">Limpieza Interior</span>
-            <span class="price-pill" id="p-int">--</span>
+        <label class="svc" for="check-ext" style="animation-delay: 0.1s">
+          <input type="checkbox" class="svc-check" id="check-ext">
+          <div class="svc-info">
+            <div class="svc-head"><span class="svc-title">Lavado Exterior</span><span class="price-pill" id="p-ext">--</span></div>
+            <p class="svc-desc">Detallado de llantas y cera de brillo.</p>
           </div>
-          <p class="svc-desc">Aspirado full y restauración de plásticos.</p>
-        </div>
-      </label>
+        </label>
 
-      <label class="svc" for="check-suelo" style="animation-delay: 0.3s">
-        <input type="checkbox" class="svc-check" id="check-suelo">
-        <div class="svc-info">
-          <div class="svc-head">
-            <span class="svc-title">Limpieza de Suelo</span>
-            <span class="price-pill" id="p-suelo">--</span>
+        <label class="svc" for="check-int" style="animation-delay: 0.2s">
+          <input type="checkbox" class="svc-check" id="check-int">
+          <div class="svc-info">
+            <div class="svc-head"><span class="svc-title">Limpieza Interior</span><span class="price-pill" id="p-int">--</span></div>
+            <p class="svc-desc">Aspirado full y restauración de plásticos.</p>
           </div>
-          <p class="svc-desc">Extracción de tierra y manchas de la alfombra.</p>
-        </div>
-      </label>
+        </label>
 
-      <label class="svc" for="check-steam" style="animation-delay: 0.4s">
-        <input type="checkbox" class="svc-check" id="check-steam">
-        <div class="svc-info">
-          <div class="svc-head">
-            <span class="svc-title">Sanitizado a Vapor</span>
-            <span class="pill price-pill" id="p-steam">--</span>
+        <label class="svc" for="check-suelo" style="animation-delay: 0.3s">
+          <input type="checkbox" class="svc-check" id="check-suelo">
+          <div class="svc-info">
+            <div class="svc-head"><span class="svc-title">Limpieza de Suelo</span><span class="price-pill" id="p-suelo">--</span></div>
+            <p class="svc-desc">Extracción de tierra de la alfombra.</p>
           </div>
-          <p class="svc-desc">Desinfección de aire y superficies a 105°C.</p>
-        </div>
-      </label>
+        </label>
 
-      <label class="svc" for="check-techo" style="animation-delay: 0.5s">
-        <input type="checkbox" class="svc-check" id="check-techo">
-        <div class="svc-info">
-          <div class="svc-head">
-            <span class="svc-title">Limpieza de Techo</span>
-            <span class="price-pill">$10.000</span>
+        <label class="svc" for="check-steam" style="animation-delay: 0.4s">
+          <input type="checkbox" class="svc-check" id="check-steam">
+          <div class="svc-info">
+            <div class="svc-head"><span class="svc-title">Sanitizado a Vapor</span><span class="price-pill" id="p-steam">--</span></div>
+            <p class="svc-desc">Elimina bacterias en aire y plásticos.</p>
           </div>
-          <p class="svc-desc">Técnica manual para manchas de roce.</p>
-        </div>
-      </label>
+        </label>
 
-      <label class="svc" for="check-tela" style="animation-delay: 0.6s">
-        <input type="checkbox" class="svc-check" id="check-tela">
-        <div class="svc-info">
-          <div class="svc-head">
-            <span class="svc-title">Tapizados de Tela</span>
-            <span class="price-pill" id="p-tela">--</span>
+        <label class="svc" for="check-techo" style="animation-delay: 0.5s">
+          <input type="checkbox" class="svc-check" id="check-techo">
+          <div class="svc-info">
+            <div class="svc-head"><span class="svc-title">Limpieza de Techo</span><span class="price-pill">$10.000</span></div>
+            <p class="svc-desc">Manchas de roce y suciedad del cielo.</p>
           </div>
-          <p class="svc-desc">Lavado profundo por inyección/extracción.</p>
-        </div>
-      </label>
+        </label>
 
-      <label class="svc" for="check-cuero" style="animation-delay: 0.7s">
-        <input type="checkbox" class="svc-check" id="check-cuero">
-        <div class="svc-info">
-          <div class="svc-head">
-            <span class="svc-title">Tapizados de Cuero</span>
-            <span class="price-pill" id="p-cuero">--</span>
+        <label class="svc" for="check-tela" style="animation-delay: 0.6s">
+          <input type="checkbox" class="svc-check" id="check-tela">
+          <div class="svc-info">
+            <div class="svc-head"><span class="svc-title">Tapizados de Tela</span><span class="price-pill" id="p-tela">--</span></div>
+            <p class="svc-desc">Lavado profundo con extractor.</p>
           </div>
-          <p class="svc-desc">Limpieza técnica y nutrición profunda.</p>
-        </div>
-      </label>
+        </label>
+
+        <label class="svc" for="check-cuero" style="animation-delay: 0.7s">
+          <input type="checkbox" class="svc-check" id="check-cuero">
+          <div class="svc-info">
+            <div class="svc-head"><span class="svc-title">Tapizados de Cuero</span><span class="price-pill" id="p-cuero">--</span></div>
+            <p class="svc-desc">Limpieza técnica y nutrición.</p>
+          </div>
+        </label>
     </div>
   </section>
 </main>
 
-<div class="total-bar">
-  <div class="total-text">Total estimado:</div>
+<div class="total-bar" id="bar">
   <div class="total-amount" id="total-val">$0</div>
   <a href="#" class="cta-whatsapp" id="btn-ws">Pedir Turno por WhatsApp</a>
 </div>
 
 <script>
-  // NUEVA TABLA DE PRECIOS UNIFICADA
   const PRECIOS = {
     auto:   { ext: 15000, int: 20000, suelo: 15000, steam: 15000, tela: 40000, cuero: 15000, techo: 10000 },
     suv:    { ext: 20000, int: 20000, suelo: 20000, steam: 20000, tela: 40000, cuero: 20000, techo: 10000 },
     pickup: { ext: 25000, int: 25000, suelo: 20000, steam: 20000, tela: 45000, cuero: 20000, techo: 10000 }
   };
 
-  let currentType = 'auto';
-  const vehButtons = document.querySelectorAll('.veh-btn');
-  const checkboxes = document.querySelectorAll('.svc-check');
-  const totalVal = document.getElementById('total-val');
-  const btnWs = document.getElementById('btn-ws');
+  let currentType = null;
+  const buttons = document.querySelectorAll('.veh-btn');
+  const container = document.getElementById('svc-container');
+  const bar = document.getElementById('bar');
 
-  // Elementos de precio visual
-  const pExt = document.getElementById('p-ext');
-  const pInt = document.getElementById('p-int');
-  const pSuelo = document.getElementById('p-suelo');
-  const pSteam = document.getElementById('p-steam');
-  const pTela = document.getElementById('p-tela');
-  const pCuero = document.getElementById('p-cuero');
-
-  function update(e) {
+  function update() {
+    if (!currentType) return;
     let total = 0;
-    let selectedNames = [];
+    let selected = [];
 
-    // Lógica: Si elige Sanitizado, marcar Interior automáticamente
-    if (document.getElementById('check-steam').checked && !document.getElementById('check-int').checked) {
-      document.getElementById('check-int').checked = true;
+    // Precios visuales
+    document.getElementById('p-ext').textContent = '$' + PRECIOS[currentType].ext.toLocaleString('es-AR');
+    document.getElementById('p-int').textContent = '$' + PRECIOS[currentType].int.toLocaleString('es-AR');
+    document.getElementById('p-suelo').textContent = '$' + PRECIOS[currentType].suelo.toLocaleString('es-AR');
+    document.getElementById('p-steam').textContent = '$' + PRECIOS[currentType].steam.toLocaleString('es-AR');
+    document.getElementById('p-tela').textContent = '$' + PRECIOS[currentType].tela.toLocaleString('es-AR');
+    document.getElementById('p-cuero').textContent = '$' + PRECIOS[currentType].cuero.toLocaleString('es-AR');
+
+    const checks = {
+      ext: document.getElementById('check-ext'),
+      int: document.getElementById('check-int'),
+      suelo: document.getElementById('check-suelo'),
+      steam: document.getElementById('check-steam'),
+      techo: document.getElementById('check-techo'),
+      tela: document.getElementById('check-tela'),
+      cuero: document.getElementById('check-cuero')
+    };
+
+    // Auto-check Interior si elige Vapor
+    if(checks.steam.checked && !checks.int.checked) checks.int.checked = true;
+
+    for (let key in checks) {
+      if (checks[key].checked) {
+        total += PRECIOS[currentType][key];
+        selected.push(key.toUpperCase());
+      }
     }
 
-    // Lógica Excluyente: Tela O Cuero
-    if (e && e.target.id === 'check-tela' && e.target.checked) document.getElementById('check-cuero').checked = false;
-    if (e && e.target.id === 'check-cuero' && e.target.checked) document.getElementById('check-tela').checked = false;
-
-    // Actualizar precios visuales en las cards
-    pExt.textContent = '$' + PRECIOS[currentType].ext.toLocaleString('es-AR');
-    pInt.textContent = '$' + PRECIOS[currentType].int.toLocaleString('es-AR');
-    pSuelo.textContent = '$' + PRECIOS[currentType].suelo.toLocaleString('es-AR');
-    pSteam.textContent = '$' + PRECIOS[currentType].steam.toLocaleString('es-AR');
-    pTela.textContent = '$' + PRECIOS[currentType].tela.toLocaleString('es-AR');
-    pCuero.textContent = '$' + PRECIOS[currentType].cuero.toLocaleString('es-AR');
-
-    // Calcular Total
-    if(document.getElementById('check-ext').checked) { total += PRECIOS[currentType].ext; selectedNames.push("Exterior"); }
-    if(document.getElementById('check-int').checked) { total += PRECIOS[currentType].int; selectedNames.push("Interior"); }
-    if(document.getElementById('check-suelo').checked) { total += PRECIOS[currentType].suelo; selectedNames.push("Suelo"); }
-    if(document.getElementById('check-steam').checked) { total += PRECIOS[currentType].steam; selectedNames.push("Vapor"); }
-    if(document.getElementById('check-techo').checked) { total += PRECIOS[currentType].techo; selectedNames.push("Techo"); }
-    if(document.getElementById('check-tela').checked) { total += PRECIOS[currentType].tela; selectedNames.push("Tap. Tela"); }
-    if(document.getElementById('check-cuero').checked) { total += PRECIOS[currentType].cuero; selectedNames.push("Tap. Cuero"); }
-
-    totalVal.textContent = '$' + total.toLocaleString('es-AR');
-
-    // Generar mensaje de WhatsApp
-    const msg = encodeURIComponent(
-      `¡Hola LyS Works! 🧼 Quiero un turno para mi ${currentType.toUpperCase()}:\n\n` +
-      `Servicios elegidos:\n- ${selectedNames.join('\n- ')}\n\n` +
-      `Total estimado: $${total.toLocaleString('es-AR')}\n` +
-      `*(Sujeto a revisión visual)*`
-    );
-    btnWs.href = `https://wa.me/2995760611?text=${msg}`;
+    document.getElementById('total-val').textContent = '$' + total.toLocaleString('es-AR');
+    
+    const msg = encodeURIComponent(`¡Hola LyS Works! 🧼 Consulto por mi ${currentType.toUpperCase()}:\n\nServicios:\n- ${selected.join('\n- ')}\n\nTotal: $${total.toLocaleString('es-AR')}`);
+    document.getElementById('btn-ws').href = `https://wa.me/2995760611?text=${msg}`;
+    bar.style.display = total > 0 ? 'flex' : 'none';
   }
 
-  vehButtons.forEach(btn => {
+  buttons.forEach(btn => {
     btn.addEventListener('click', () => {
-      vehButtons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
       currentType = btn.dataset.type;
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      container.style.display = 'block';
       update();
     });
   });
 
-  checkboxes.forEach(cb => cb.addEventListener('change', (e) => update(e)));
-  
-  // Iniciar con valores por defecto
-  update();
+  document.querySelectorAll('.svc-check').forEach(cb => cb.addEventListener('change', update));
 </script>
-
 </body>
 </html>
