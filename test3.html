@@ -2,165 +2,208 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>LyS Lavados • Lavado a domicilio en Cipolletti</title>
+  <title>LyS Works • Estética Vehicular</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="LyS Lavados a domicilio en Cipolletti. Estética vehicular. Elegí tu tipo de vehículo y reservá tu turno online.">
-  <meta property="og:title" content="LyS Lavados • Lavado de autos a domicilio en Cipolletti">
-  <meta property="og:description" content="Exterior, Interior, Vapor y Tapizados. Tu auto como nuevo, sin moverte de casa.">
-  <meta property="og:url" content="https://lyslavados.com">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://lyslavados.com/logo-lys.png">
-  <link rel="icon" type="image/png" href="favicon.png">
-
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      --bg:#020817; --card:#050815; --line:#111827; --muted:#9ca3af;
-      --title:#e5e7eb; --cta:#22c55e; --cta-ink:#020817;
-      --ring:0 0 0 4px rgba(34,197,94,.22);
-    }
-    *{ box-sizing:border-box; margin:0; padding:0; }
-
-    body{
-      font-family:"Inter", sans-serif; color:#fff; min-height:100vh;
-      padding:18px 12px 80px; 
-      background: radial-gradient(900px 600px at 0% 0%, rgba(34,197,94,0.10), transparent), #020817;
-      font-size:15px;
+    :root {
+      --bg: #020617;
+      --card: rgba(15, 23, 42, 0.6);
+      --line: rgba(255, 255, 255, 0.08);
+      --muted: #94a3b8;
+      --title: #f8fafc;
+      --cta: #22c55e;
+      --cta-ink: #020617;
+      --accent: #10b981;
     }
 
-    .wrap{ max-width:520px; margin:0 auto; }
-    .card{
-      background:var(--card); border-radius:20px; padding:18px 16px 16px;
-      border:1px solid rgba(148,163,253,0.12); box-shadow:0 18px 40px rgba(0,0,0,0.6);
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: "Inter", sans-serif;
+      color: #fff;
+      min-height: 100vh;
+      padding: 20px 16px 100px;
+      background: 
+        radial-gradient(circle at 0% 0%, rgba(34, 197, 94, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.1) 0%, transparent 40%),
+        #020617;
+      font-size: 15px;
+      line-height: 1.5;
     }
 
-    .brand-logo{ display:block; height:84px; margin:0 auto 8px auto; }
-    .tagline{ text-align:center; font-size:11px; color:var(--muted); letter-spacing:0.14em; text-transform:uppercase; margin-bottom:6px; }
-    h1{ font-size:24px; text-align:center; font-weight:800; color:var(--title); margin-bottom:6px; }
-    .hero-lead{ font-size:14px; color:#e5e7eb; text-align:center; margin-bottom:12px; line-height:1.4; }
+    .wrap { max-width: 480px; margin: 0 auto; }
 
-    .chips{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:14px; }
-    .chip{ padding:6px 9px; border-radius:999px; border:1px solid var(--line); font-size:11px; color:#e5e7eb; background:#020817; display:flex; align-items:center; gap:4px; }
+    /* Animación de entrada de la tarjeta principal */
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 24px;
+      padding: 24px 20px;
+      border: 1px solid var(--line);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
 
-    .veh-toggle{ margin-bottom:14px; padding:12px 10px 10px; border-radius:16px; background:#020817; border:1px solid rgba(34,197,94,0.45); }
-    .veh-label{ display:flex; align-items:flex-start; gap:8px; font-size:14px; font-weight:600; color:#22c55e; margin-bottom:8px; }
-    .veh-buttons{ display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; }
-    .veh-btn{ padding:9px 10px; border-radius:999px; border:1px solid #293548; background:#020817; color:#e5e7eb; font-size:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; transition:all .16s ease; }
-    .veh-btn.active{ background:var(--cta); color:var(--cta-ink); border-color:#16a34a; font-weight:700; transform:translateY(-1px); }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-    /* ESTADO INICIAL OCULTO */
+    .brand-logo { display: block; height: 90px; margin: 0 auto 12px auto; filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.3)); }
+    .tagline { text-align: center; font-size: 10px; color: var(--cta); letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; }
+    h1 { font-size: 26px; text-align: center; font-weight: 900; color: var(--title); margin-bottom: 8px; letter-spacing: -0.02em; }
+    .hero-lead { font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 20px; }
+
+    /* Chips con brillo */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px; }
+    .chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); font-size: 11px; color: #e2e8f0; background: rgba(255,255,255,0.03); display: flex; align-items: center; gap: 6px; }
+
+    /* Selector de Vehículos */
+    .veh-toggle { 
+      margin-bottom: 20px; padding: 16px; border-radius: 20px; 
+      background: rgba(0,0,0,0.2); border: 1px solid rgba(34,197,94,0.2);
+    }
+    .veh-label { font-size: 13px; font-weight: 700; color: var(--title); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .veh-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .veh-btn { 
+      padding: 12px 8px; border-radius: 14px; border: 1px solid var(--line); 
+      background: rgba(255,255,255,0.05); color: #94a3b8; font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .veh-btn span { font-size: 20px; }
+    .veh-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .veh-btn.active { 
+      background: var(--cta); color: var(--cta-ink); border-color: var(--cta);
+      transform: scale(1.05); box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+    }
+
+    /* Contenedor de Servicios */
     #servicios-container { display: none; }
-    .sticky-cta { display: none; }
-
-    .svc-title-label{ font-size:13px; color:var(--muted); margin:15px 0 10px; }
-    .svc{ border:1px solid var(--line); background:#020817; border-radius:14px; padding:10px; margin-bottom:8px; }
-    .svc-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px; }
-    .svc-title{ font-weight:700; color:#e5e7eb; font-size:15px; }
+    .svc-title-label { font-size: 12px; color: var(--muted); margin: 24px 0 12px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
     
-    .price-wrap{ display:flex; align-items:center; gap:4px; }
-    .price-label{ font-size:10px; color:var(--muted); }
-    .pill{ font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px; background:rgba(34,197,94,0.14); color:#bbf7d0; border:1px solid rgba(34,197,94,0.38); }
-    .pill-visible{ color:#020817; background:#22c55e; border-color:#16a34a; }
+    .svc { 
+      border: 1px solid var(--line); background: rgba(255,255,255,0.02); 
+      border-radius: 18px; padding: 16px; margin-bottom: 12px;
+      transition: transform 0.2s ease;
+      animation: fadeInItem 0.5s ease forwards; opacity: 0;
+    }
+    @keyframes fadeInItem {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .svc:hover { border-color: rgba(34, 197, 94, 0.3); background: rgba(34, 197, 94, 0.02); }
 
-    .svc-desc{ color:#d1d5db; font-size:12px; line-height:1.4; margin-top:2px; min-height: 34px; }
+    .svc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .svc-title { font-weight: 700; color: var(--title); font-size: 16px; }
+    
+    .pill { 
+      font-size: 12px; font-weight: 800; padding: 5px 12px; border-radius: 999px; 
+      background: var(--cta); color: var(--cta-ink);
+    }
 
-    .socials{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
-    .social-btn{ flex:1; padding:8px 10px; border-radius:999px; border:1px solid #22c55e; background:#0b1726; color:#e5e7eb; font-size:11px; display:flex; align-items:center; justify-content:center; gap:6px; text-decoration:none; font-weight:600; }
-    .social-btn:hover{ background:#22c55e; color:#020817; }
+    .svc-desc { color: var(--muted); font-size: 13px; line-height: 1.4; }
 
-    .sticky-cta{ position:fixed; left:0; right:0; bottom:0; padding:10px 12px 12px; background:linear-gradient(to top, rgba(2,8,23,0.98), rgba(2,8,23,0.9)); justify-content:center; z-index:40; }
-    .cta-main{ width:100%; max-width:520px; background:var(--cta); color:var(--cta-ink); text-align:center; padding:11px 20px; border-radius:999px; text-decoration:none; font-weight:800; font-size:15px; box-shadow:0 10px 26px rgba(22,163,74,0.7); }
+    .socials { display: flex; gap: 10px; margin-top: 20px; }
+    .social-btn { 
+      flex: 1; padding: 12px; border-radius: 14px; border: 1px solid var(--line); 
+      background: rgba(255,255,255,0.05); color: #fff; font-size: 12px; 
+      display: flex; align-items: center; justify-content: center; gap: 8px; 
+      text-decoration: none; font-weight: 600; transition: 0.3s;
+    }
+    .social-btn:hover { background: #fff; color: #000; }
 
-    footer{ margin-top:12px; text-align:center; color:#6b7280; font-size:10px; }
-    .mate-link{ cursor:pointer; }
+    /* CTA Flotante animado */
+    .sticky-cta { 
+      position: fixed; left: 0; right: 0; bottom: 0; padding: 20px 16px 24px; 
+      background: linear-gradient(to top, var(--bg) 60%, transparent);
+      display: none; justify-content: center; z-index: 50;
+      animation: slideUp 0.4s ease-out;
+    }
+    .cta-main { 
+      width: 100%; max-width: 440px; background: var(--cta); color: var(--cta-ink); 
+      text-align: center; padding: 16px; border-radius: 16px; text-decoration: none; 
+      font-weight: 800; font-size: 16px; box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
+      transition: transform 0.2s;
+    }
+    .cta-main:active { transform: scale(0.96); }
+
+    footer { margin-top: 24px; text-align: center; color: var(--muted); font-size: 11px; opacity: 0.7; }
+    .mate-link { color: var(--cta); text-decoration: none; font-weight: 600; }
   </style>
 </head>
 <body>
+
 <main class="wrap">
   <section class="card">
     <img src="logo-lys.png" alt="LyS Works" class="brand-logo">
-    <div class="tagline">LAVADO A DOMICILIO • CIPOLLETTI</div>
-    <h1>Tu auto limpio sin moverte de casa.</h1>
-    <p class="hero-lead">Elegí tu tipo de vehículo para ver los servicios y precios.</p>
+    <div class="tagline">Detailing a domicilio</div>
+    <h1>Estética Vehicular</h1>
+    <p class="hero-lead">Seleccioná tu vehículo para ver el presupuesto.</p>
 
     <div class="chips">
-      <div class="chip">🧽 Detailing responsable</div>
-      <div class="chip">📍 Cipolletti y alrededores</div>
-      <div class="chip">🚿🔌 Solo canilla y enchufe</div>
+      <div class="chip">✨ Premium</div>
+      <div class="chip">📍 Cipolletti</div>
+      <div class="chip">🏡 A domicilio</div>
     </div>
 
     <div class="veh-toggle">
-      <p class="veh-label"><span class="icon">🚘</span> Tipo de Vehículo</p>
+      <p class="veh-label">¿Qué vehículo tenés?</p>
       <div class="veh-buttons">
-        <button class="veh-btn" data-type="auto"><span>🚗</span> Auto</button>
-        <button class="veh-btn" data-type="suv"><span>🚙</span> SUV</button>
-        <button class="veh-btn" data-type="pickup"><span>🛻</span> Pickup</button>
+        <button class="veh-btn" data-type="auto"><span>🚗</span>Auto</button>
+        <button class="veh-btn" data-type="suv"><span>🚙</span>SUV</button>
+        <button class="veh-btn" data-type="pickup"><span>🛻</span>Pickup</button>
       </div>
     </div>
 
     <div id="servicios-container">
-        <div class="svc-title-label">Servicios disponibles para tu selección:</div>
+        <div class="svc-title-label">Servicios Disponibles</div>
 
-        <div class="svc">
+        <div class="svc" style="animation-delay: 0.1s">
           <div class="svc-head">
             <span class="svc-title">Lavado Exterior</span>
-            <div class="price-wrap"><span class="price-label">Desde:</span><span class="pill" id="p-ext" data-base="15000" data-scale="true">--</span></div>
+            <span class="pill" id="p-ext">--</span>
           </div>
           <p class="svc-desc" id="desc-ext"></p>
         </div>
 
-        <div class="svc">
+        <div class="svc" style="animation-delay: 0.2s">
           <div class="svc-head">
             <span class="svc-title">Limpieza Interior</span>
-            <div class="price-wrap"><span class="price-label">Precio:</span><span class="pill" data-base="20000" data-scale="false">$20.000</span></div>
+            <span class="pill" id="p-int">--</span>
           </div>
           <p class="svc-desc" id="desc-int"></p>
         </div>
 
-        <div class="svc">
-          <div class="svc-head">
-            <span class="svc-title">Sanitización a Vapor</span>
-            <div class="price-wrap"><span class="price-label">Precio:</span><span class="pill" data-base="15000" data-scale="false">$15.000</span></div>
-          </div>
-          <p class="svc-desc" id="desc-steam"></p>
-        </div>
-
-        <div class="svc">
+        <div class="svc" style="animation-delay: 0.3s">
           <div class="svc-head">
             <span class="svc-title">Tapizados de Tela</span>
-            <div class="price-wrap"><span class="price-label">Desde:</span><span class="pill" id="p-tela" data-base="35000" data-scale="true">--</span></div>
+            <span class="pill" id="p-tela">--</span>
           </div>
           <p class="svc-desc" id="desc-tela"></p>
         </div>
 
-        <div class="svc">
+        <div class="svc" style="animation-delay: 0.4s">
           <div class="svc-head">
             <span class="svc-title">Tapizados de Cuero</span>
-            <div class="price-wrap"><span class="price-label">Desde:</span><span class="pill" id="p-cuero" data-base="15000" data-scale="true">--</span></div>
+            <span class="pill" id="p-cuero">--</span>
           </div>
           <p class="svc-desc" id="desc-cuero"></p>
         </div>
 
-        <div class="svc">
-          <div class="svc-head">
-            <span class="svc-title">Limpieza de Techo</span>
-            <div class="price-wrap"><span class="price-label">Precio:</span><span class="pill" data-base="10000" data-scale="false">$10.000</span></div>
-          </div>
-          <p class="svc-desc" id="desc-techo"></p>
-        </div>
-
         <div class="socials">
-          <a class="social-btn" href="https://wa.me/2995760611" target="_blank">💬 WhatsApp</a>
-          <a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank">📸 Instagram</a>
-          <a class="social-btn" href="https://www.facebook.com/profile.php?id=61580252349290" target="_blank">📘 Facebook</a>
+          <a class="social-btn" href="https://wa.me/2995760611" target="_blank">WhatsApp</a>
+          <a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank">Instagram</a>
         </div>
     </div>
   </section>
 
   <footer>
-    © <span id="y"></span> LyS Works — Hecho con sudor y <span id="mateLink" class="mate-link">mate</span>.
+    © <span id="y"></span> LyS Works • <span id="mateLink" class="mate-link">Panel Admin</span>
   </footer>
 </main>
 
@@ -171,77 +214,69 @@
 <script>
   document.getElementById('y').textContent = new Date().getFullYear();
   
-  const TYPE_EXTRA = { auto: 0, suv: 5000, pickup: 15000 };
+  const PRECIOS = {
+    auto:   { ext: 15000, int: 20000, tela: 40000, cuero: 15000 },
+    suv:    { ext: 20000, int: 20000, tela: 40000, cuero: 20000 },
+    pickup: { ext: 25000, int: 25000, tela: 45000, cuero: 20000 }
+  };
   
   const DESCRIPCIONES = {
     auto: {
-      ext: "Limpieza profunda de llantas, pasaruedas y carrocería. Terminación con cera rápida que realza el color y repele el polvillo urbano.",
-      int: "Aspirado detallado. Herramientas de detailing para rejillas y rincones. Aplicación de restaurador de plásticos con protección UV (Acabado natural).",
-      steam: "Desinfección profunda de conductos de aire y superficies a 105°C. Elimina bacterias y ácaros del habitáculo.",
-      tela: "Remoción de manchas y desinfección con sistema de vapor y extracción. Dejamos las butacas impecables.",
-      cuero: "Limpieza y nutrición profunda para evitar grietas. Devuelve la suavidad original y protege contra el sol.",
-      techo: "Técnica manual con microfibras. Remueve suciedad preservando el pegamento original del tapizado."
+      ext: "Lavado artesanal con cera rápida. Ideal para mantenimiento semanal.",
+      int: "Aspirado técnico y restauración de plásticos con acabado natural mate.",
+      tela: "Limpieza profunda con sistema de extracción. Eliminamos manchas y olores.",
+      cuero: "Limpieza de poros y aplicación de cremas nutritivas con protección UV."
     },
     suv: {
-      ext: "Limpieza de llantas y pasaruedas de gran tamaño. Terminación con cera rápida que repele el polvillo urbano.",
-      int: "Aspirado profundo del habitáculo y baúl espacioso. Restaurador de plásticos con protección UV (Acabado natural).",
-      steam: "Ideal para vehículos familiares. Desinfección total a 105°C que elimina bacterias en todo el habitáculo.",
-      tela: "Remoción de manchas y desinfección con sistema de vapor. Ideal para telas que sufren el uso familiar o viajes.",
-      cuero: "Limpieza técnica y aplicación de acondicionador mate. Protege del desgaste y los rayos UV intensos.",
-      techo: "Limpieza manual cuidadosa. Remueve suciedad sin comprometer la tela ni el pegamento."
+      ext: "Limpieza detallada de carrocería y llantas de gran porte.",
+      int: "Aspirado intensivo de habitáculo y zona de carga/baúl.",
+      tela: "Desinfección total de plazas familiares y remoción de manchas rebeldes.",
+      cuero: "Tratamiento hidratante para proteger el cuero del calor del valle."
     },
     pickup: {
-      ext: "Lavado técnico de carrocería, llantas y CAJA DE CARGA. Retiramos restos de barro protegiendo la pintura. Terminación con cera rápida.",
-      int: "Limpieza intensiva de alfombras y plásticos de alto tránsito. Nos enfocamos en las zonas de mayor roce de la cabina.",
-      steam: "Sanitización extrema a 105°C. Elimina polvo fino en conductos típico del trabajo o la ruta.",
-      tela: "Extracción profunda de polvo de tierra y barro. Renovación total de las butacas sometidas a trato rudo.",
-      cuero: "Limpieza y acondicionador mate. Evita que el cuero se reseque o quiebre por la exposición climática del valle.",
-      techo: "Limpieza técnica manual. Eliminamos marcas de tierra y roce cuidando el pegamento original."
+      ext: "Lavado técnico reforzado. Incluye limpieza de caja y retiro de barro.",
+      int: "Limpieza profunda de alfombras y plásticos sometidos a trato rudo.",
+      tela: "Extracción industrial de polvo de tierra y manchas de trabajo.",
+      cuero: "Nutrición extrema para evitar que el cuero se reseque o quiebre."
     }
   };
 
-  const pills = document.querySelectorAll('.pill');
   const buttons = document.querySelectorAll('.veh-btn');
-  const serviciosContainer = document.getElementById('servicios-container');
-  const floatingCta = document.getElementById('floating-cta');
+  const container = document.getElementById('servicios-container');
+  const cta = document.getElementById('floating-cta');
   
+  const pExt = document.getElementById('p-ext');
+  const pInt = document.getElementById('p-int');
+  const pTela = document.getElementById('p-tela');
+  const pCuero = document.getElementById('p-cuero');
+
   const descExt = document.getElementById('desc-ext');
   const descInt = document.getElementById('desc-int');
-  const descSteam = document.getElementById('desc-steam');
   const descTela = document.getElementById('desc-tela');
   const descCuero = document.getElementById('desc-cuero');
-  const descTecho = document.getElementById('desc-techo');
-
-  function update(type) {
-    const extra = TYPE_EXTRA[type];
-    
-    // Mostramos el contenedor y el botón de reserva la primera vez que se hace clic
-    serviciosContainer.style.display = 'block';
-    floatingCta.style.display = 'flex';
-
-    // Actualizar Textos
-    descExt.textContent = DESCRIPCIONES[type].ext;
-    descInt.textContent = DESCRIPCIONES[type].int;
-    descSteam.textContent = DESCRIPCIONES[type].steam;
-    descTela.textContent = DESCRIPCIONES[type].tela;
-    descCuero.textContent = DESCRIPCIONES[type].cuero;
-    descTecho.textContent = DESCRIPCIONES[type].techo;
-
-    // Actualizar Precios
-    pills.forEach(p => {
-      const base = parseInt(p.dataset.base);
-      const scales = p.dataset.scale === "true";
-      const final = scales ? (base + extra) : base;
-      p.textContent = '$' + final.toLocaleString('es-AR');
-      p.classList.add('pill-visible');
-    });
-  }
 
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
+      const type = btn.dataset.type;
+      
+      // Reset de animaciones para que vuelvan a "entrar" al cambiar de vehículo
+      container.style.display = 'none';
+      void container.offsetWidth; // Trigger reflow
+      container.style.display = 'block';
+      cta.style.display = 'flex';
+
       buttons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      update(btn.dataset.type);
+      
+      pExt.textContent = '$' + PRECIOS[type].ext.toLocaleString('es-AR');
+      pInt.textContent = '$' + PRECIOS[type].int.toLocaleString('es-AR');
+      pTela.textContent = '$' + PRECIOS[type].tela.toLocaleString('es-AR');
+      pCuero.textContent = '$' + PRECIOS[type].cuero.toLocaleString('es-AR');
+
+      descExt.textContent = DESCRIPCIONES[type].ext;
+      descInt.textContent = DESCRIPCIONES[type].int;
+      descTela.textContent = DESCRIPCIONES[type].tela;
+      descCuero.textContent = DESCRIPCIONES[type].cuero;
     });
   });
 
