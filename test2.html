@@ -89,7 +89,7 @@
             <span class="svc-title">Lavado Exterior</span>
             <span class="price-pill" id="p-ext">$15.000</span>
           </div>
-          <p class="svc-desc" id="desc-ext">Limpieza profunda de ruedas, llantas y pasaruedas (clave en camionetas), más lavado completo de la carrocería. Se aplica cera rápida que aporta brillo y protección ligera, y revividor en cubiertas y plásticos para un acabado más renovado.</p>
+          <p class="svc-desc" id="desc-ext">Limpieza profunda de ruedas, llantas y pasaruedas (clave en camionetas), más lavado completo de la carrocería. Se aplica cera rápida que aporta brillo y protección ligera, y revividor en cubiertas y plásticos.</p>
         </div>
       </label>
 
@@ -100,7 +100,7 @@
             <span class="svc-title">Limpieza Interior</span>
             <span class="price-pill">$20.000</span>
           </div>
-          <p class="svc-desc">Aspirado profundo y detallado de todo el habitáculo. Se trabaja con herramientas de detailing para llegar a zonas difíciles. Aplicación de restaurador de plásticos con protección UV. Acabado natural.</p>
+          <p class="svc-desc">Aspirado profundo y detallado de todo el habitáculo. Herramientas de detailing para rejillas y rincones difíciles. Aplicación de restaurador de plásticos con protección UV (Acabado natural).</p>
         </div>
       </label>
 
@@ -122,7 +122,7 @@
             <span class="svc-title">Tapizados de Tela</span>
             <span class="price-pill" id="p-tela">$35.000</span>
           </div>
-          <p class="svc-desc">Limpieza profunda con sistema de extracción y vapor. Remueve manchas y desinfecta la superficie de las butacas. Renueva el color de las butacas.</p>
+          <p class="svc-desc">Limpieza profunda con sistema de extracción y vapor. Remueve manchas y desinfecta la superficie de las butacas. Renueva el color de las fibras.</p>
         </div>
       </label>
 
@@ -165,26 +165,35 @@
   const checkboxes = document.querySelectorAll('.svc-check');
   const checkInt = document.getElementById('check-int');
   const checkSteam = document.getElementById('check-steam');
+  const checkTela = document.getElementById('check-tela');
+  const checkCuero = document.getElementById('check-cuero');
   const totalVal = document.getElementById('total-val');
   const btnWs = document.getElementById('btn-ws');
   const descExt = document.getElementById('desc-ext');
 
-  function update() {
+  function update(e) {
     let total = 0;
     let selectedNames = [];
     const extra = TYPE_EXTRA[currentType];
 
-    // Lógica de Sanitización -> Interior
+    // Lógica Excluyente: Tela O Cuero
+    if (e && e.target === checkTela && checkTela.checked) {
+      checkCuero.checked = false;
+    } else if (e && e.target === checkCuero && checkCuero.checked) {
+      checkTela.checked = false;
+    }
+
+    // Lógica Sanitización -> Interior
     if (checkSteam.checked && !checkInt.checked) {
       checkInt.checked = true;
     }
 
-    // Descripción dinámica
+    // Descripciones dinámicas
     descExt.textContent = (currentType === 'pickup') 
       ? "Limpieza profunda de llantas, pasaruedas, carrocería y CAJA DE CARGA. Incluye cera rápida y revividor natural."
       : "Limpieza profunda de llantas, pasaruedas y carrocería. Incluye cera rápida y revividor natural.";
 
-    // Sincronización de precios visuales en las tarjetas
+    // Precios visuales
     document.getElementById('p-ext').textContent = '$' + (15000 + extra).toLocaleString('es-AR');
     document.getElementById('p-tela').textContent = '$' + (35000 + extra).toLocaleString('es-AR');
     document.getElementById('p-cuero').textContent = '$' + (15000 + extra).toLocaleString('es-AR');
@@ -201,7 +210,7 @@
     totalVal.textContent = '$' + total.toLocaleString('es-AR');
 
     const msg = encodeURIComponent(
-      `¡Hola Works! 🧼 Consulto por mi ${currentType.toUpperCase()}:\n\n` +
+      `¡Hola LyS Works! 🧼 Consulto por mi ${currentType.toUpperCase()}:\n\n` +
       `Servicios:\n- ${selectedNames.join('\n- ')}\n\n` +
       `Presupuesto estimado: $${total.toLocaleString('es-AR')}\n` +
       `*(Sujeto a revisión visual)*`
@@ -218,7 +227,7 @@
     });
   });
 
-  checkboxes.forEach(cb => cb.addEventListener('change', update));
+  checkboxes.forEach(cb => cb.addEventListener('change', (e) => update(e)));
   update();
 </script>
 
