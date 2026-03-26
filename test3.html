@@ -4,121 +4,422 @@
   <meta charset="utf-8">
   <title>LyS Lavados • Lavado a domicilio en Cipolletti</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="LyS Lavados a domicilio en Cipolletti. Estética vehicular profesional. Elegí tu tipo de vehículo y reservá tu turno online.">
+  <meta name="description" content="LyS Lavados a domicilio en Cipolletti. Estética vehicular. Elegí tu tipo de vehículo y reservá tu turno online.">
+  <meta property="og:title" content="LyS Lavados • Lavado de autos a domicilio en Cipolletti">
+  <meta property="og:description" content="Exterior, Interior, Vapor y Tapizados. Tu auto como nuevo, sin moverte de casa. Reservá tu turno online.">
+  <meta property="og:url" content="https://lyslavados.com">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://lyslavados.com/logo-lys.png">
   <link rel="icon" type="image/png" href="favicon.png">
+
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg:#020817; --card:#050815; --line:#111827; --muted:#9ca3af;
-      --title:#e5e7eb; --cta:#22c55e; --cta-ink:#020817;
+      --bg:#020817;
+      --card:#050815;
+      --line:#111827;
+      --muted:#9ca3af;
+      --title:#e5e7eb;
+      --cta:#22c55e;
+      --cta-ink:#020817;
       --ring:0 0 0 4px rgba(34,197,94,.22);
     }
     *{ box-sizing:border-box; margin:0; padding:0; }
+
     body{
-      font-family:"Inter",system-ui,-apple-system,sans-serif;
-      color:#fff; min-height:100vh; padding:18px 12px 80px;
-      background: radial-gradient(900px 600px at 0% 0%, rgba(34,197,94,0.10), transparent),
-                  radial-gradient(700px 500px at 100% 0%, rgba(56,189,248,0.06), transparent), #020817;
+      font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;
+      color:#fff;
+      min-height:100vh;
+      padding:18px 12px 80px; 
+      background:
+        radial-gradient(900px 600px at 0% 0%, rgba(34,197,94,0.10), transparent),
+        radial-gradient(700px 500px at 100% 0%, rgba(56,189,248,0.06), transparent),
+        #020817;
       font-size:15px;
     }
-    .wrap{ max-width:520px; margin:0 auto; }
-    .card{
-      background:var(--card); border-radius:20px; padding:18px 16px 16px;
-      border:1px solid rgba(148,163,253,0.12); box-shadow:0 18px 40px rgba(0,0,0,0.6);
+
+    .wrap{
+      max-width:520px;
+      margin:0 auto;
     }
-    .brand-logo{ display:block; height:84px; margin:0 auto 8px auto; }
-    .tagline{ text-align:center; font-size:11px; color:var(--muted); letter-spacing:0.14em; text-transform:uppercase; margin-bottom:6px; }
-    h1{ font-size:24px; text-align:center; font-weight:800; color:var(--title); margin-bottom:6px; }
-    .hero-lead{ font-size:14px; color:#e5e7eb; text-align:center; margin-bottom:12px; line-height:1.4; }
-    .chips{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:14px; }
-    .chip{ padding:6px 9px; border-radius:999px; border:1px solid var(--line); font-size:11px; color:#e5e7eb; background:#020817; display:flex; align-items:center; gap:4px; }
-    
-    .veh-toggle{ margin-bottom:14px; padding:12px 10px 10px; border-radius:16px; background:#020817; border:1px solid rgba(34,197,94,0.45); box-shadow:0 0 18px rgba(34,197,94,0.16); }
-    .veh-label{ display:flex; align-items:flex-start; gap:8px; font-size:14px; font-weight:600; color:#22c55e; margin-bottom:8px; }
-    .veh-label .txt{ color:#bbf7d0; line-height:1.4; }
-    .veh-buttons{ display:grid; grid-template-columns:1fr; gap:8px; }
-    @media (min-width:520px){ .veh-buttons{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
-    .veh-btn{ width:100%; padding:9px 10px; border-radius:999px; border:1px solid #293548; background:#020817; color:#e5e7eb; font-size:12px; cursor:pointer; display:flex; align-items:flex-start; gap:8px; transition:all .16s ease; text-align:left; }
-    .veh-btn small{ display:block; font-size:10px; color:#9ca3af; }
-    .veh-btn:hover{ border-color:#22c55e; transform:translateY(-1px); }
-    .veh-btn-init{ border-color:rgba(34,197,94,0.42); animation:pulseSoft 1.4s ease-in-out infinite; }
-    .veh-btn.active{ background:var(--cta); color:var(--cta-ink); border-color:#16a34a; box-shadow:var(--ring); font-weight:700; transform:translateY(-1px); animation:none; }
 
-    @keyframes pulseSoft{ 0%{ box-shadow:0 0 6px rgba(34,197,94,0.16); } 50%{ box-shadow:0 0 16px rgba(34,197,94,0.40); } 100%{ box-shadow:0 0 6px rgba(34,197,94,0.16); } }
+    .card{
+      background:var(--card);
+      border-radius:20px;
+      padding:18px 16px 16px;
+      border:1px solid rgba(148,163,253,0.12);
+      box-shadow:0 18px 40px rgba(0,0,0,0.6);
+    }
 
-    .svc-title-label{ font-size:13px; color:var(--muted); margin:4px 0 6px; }
-    .svc{ border:1px solid var(--line); background:#020817; border-radius:14px; padding:9px 10px 8px; margin-bottom:8px; }
-    .svc-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px; }
-    .svc-title{ font-weight:700; color:#e5e7eb; font-size:15px; }
-    .price-wrap{ display:flex; align-items:center; gap:4px; }
-    .price-label{ font-size:10px; color:var(--muted); }
-    .price-wrap.price-active .price-label{ color:#cbd5e1; }
-    .pill{ font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px; white-space:nowrap; transition:all .18s ease; }
-    .pill-init{ color:#bbf7d0; background:rgba(34,197,94,0.14); border:1px solid rgba(34,197,94,0.38); animation:pulseSoft 1.4s ease-in-out infinite; }
-    .pill-visible{ color:#020817; background:#22c55e; border:1px solid #16a34a; animation:none; }
-    .svc-list{ margin:0; padding-left:16px; color:#d1d5db; font-size:12px; line-height:1.5; list-style:disc; }
-    .note{ color:#9ca3af; font-size:10px; margin-top:6px; line-height:1.5; }
+    .brand-logo{
+      display:block;
+      height:84px;
+      margin:0 auto 8px auto;
+    }
 
-    .socials{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
-    .social-btn{ flex:1; padding:8px 10px; border-radius:999px; border:1px solid #22c55e; background:#0b1726; color:#e5e7eb; font-size:11px; display:flex; align-items:center; justify-content:center; gap:6px; text-decoration:none; font-weight:600; transition:all .16s ease; }
-    .social-btn:hover{ background:#22c55e; color:#020817; transform:translateY(-1px); }
+    .tagline{
+      text-align:center;
+      font-size:11px;
+      color:var(--muted);
+      letter-spacing:0.14em;
+      text-transform:uppercase;
+      margin-bottom:6px;
+    }
 
-    .sticky-cta{ position:fixed; left:0; right:0; bottom:0; padding:10px 12px 12px; background:linear-gradient(to top, rgba(2,8,23,0.98), rgba(2,8,23,0.9)); display:flex; justify-content:center; z-index:40; }
-    .cta-main{ display:flex; align-items:center; justify-content:center; gap:8px; padding:11px 20px; border-radius:999px; border:1px solid #16a34a; background:var(--cta); color:var(--cta-ink); font-weight:800; font-size:15px; text-decoration:none; box-shadow:0 10px 26px rgba(22,163,74,0.7); width:100%; max-width:520px; transition:all .14s ease; }
-    
-    footer{ margin-top:12px; text-align:center; color:#6b7280; font-size:10px; }
-    .mate-link{ cursor:pointer; }
+    h1{
+      font-size:24px;
+      text-align:center;
+      font-weight:800;
+      color:var(--title);
+      margin-bottom:6px;
+    }
+
+    .hero-lead{
+      font-size:14px;
+      color:#e5e7eb;
+      text-align:center;
+      margin-bottom:12px;
+      line-height:1.4;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      justify-content:center;
+      margin-bottom:14px;
+    }
+    .chip{
+      padding:6px 9px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      font-size:11px;
+      color:#e5e7eb;
+      background:#020817;
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+
+    .veh-toggle{
+      margin-bottom:14px;
+      padding:12px 10px 10px;
+      border-radius:16px;
+      background:#020817;
+      border:1px solid rgba(34,197,94,0.45);
+      box-shadow:0 0 18px rgba(34,197,94,0.16);
+    }
+    .veh-label{
+      display:flex;
+      align-items:flex-start;
+      gap:8px;
+      font-size:14px;
+      font-weight:600;
+      color:#22c55e;
+      margin-bottom:8px;
+    }
+    .veh-label .icon{
+      font-size:18px;
+      line-height:1;
+      margin-top:1px;
+    }
+    .veh-label .txt{
+      color:#bbf7d0;
+      line-height:1.4;
+    }
+
+    .veh-buttons{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
+    }
+    @media (min-width:520px){
+      .veh-buttons{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+    }
+    .veh-btn{
+      width:100%;
+      padding:9px 10px;
+      border-radius:999px;
+      border:1px solid #293548;
+      background:#020817;
+      color:#e5e7eb;
+      font-size:12px;
+      cursor:pointer;
+      display:flex;
+      align-items:flex-start;
+      gap:8px;
+      transition:all .16s ease;
+      text-align:left;
+    }
+    .veh-btn span{
+      font-size:16px;
+      line-height:1.1;
+    }
+    .veh-btn small{
+      display:block;
+      font-size:10px;
+      color:#9ca3af;
+    }
+    .veh-btn:hover{
+      border-color:#22c55e;
+      transform:translateY(-1px);
+    }
+    .veh-btn-init{
+      box-shadow:0 0 10px rgba(34,197,94,0.16);
+      border-color:rgba(34,197,94,0.42);
+      animation:pulseSoft 1.4s ease-in-out infinite;
+    }
+    .veh-btn.active{
+      background:var(--cta);
+      color:var(--cta-ink);
+      border-color:#16a34a;
+      box-shadow:var(--ring);
+      font-weight:700;
+      transform:translateY(-1px);
+      animation:none;
+    }
+
+    @keyframes pulseSoft{
+      0%{ box-shadow:0 0 6px rgba(34,197,94,0.16); }
+      50%{ box-shadow:0 0 16px rgba(34,197,94,0.40); }
+      100%{ box-shadow:0 0 6px rgba(34,197,94,0.16); }
+    }
+
+    .svc-title-label{
+      font-size:13px;
+      color:var(--muted);
+      margin:4px 0 6px;
+    }
+
+    .svc{
+      border:1px solid var(--line);
+      background:#020817;
+      border-radius:14px;
+      padding:9px 10px 8px;
+      margin-bottom:8px;
+    }
+    .svc-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      margin-bottom:4px;
+    }
+    .svc-title{
+      font-weight:700;
+      color:#e5e7eb;
+      font-size:15px;
+    }
+
+    .price-wrap{
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+    .price-label{
+      font-size:10px;
+      color:var(--muted);
+    }
+    .price-wrap.price-active .price-label{
+      color:#cbd5e1;
+    }
+
+    .pill{
+      font-size:11px;
+      font-weight:700;
+      padding:4px 10px;
+      border-radius:999px;
+      white-space:nowrap;
+      transition:all .18s ease;
+    }
+    .pill-init{
+      color:#bbf7d0;
+      background:rgba(34,197,94,0.14);
+      border:1px solid rgba(34,197,94,0.38);
+      box-shadow:0 0 8px rgba(34,197,94,0.18);
+      animation:pulseSoft 1.4s ease-in-out infinite;
+    }
+    .pill-visible{
+      color:#020817;
+      background:#22c55e;
+      border:1px solid #16a34a;
+      box-shadow:none;
+      animation:none;
+    }
+
+    .svc-list{
+      margin:0;
+      padding-left:16px;
+      color:#d1d5db;
+      font-size:12px;
+      line-height:1.5;
+    }
+    .svc-list li{ margin:1px 0; }
+
+    .note{
+      color:#9ca3af;
+      font-size:10px;
+      margin-top:6px;
+      line-height:1.5;
+    }
+
+    .socials{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+    .social-btn{
+      flex:1;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid #22c55e;
+      background:#0b1726;
+      color:#e5e7eb;
+      font-size:11px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      text-decoration:none;
+      font-weight:600;
+      transition:all .16s ease;
+    }
+    .social-btn:hover{
+      background:#22c55e;
+      color:#020817;
+      transform:translateY(-1px);
+      box-shadow:0 6px 16px rgba(34,197,94,0.5);
+    }
+
+    .sticky-cta{
+      position:fixed;
+      left:0; right:0; bottom:0;
+      padding:10px 12px 12px;
+      background:linear-gradient(to top, rgba(2,8,23,0.98), rgba(2,8,23,0.9));
+      display:flex;
+      justify-content:center;
+      z-index:40;
+      box-shadow:0 -6px 18px rgba(0,0,0,0.85);
+    }
+    .cta-main{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:11px 20px;
+      border-radius:999px;
+      border:1px solid #16a34a;
+      background:var(--cta);
+      color:var(--cta-ink);
+      font-weight:800;
+      font-size:15px;
+      text-decoration:none;
+      box-shadow:0 10px 26px rgba(22,163,74,0.7);
+      width:100%;
+      max-width:520px;
+      transition:all .14s ease;
+    }
+    .cta-main:hover{
+      transform:translateY(-1px);
+      box-shadow:0 14px 34px rgba(22,163,74,0.9);
+    }
+
+    footer{
+      margin-top:12px;
+      text-align:center;
+      color:#6b7280;
+      font-size:10px;
+    }
+    .mate-link{
+      cursor:pointer;
+      border-bottom:1px dashed transparent;
+      text-underline-offset:2px;
+    }
+    .mate-link:hover,
+    .mate-link:focus{
+      border-bottom-color:currentColor;
+      outline:none;
+    }
+
+    @media (min-width:600px){
+      body{
+        padding-top:24px;
+        padding-bottom:90px;
+      }
+    }
   </style>
 </head>
 <body>
 <main class="wrap">
   <section class="card">
     <img src="logo-lys.png" alt="LyS Lavados" class="brand-logo">
+
     <div class="tagline">LAVADO A DOMICILIO • CIPOLLETTI</div>
     <h1>Tu auto limpio sin moverte de casa.</h1>
-    <p class="hero-lead">Elegí tu vehículo para actualizar los precios. Vamos a tu domicilio con todo lo necesario.</p>
+    <p class="hero-lead">
+      Elegí tu tipo de vehículo para actualizar los precios. 
+      Vamos a tu domicilio con todo lo necesario.
+    </p>
 
     <div class="chips">
-      <div class="chip">🧽 Detailing profesional</div>
+      <div class="chip">🧽 Detailing responsable</div>
       <div class="chip">📍 Cipolletti y alrededores</div>
       <div class="chip">⏱️ Turnos puntuales</div>
-      <div class="chip">🚿🔌 Solo canilla y enchufe</div>
+      <div class="chip">🚿🔌 Solo necesitás canilla y enchufe</div>
     </div>
 
     <div class="veh-toggle">
       <p id="veh-label" class="veh-label">
         <span class="icon">🚘</span>
-        <span class="txt">Seleccioná tu tipo de vehículo:</span>
+        <span class="txt">
+          Elegí tu tipo de vehículo y vamos a actualizar automáticamente los precios de los servicios.
+        </span>
       </p>
       <div class="veh-buttons">
         <button type="button" class="veh-btn veh-btn-init" data-type="auto">
-          <span>🚗</span><div>Auto Chico / Mediano<small>Clio, Gol, Cronos, etc.</small></div>
+          <span>🚗</span>
+          <div>
+            Auto Chico / Mediano
+            <small>Ej: Clio, Gol, 208, Cronos, Corolla, etc…</small>
+          </div>
         </button>
         <button type="button" class="veh-btn veh-btn-init" data-type="suv">
-          <span>🚙</span><div>SUV / Utilitario<small>Duster, EcoSport, Kangoo, etc.</small></div>
+          <span>🚙</span>
+          <div>
+            SUV / Camioneta Chica / Utilitario
+            <small>Ej: Duster, Tracker, Saveiro, Strada, Kangoo, etc…</small>
+          </div>
         </button>
         <button type="button" class="veh-btn veh-btn-init" data-type="pickup">
-          <span>🛻</span><div>Pickup / Grande<small>Hilux, Amarok, RAM, etc.</small></div>
+          <span>🛻</span>
+          <div>
+            Pickup / Camioneta Grande
+            <small>Ej: Hilux, Amarok, Ranger, Toro, etc…</small>
+          </div>
         </button>
       </div>
     </div>
 
-    <div class="svc-title-label">Servicios individuales:</div>
+    <div class="svc-title-label">Nuestros servicios detallados:</div>
 
     <div class="svc">
       <div class="svc-head">
-        <div class="svc-title">Exterior Premium</div>
+        <div class="svc-title">Lavado Exterior Premium</div>
         <div class="price-wrap">
           <span class="price-label">Precio:</span>
           <span class="pill pill-init" data-base="15000">Elegí vehículo ↑</span>
         </div>
       </div>
       <ul class="svc-list">
-        <li>Prelavado con Snow Foam.</li>
-        <li>Lavado detallado de llantas y pasaruedas.</li>
-        <li>Secado seguro con microfibra.</li>
+        <li>Prelavado con snow foam.</li>
+        <li>Lavado con guantes de microfibra.</li>
+        <li>Limpieza de llantas y pasaruedas.</li>
+        <li>Secado seguro sin rayas.</li>
       </ul>
     </div>
 
@@ -131,9 +432,9 @@
         </div>
       </div>
       <ul class="svc-list">
-        <li>Aspirado profundo industrial.</li>
-        <li>Limpieza de torpedos y plásticos (pH neutro).</li>
-        <li>Vidrios internos sin vetas.</li>
+        <li>Aspirado completo y detallado.</li>
+        <li>Plásticos y tablero con productos neutros.</li>
+        <li>Vidrios interiores sin vetas.</li>
       </ul>
     </div>
 
@@ -146,8 +447,8 @@
         </div>
       </div>
       <ul class="svc-list">
-        <li>Desinfección de ductos de aire acondicionado.</li>
-        <li>Eliminación de olores y bacterias a 105°C.</li>
+        <li>Desinfección de ductos de A/C.</li>
+        <li>Eliminación de bacterias y olores a 105°C.</li>
       </ul>
     </div>
 
@@ -161,7 +462,7 @@
       </div>
       <ul class="svc-list">
         <li>Extracción profunda de suciedad y manchas.</li>
-        <li>Eliminación de ácaros y malos olores.</li>
+        <li>Secado rápido y desinfección.</li>
       </ul>
     </div>
 
@@ -174,24 +475,26 @@
         </div>
       </div>
       <ul class="svc-list">
-        <li>Limpieza técnica con productos específicos.</li>
-        <li>Acondicionado para evitar grietas y resecamiento.</li>
+        <li>Limpieza técnica con pH neutro.</li>
+        <li>Acondicionado para evitar grietas.</li>
       </ul>
     </div>
 
     <p class="note">
       * Exterior y Tapizados ajustan según tamaño: SUV (+$5.000) / Pickup (+$15.000).<br>
-      * Interior y Vapor mantienen precio fijo.
+      * El servicio Interior y Vapor mantienen precio fijo.
     </p>
 
     <div class="socials">
-      <a class="social-btn" href="https://wa.me/2995760611" target="_blank">💬 WhatsApp</a>
-      <a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank">📸 Instagram</a>
+      <a class="social-btn" href="https://wa.me/2995760611" target="_blank" rel="noopener">💬 Escribinos por WhatsApp</a>
+      <a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank" rel="noopener">📸 Visita nuestro Instagram</a>
+      <a class="social-btn" href="https://www.facebook.com/profile.php?id=61580252349290" target="_blank" rel="noopener">📘 Visit nuestro Facebook</a>
     </div>
   </section>
 
   <footer>
-    © <span id="y"></span> LyS Lavados — Hecho con <span id="mateLink" class="mate-link">mate</span>.
+    © <span id="y"></span> LyS Lavados — Hecho con dedicación y
+    <span id="mateLink" class="mate-link" role="link" tabindex="0" aria-label="Acceso oculto">mate</span>.
   </footer>
 </main>
 
@@ -209,19 +512,24 @@
 
   function actualizarPills(tipo){
     const extra = TYPE_EXTRA[tipo] || 0;
+
     pillEls.forEach(pill => {
       const base = Number(pill.dataset.base);
+      if (Number.isNaN(base)) return;
+
       const svc = pill.closest('.svc');
       const title = svc?.querySelector('.svc-title')?.textContent || '';
       
-      // Lógica: Interior y Vapor NO suman extra por tamaño.
-      const esFijo = (title.includes('Interior') && !title.includes('Exterior')) || title.includes('Vapor');
+      // Interior y Vapor son fijos. El resto escala.
+      const esFijo = title.includes('Interior') || title.includes('Vapor');
       const final = esFijo ? base : base + extra;
 
       pill.textContent = '$' + final.toLocaleString('es-AR');
       pill.classList.remove('pill-init');
       pill.classList.add('pill-visible');
-      pill.closest('.price-wrap')?.classList.add('price-active');
+
+      const wrap = pill.closest('.price-wrap');
+      if (wrap) wrap.classList.add('price-active');
     });
   }
 
@@ -230,15 +538,32 @@
       const tipo = btn.dataset.type;
       vehButtons.forEach(b => b.classList.remove('active','veh-btn-init'));
       btn.classList.add('active');
+
+      if (tipo === 'auto') {
+        vehLabel.innerHTML = '<span class="icon">🚘</span><span class="txt">Precios para autos chicos / Medianos.</span>';
+      } else if (tipo === 'suv') {
+        vehLabel.innerHTML = '<span class="icon">🚘</span><span class="txt">Precios para SUV / Utilitarios (+$5.000 en Exterior/Tapizados).</span>';
+      } else {
+        vehLabel.innerHTML = '<span class="icon">🚘</span><span class="txt">Precios para pickups / grandes (+$15.000 en Exterior/Tapizados).</span>';
+      }
+
       actualizarPills(tipo);
     });
   });
 
-  const mate = document.getElementById('mateLink');
-  mate.addEventListener('click', () => {
+  const ADMIN_PASS = 'yerba';
+  function solicitarClaveYEntrar() {
     const clave = prompt('Ingresá la contraseña:');
-    if ((clave || '').trim() === 'yerba') window.open('admin.html', '_blank');
-  });
+    if (clave === null) return;
+    if ((clave || '').trim() === ADMIN_PASS) {
+      window.open('admin.html', '_blank', 'noopener,noreferrer');
+    } else {
+      alert('Contraseña incorrecta.');
+    }
+  }
+
+  const mate = document.getElementById('mateLink');
+  mate.addEventListener('click', solicitarClaveYEntrar);
 </script>
 </body>
 </html>
