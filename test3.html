@@ -60,7 +60,7 @@
     .pill{ font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px; background:rgba(34,197,94,0.14); color:#bbf7d0; border:1px solid rgba(34,197,94,0.38); }
     .pill-visible{ color:#020817; background:#22c55e; border-color:#16a34a; }
 
-    .svc-desc{ color:#d1d5db; font-size:12px; line-height:1.4; margin-top:2px; }
+    .svc-desc{ color:#d1d5db; font-size:12px; line-height:1.4; margin-top:2px; min-height: 34px; }
 
     .socials{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
     .social-btn{ flex:1; padding:8px 10px; border-radius:999px; border:1px solid #22c55e; background:#0b1726; color:#e5e7eb; font-size:11px; display:flex; align-items:center; justify-content:center; gap:6px; text-decoration:none; font-weight:600; }
@@ -79,7 +79,7 @@
     <img src="logo-lys.png" alt="LyS Works" class="brand-logo">
     <div class="tagline">LAVADO A DOMICILIO • CIPOLLETTI</div>
     <h1>Tu auto limpio sin moverte de casa.</h1>
-    <p class="hero-lead">Elegí tu tipo de vehículo para ver los precios actualizados.</p>
+    <p class="hero-lead">Elegí tu tipo de vehículo para ver los servicios y precios.</p>
 
     <div class="chips">
       <div class="chip">🧽 Detailing responsable</div>
@@ -103,7 +103,7 @@
         <span class="svc-title">Lavado Exterior</span>
         <div class="price-wrap"><span class="price-label">Desde:</span><span class="pill" id="p-ext" data-base="15000" data-scale="true">--</span></div>
       </div>
-      <p class="svc-desc" id="desc-ext">Limpieza profunda de ruedas, llantas y pasaruedas. Lavado de carrocería con cera rápida para brillo y protección ligera.</p>
+      <p class="svc-desc" id="desc-ext"></p>
     </div>
 
     <div class="svc">
@@ -111,7 +111,7 @@
         <span class="svc-title">Limpieza Interior</span>
         <div class="price-wrap"><span class="price-label">Precio:</span><span class="pill" data-base="20000" data-scale="false">$20.000</span></div>
       </div>
-      <p class="svc-desc">Aspirado profundo y detallado. Restaurador de plásticos con protección UV (Acabado natural).</p>
+      <p class="svc-desc" id="desc-int"></p>
     </div>
 
     <div class="svc">
@@ -119,7 +119,7 @@
         <span class="svc-title">Sanitización a Vapor</span>
         <div class="price-wrap"><span class="price-label">Precio:</span><span class="pill" data-base="15000" data-scale="false">$15.000</span></div>
       </div>
-      <p class="svc-desc">Desinfección profunda de conductos de aire y superficies a 105°C. Elimina bacterias y ácaros.</p>
+      <p class="svc-desc" id="desc-steam"></p>
     </div>
 
     <div class="svc">
@@ -127,7 +127,7 @@
         <span class="svc-title">Tapizados de Tela</span>
         <div class="price-wrap"><span class="price-label">Desde:</span><span class="pill" id="p-tela" data-base="35000" data-scale="true">--</span></div>
       </div>
-      <p class="svc-desc">Remoción de manchas y desinfección profunda con sistema de extracción y vapor.</p>
+      <p class="svc-desc" id="desc-tela"></p>
     </div>
 
     <div class="svc">
@@ -135,7 +135,7 @@
         <span class="svc-title">Tapizados de Cuero</span>
         <div class="price-wrap"><span class="price-label">Desde:</span><span class="pill" id="p-cuero" data-base="15000" data-scale="true">--</span></div>
       </div>
-      <p class="svc-desc">Limpieza técnica y nutrición profunda para evitar grietas y devolver la suavidad original.</p>
+      <p class="svc-desc" id="desc-cuero"></p>
     </div>
 
     <div class="svc">
@@ -143,7 +143,7 @@
         <span class="svc-title">Limpieza de Techo</span>
         <div class="price-wrap"><span class="price-label">Precio:</span><span class="pill" data-base="10000" data-scale="false">$10.000</span></div>
       </div>
-      <p class="svc-desc">Técnica manual con microfibras. Remueve manchas preservando el pegamento original.</p>
+      <p class="svc-desc" id="desc-techo"></p>
     </div>
 
     <div class="socials">
@@ -164,18 +164,58 @@
 
 <script>
   document.getElementById('y').textContent = new Date().getFullYear();
+  
   const TYPE_EXTRA = { auto: 0, suv: 5000, pickup: 15000 };
+  
+  const DESCRIPCIONES = {
+    auto: {
+      ext: "Lavado detallado de carrocería con técnica de dos baldes. Terminación con cera que realza el color y repele el polvillo urbano.",
+      int: "Limpieza técnica de comandos, rejillas y consola central. Eliminamos el polvo en rincones donde el aspirado común no llega.",
+      steam: "Desinfección profunda de conductos de aire y superficies a 105°C. Elimina bacterias y ácaros del habitáculo.",
+      tela: "Remoción de manchas y desinfección con sistema de extracción. Dejamos las butacas impecables para el uso diario urbano.",
+      cuero: "Limpieza de poros y nutrición profunda para evitar grietas. Devuelve la suavidad original y protege contra el sol.",
+      techo: "Técnica manual con microfibras. Remueve manchas de roce preservando el pegamento original del tapizado."
+    },
+    suv: {
+      ext: "Limpieza profunda en pasaruedas y llantas de gran porte. Lavado de carrocería con cera rápida para facilitar los próximos lavados.",
+      int: "Aspirado de alta potencia en toda la superficie y baúl. Tratamiento de plásticos para recuperar el tono y proteger del sol.",
+      steam: "Ideal para vehículos familiares. Desinfección a 105°C que elimina bacterias y ácaros en el gran habitáculo.",
+      tela: "Extracción de manchas profundas en todas las plazas. Dejamos las telas como nuevas, ideal después de viajes o vacaciones.",
+      cuero: "Limpieza técnica y aplicación de acondicionador mate. Protege las butacas familiares del desgaste y los rayos UV.",
+      techo: "Limpieza manual cuidadosa para grandes superficies. Remueve manchas sin comprometer la tela ni el pegamento."
+    },
+    pickup: {
+      ext: "Lavado técnico de carrocería, llantas y CAJA DE CARGA. Retiramos restos de barro o suciedad pesada protegiendo la pintura.",
+      int: "Limpieza intensiva de alfombras y plásticos de alto tránsito. Nos enfocamos en las zonas de mayor roce de la cabina.",
+      steam: "Sanitización extrema a 105°C. Elimina polvo fino en conductos y bacterias propias del trabajo o la ruta.",
+      tela: "Extracción profunda de polvo de tierra y barro incrustado. Renovación total de las butacas sometidas a trato rudo.",
+      cuero: "Limpieza y acondicionador mate. Evita que el cuero se reseque o quiebre por la exposición climática del valle y el uso intenso.",
+      techo: "Limpieza técnica manual. Eliminamos marcas de tierra y roce cuidando el pegamento original."
+    }
+  };
+
   const pills = document.querySelectorAll('.pill');
   const buttons = document.querySelectorAll('.veh-btn');
+  
   const descExt = document.getElementById('desc-ext');
+  const descInt = document.getElementById('desc-int');
+  const descSteam = document.getElementById('desc-steam');
+  const descTela = document.getElementById('desc-tela');
+  const descCuero = document.getElementById('desc-cuero');
+  const descTecho = document.getElementById('desc-techo');
 
   function update(type) {
     const extra = TYPE_EXTRA[type];
     
-    descExt.textContent = (type === 'pickup') 
-      ? "Limpieza profunda de llantas, pasaruedas, carrocería y CAJA DE CARGA. Incluye cera rápida y revividor natural."
-      : "Limpieza profunda de llantas, pasaruedas y carrocería. Incluye cera rápida y revividor natural.";
+    // Actualizar Textos
+    descExt.textContent = DESCRIPCIONES[type].ext;
+    descInt.textContent = DESCRIPCIONES[type].int;
+    descSteam.textContent = DESCRIPCIONES[type].steam;
+    descTela.textContent = DESCRIPCIONES[type].tela;
+    descCuero.textContent = DESCRIPCIONES[type].cuero;
+    descTecho.textContent = DESCRIPCIONES[type].techo;
 
+    // Actualizar Precios
     pills.forEach(p => {
       const base = parseInt(p.dataset.base);
       const scales = p.dataset.scale === "true";
@@ -192,6 +232,11 @@
       update(btn.dataset.type);
     });
   });
+
+  // Disparar update() al cargar para que no arranquen los textos vacíos
+  // Automáticamente selecciona 'auto' por defecto
+  update('auto');
+  document.querySelector('.veh-btn[data-type="auto"]').classList.add('active');
 
   document.getElementById('mateLink').addEventListener('click', () => {
     const clave = prompt('Password:');
