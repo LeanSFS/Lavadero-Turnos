@@ -50,7 +50,11 @@
     .veh-btn{ padding:9px 10px; border-radius:999px; border:1px solid #293548; background:#020817; color:#e5e7eb; font-size:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; transition:all .16s ease; }
     .veh-btn.active{ background:var(--cta); color:var(--cta-ink); border-color:#16a34a; font-weight:700; transform:translateY(-1px); }
 
-    .svc-title-label{ font-size:13px; color:var(--muted); margin:4px 0 6px; }
+    /* ESTADO INICIAL OCULTO */
+    #servicios-container { display: none; }
+    .sticky-cta { display: none; }
+
+    .svc-title-label{ font-size:13px; color:var(--muted); margin:15px 0 10px; }
     .svc{ border:1px solid var(--line); background:#020817; border-radius:14px; padding:10px; margin-bottom:8px; }
     .svc-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px; }
     .svc-title{ font-weight:700; color:#e5e7eb; font-size:15px; }
@@ -66,7 +70,7 @@
     .social-btn{ flex:1; padding:8px 10px; border-radius:999px; border:1px solid #22c55e; background:#0b1726; color:#e5e7eb; font-size:11px; display:flex; align-items:center; justify-content:center; gap:6px; text-decoration:none; font-weight:600; }
     .social-btn:hover{ background:#22c55e; color:#020817; }
 
-    .sticky-cta{ position:fixed; left:0; right:0; bottom:0; padding:10px 12px 12px; background:linear-gradient(to top, rgba(2,8,23,0.98), rgba(2,8,23,0.9)); display:flex; justify-content:center; z-index:40; }
+    .sticky-cta{ position:fixed; left:0; right:0; bottom:0; padding:10px 12px 12px; background:linear-gradient(to top, rgba(2,8,23,0.98), rgba(2,8,23,0.9)); justify-content:center; z-index:40; }
     .cta-main{ width:100%; max-width:520px; background:var(--cta); color:var(--cta-ink); text-align:center; padding:11px 20px; border-radius:999px; text-decoration:none; font-weight:800; font-size:15px; box-shadow:0 10px 26px rgba(22,163,74,0.7); }
 
     footer{ margin-top:12px; text-align:center; color:#6b7280; font-size:10px; }
@@ -96,60 +100,62 @@
       </div>
     </div>
 
-    <div class="svc-title-label">Nuestros servicios:</div>
+    <div id="servicios-container">
+        <div class="svc-title-label">Servicios disponibles para tu selección:</div>
 
-    <div class="svc">
-      <div class="svc-head">
-        <span class="svc-title">Lavado Exterior</span>
-        <div class="price-wrap"><span class="price-label">Desde:</span><span class="pill" id="p-ext" data-base="15000" data-scale="true">--</span></div>
-      </div>
-      <p class="svc-desc" id="desc-ext"></p>
-    </div>
+        <div class="svc">
+          <div class="svc-head">
+            <span class="svc-title">Lavado Exterior</span>
+            <div class="price-wrap"><span class="price-label">Desde:</span><span class="pill" id="p-ext" data-base="15000" data-scale="true">--</span></div>
+          </div>
+          <p class="svc-desc" id="desc-ext"></p>
+        </div>
 
-    <div class="svc">
-      <div class="svc-head">
-        <span class="svc-title">Limpieza Interior</span>
-        <div class="price-wrap"><span class="price-label">Precio:</span><span class="pill" data-base="20000" data-scale="false">$20.000</span></div>
-      </div>
-      <p class="svc-desc" id="desc-int"></p>
-    </div>
+        <div class="svc">
+          <div class="svc-head">
+            <span class="svc-title">Limpieza Interior</span>
+            <div class="price-wrap"><span class="price-label">Precio:</span><span class="pill" data-base="20000" data-scale="false">$20.000</span></div>
+          </div>
+          <p class="svc-desc" id="desc-int"></p>
+        </div>
 
-    <div class="svc">
-      <div class="svc-head">
-        <span class="svc-title">Sanitización a Vapor</span>
-        <div class="price-wrap"><span class="price-label">Precio:</span><span class="pill" data-base="15000" data-scale="false">$15.000</span></div>
-      </div>
-      <p class="svc-desc" id="desc-steam"></p>
-    </div>
+        <div class="svc">
+          <div class="svc-head">
+            <span class="svc-title">Sanitización a Vapor</span>
+            <div class="price-wrap"><span class="price-label">Precio:</span><span class="pill" data-base="15000" data-scale="false">$15.000</span></div>
+          </div>
+          <p class="svc-desc" id="desc-steam"></p>
+        </div>
 
-    <div class="svc">
-      <div class="svc-head">
-        <span class="svc-title">Tapizados de Tela</span>
-        <div class="price-wrap"><span class="price-label">Desde:</span><span class="pill" id="p-tela" data-base="35000" data-scale="true">--</span></div>
-      </div>
-      <p class="svc-desc" id="desc-tela"></p>
-    </div>
+        <div class="svc">
+          <div class="svc-head">
+            <span class="svc-title">Tapizados de Tela</span>
+            <div class="price-wrap"><span class="price-label">Desde:</span><span class="pill" id="p-tela" data-base="35000" data-scale="true">--</span></div>
+          </div>
+          <p class="svc-desc" id="desc-tela"></p>
+        </div>
 
-    <div class="svc">
-      <div class="svc-head">
-        <span class="svc-title">Tapizados de Cuero</span>
-        <div class="price-wrap"><span class="price-label">Desde:</span><span class="pill" id="p-cuero" data-base="15000" data-scale="true">--</span></div>
-      </div>
-      <p class="svc-desc" id="desc-cuero"></p>
-    </div>
+        <div class="svc">
+          <div class="svc-head">
+            <span class="svc-title">Tapizados de Cuero</span>
+            <div class="price-wrap"><span class="price-label">Desde:</span><span class="pill" id="p-cuero" data-base="15000" data-scale="true">--</span></div>
+          </div>
+          <p class="svc-desc" id="desc-cuero"></p>
+        </div>
 
-    <div class="svc">
-      <div class="svc-head">
-        <span class="svc-title">Limpieza de Techo</span>
-        <div class="price-wrap"><span class="price-label">Precio:</span><span class="pill" data-base="10000" data-scale="false">$10.000</span></div>
-      </div>
-      <p class="svc-desc" id="desc-techo"></p>
-    </div>
+        <div class="svc">
+          <div class="svc-head">
+            <span class="svc-title">Limpieza de Techo</span>
+            <div class="price-wrap"><span class="price-label">Precio:</span><span class="pill" data-base="10000" data-scale="false">$10.000</span></div>
+          </div>
+          <p class="svc-desc" id="desc-techo"></p>
+        </div>
 
-    <div class="socials">
-      <a class="social-btn" href="https://wa.me/2995760611" target="_blank">💬 WhatsApp</a>
-      <a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank">📸 Instagram</a>
-      <a class="social-btn" href="https://www.facebook.com/profile.php?id=61580252349290" target="_blank">📘 Facebook</a>
+        <div class="socials">
+          <a class="social-btn" href="https://wa.me/2995760611" target="_blank">💬 WhatsApp</a>
+          <a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank">📸 Instagram</a>
+          <a class="social-btn" href="https://www.facebook.com/profile.php?id=61580252349290" target="_blank">📘 Facebook</a>
+        </div>
     </div>
   </section>
 
@@ -158,7 +164,7 @@
   </footer>
 </main>
 
-<div class="sticky-cta">
+<div class="sticky-cta" id="floating-cta">
   <a class="cta-main" href="reserva.html">🗓️ Reservar turno online</a>
 </div>
 
@@ -170,32 +176,34 @@
   const DESCRIPCIONES = {
     auto: {
       ext: "Limpieza profunda de llantas, pasaruedas y carrocería. Terminación con cera rápida que realza el color y repele el polvillo urbano.",
-      int: "Aspirado profundo y detallado de todo el habitáculo. Herramientas de detailing para rejillas y rincones difíciles. Aplicación de restaurador de plásticos con protección UV (Acabado natural). Eliminamos el polvo en rincones donde el aspirado común no llega.",
+      int: "Aspirado detallado. Herramientas de detailing para rejillas y rincones. Aplicación de restaurador de plásticos con protección UV (Acabado natural).",
       steam: "Desinfección profunda de conductos de aire y superficies a 105°C. Elimina bacterias y ácaros del habitáculo.",
-      tela: "Remoción de manchas y desinfección con sistema de vapor y extracción. Dejamos las butacas impecables para el uso diario urbano.",
+      tela: "Remoción de manchas y desinfección con sistema de vapor y extracción. Dejamos las butacas impecables.",
       cuero: "Limpieza y nutrición profunda para evitar grietas. Devuelve la suavidad original y protege contra el sol.",
       techo: "Técnica manual con microfibras. Remueve suciedad preservando el pegamento original del tapizado."
     },
     suv: {
-      ext: "Limpieza profunda de llantas, pasaruedas y carrocería. Terminación con cera rápida que realza el color y repele el polvillo urbano.",
-      int: "Aspirado profundo y detallado de todo el habitáculo. Herramientas de detailing para rejillas y rincones difíciles. Aplicación de restaurador de plásticos con protección UV (Acabado natural). Eliminamos el polvo en rincones donde el aspirado común no llega.",
-      steam: "Ideal para vehículos familiares. Desinfección a 105°C que elimina bacterias y ácaros en el gran habitáculo.",
-      tela: "Remoción de manchas y desinfección con sistema de vapor y extracción. Dejamos las telas como nuevas, ideal después de viajes o vacaciones.",
-      cuero: "Limpieza técnica y aplicación de acondicionador mate. Protege las butacas familiares del desgaste y los rayos UV.",
-      techo: "Limpieza manual cuidadosa para grandes superficies. Remueve suciedad sin comprometer la tela ni el pegamento."
+      ext: "Limpieza de llantas y pasaruedas de gran tamaño. Terminación con cera rápida que repele el polvillo urbano.",
+      int: "Aspirado profundo del habitáculo y baúl espacioso. Restaurador de plásticos con protección UV (Acabado natural).",
+      steam: "Ideal para vehículos familiares. Desinfección total a 105°C que elimina bacterias en todo el habitáculo.",
+      tela: "Remoción de manchas y desinfección con sistema de vapor. Ideal para telas que sufren el uso familiar o viajes.",
+      cuero: "Limpieza técnica y aplicación de acondicionador mate. Protege del desgaste y los rayos UV intensos.",
+      techo: "Limpieza manual cuidadosa. Remueve suciedad sin comprometer la tela ni el pegamento."
     },
     pickup: {
-      ext: "Lavado técnico de carrocería, llantas y caja de carga. Retiramos restos de barro o suciedad pesada protegiendo la pintura. Terminación con cera rápida que realza el color y repele el polvillo.",
-      int: "Aspirado profundo y detallado de todo el habitáculo. Herramientas de detailing para rejillas y rincones difíciles. Aplicación de restaurador de plásticos con protección UV (Acabado natural). Eliminamos el polvo en rincones donde el aspirado común no llega..",
-      steam: "Sanitización extrema a 105°C. Elimina polvo fino en conductos y bacterias propias del trabajo o la ruta.",
-      tela: "Extracción profunda de polvo de tierra y barro incrustado. Renovación total de las butacas sometidas a trato rudo.",
-      cuero: "Limpieza y acondicionador mate. Evita que el cuero se reseque o quiebre por la exposición climática del valle y el uso intenso.",
+      ext: "Lavado técnico de carrocería, llantas y CAJA DE CARGA. Retiramos restos de barro protegiendo la pintura. Terminación con cera rápida.",
+      int: "Limpieza intensiva de alfombras y plásticos de alto tránsito. Nos enfocamos en las zonas de mayor roce de la cabina.",
+      steam: "Sanitización extrema a 105°C. Elimina polvo fino en conductos típico del trabajo o la ruta.",
+      tela: "Extracción profunda de polvo de tierra y barro. Renovación total de las butacas sometidas a trato rudo.",
+      cuero: "Limpieza y acondicionador mate. Evita que el cuero se reseque o quiebre por la exposición climática del valle.",
       techo: "Limpieza técnica manual. Eliminamos marcas de tierra y roce cuidando el pegamento original."
     }
   };
 
   const pills = document.querySelectorAll('.pill');
   const buttons = document.querySelectorAll('.veh-btn');
+  const serviciosContainer = document.getElementById('servicios-container');
+  const floatingCta = document.getElementById('floating-cta');
   
   const descExt = document.getElementById('desc-ext');
   const descInt = document.getElementById('desc-int');
@@ -207,6 +215,10 @@
   function update(type) {
     const extra = TYPE_EXTRA[type];
     
+    // Mostramos el contenedor y el botón de reserva la primera vez que se hace clic
+    serviciosContainer.style.display = 'block';
+    floatingCta.style.display = 'flex';
+
     // Actualizar Textos
     descExt.textContent = DESCRIPCIONES[type].ext;
     descInt.textContent = DESCRIPCIONES[type].int;
@@ -232,11 +244,6 @@
       update(btn.dataset.type);
     });
   });
-
-  // Disparar update() al cargar para que no arranquen los textos vacíos
-  // Automáticamente selecciona 'auto' por defecto
-  update('auto');
-  document.querySelector('.veh-btn[data-type="auto"]').classList.add('active');
 
   document.getElementById('mateLink').addEventListener('click', () => {
     const clave = prompt('Password:');
