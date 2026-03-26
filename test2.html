@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>LyS Lavados • Detailing a Domicilio</title>
+  <title>LyS Works • Presupuesto de Detailing</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -15,9 +15,8 @@
     *{ box-sizing:border-box; margin:0; padding:0; }
     body{
       font-family:"Inter", sans-serif; color:#fff; min-height:100vh;
-      padding:18px 12px 140px;
-      background: radial-gradient(900px 600px at 0% 0%, rgba(34,197,94,0.10), transparent), #020817;
-      font-size:15px;
+      padding:18px 12px 160px;
+      background: radial-gradient(900px 600px at 0% 0%, rgba(34,197,94,0.08), transparent), #020817;
     }
     .wrap{ max-width:520px; margin:0 auto; }
     .card{
@@ -25,15 +24,15 @@
       border:1px solid rgba(148,163,253,0.12); box-shadow:0 18px 40px rgba(0,0,0,0.6);
     }
     .brand-logo{ display:block; height:70px; margin:0 auto 10px auto; }
-    h1{ font-size:22px; text-align:center; font-weight:800; color:var(--title); margin-bottom:15px; }
+    h1{ font-size:20px; text-align:center; font-weight:800; color:var(--title); margin-bottom:15px; }
 
     /* Selección de Vehículo */
     .veh-toggle{ margin-bottom:20px; padding:12px; border-radius:16px; background:#020817; border:1px solid rgba(34,197,94,0.3); }
-    .veh-label{ font-size:12px; color:#bbf7d0; margin-bottom:8px; text-align:center; text-transform:uppercase; letter-spacing:1px; }
+    .veh-label{ font-size:11px; color:#bbf7d0; margin-bottom:8px; text-align:center; text-transform:uppercase; letter-spacing:1px; font-weight:700; }
     .veh-buttons{ display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; }
     .veh-btn{
       padding:10px 5px; border-radius:12px; border:1px solid #293548;
-      background:#0b1726; color:#e5e7eb; font-size:11px; cursor:pointer;
+      background:#0b1726; color:#e5e7eb; font-size:10px; cursor:pointer;
       display:flex; flex-direction:column; align-items:center; gap:4px; transition: 0.2s;
     }
     .veh-btn span { font-size: 20px; }
@@ -42,29 +41,32 @@
     /* Servicios */
     .svc{
       border:1px solid var(--line); background:rgba(255,255,255,0.02);
-      border-radius:16px; padding:15px; margin-bottom:12px;
+      border-radius:16px; padding:14px; margin-bottom:12px;
       display: flex; align-items: flex-start; gap:12px; cursor: pointer; transition: 0.2s;
     }
-    .svc:hover { border-color: rgba(34,197,94,0.4); background:rgba(255,255,255,0.04); }
-    .svc-check { width: 22px; height: 22px; accent-color: var(--cta); cursor: pointer; margin-top: 2px; }
+    .svc:hover { border-color: rgba(34,197,94,0.4); }
+    .svc-check { width: 20px; height: 20px; accent-color: var(--cta); cursor: pointer; margin-top: 2px; }
     .svc-info { flex: 1; }
-    .svc-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-    .svc-title { font-weight: 700; font-size: 15px; color: #fff; }
-    .svc-desc { color: var(--muted); font-size: 12px; line-height: 1.4; }
-    .price-pill { font-size: 12px; font-weight: 800; color: #22c55e; background: rgba(34,197,94,0.1); padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+    .svc-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+    .svc-title { font-weight: 700; font-size: 14px; color: #fff; }
+    .svc-desc { color: var(--muted); font-size: 11px; line-height: 1.4; }
+    .price-pill { font-size: 11px; font-weight: 800; color: #22c55e; background: rgba(34,197,94,0.1); padding: 2px 8px; border-radius: 6px; }
 
-    /* Barra Total */
+    /* Ocultar Caja de Carga por defecto */
+    #svc-caja { display: none; border-color: rgba(56, 189, 248, 0.2); }
+
+    /* Barra Total Sticky */
     .total-bar {
       position: fixed; bottom: 0; left: 0; right: 0;
-      background: rgba(5,8,21,0.95); backdrop-filter: blur(10px);
+      background: rgba(5,8,21,0.95); backdrop-filter: blur(12px);
       border-top: 1px solid var(--line); padding: 15px;
-      display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 100;
+      display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 100;
     }
-    .total-amount { color: var(--cta); font-size: 26px; font-weight: 800; }
+    .total-amount { color: var(--cta); font-size: 28px; font-weight: 800; }
     .cta-whatsapp {
       width: 100%; max-width: 400px; background: var(--cta); color: var(--cta-ink);
       text-align: center; padding: 14px; border-radius: 999px;
-      text-decoration: none; font-weight: 800; font-size: 16px;
+      text-decoration: none; font-weight: 800; font-size: 15px;
       box-shadow: 0 10px 25px rgba(22,163,74,0.4);
     }
   </style>
@@ -73,20 +75,19 @@
 
 <main class="wrap">
   <section class="card">
-    <img src="logo-lys.png" alt="LyS Lavados" class="brand-logo">
-    <h1>Personalizá tu Lavado</h1>
+    <img src="logo-lys.png" alt="LyS Works" class="brand-logo">
+    <h1>Cotizá tu servicio a domicilio</h1>
 
     <div class="veh-toggle">
       <p class="veh-label">Tipo de vehículo</p>
       <div class="veh-buttons">
         <button class="veh-btn active" data-type="auto"><span>🚗</span>Auto</button>
-        <button class="veh-btn" data-type="suv"><span>🚙</span>SUV / PickUp</button>
-        <button class="veh-btn" data-type="truck"><span>🛻</span>PickUp Grande</button>
+        <button class="veh-btn" data-type="suv"><span>🚙</span>SUV / Utilitario</button>
+        <button class="veh-btn" data-type="pickup"><span>🛻</span>Pickup</button>
       </div>
     </div>
 
     <div class="svc-container">
-      
       <label class="svc" for="check-ext">
         <input type="checkbox" class="svc-check" id="check-ext" data-base="15000" data-scale="true">
         <div class="svc-info">
@@ -94,7 +95,7 @@
             <span class="svc-title">Lavado Exterior</span>
             <span class="price-pill" id="p-ext">$15.000</span>
           </div>
-          <p class="svc-desc">Limpieza profunda de ruedas, llantas y pasaruedas. Lavado de carrocería con cera rápida para brillo y protección. Revividor de cubiertas (no graso).</p>
+          <p class="svc-desc">Limpieza profunda de llantas y pasaruedas. Lavado de carrocería con productos de base acuosa, cera rápida y revividor de cubiertas natural.</p>
         </div>
       </label>
 
@@ -105,20 +106,18 @@
             <span class="svc-title">Limpieza Interior</span>
             <span class="price-pill">$20.000</span>
           </div>
-          <p class="svc-desc">Aspirado detallado en todo el habitáculo (alfombras y rincones). Limpieza prolija de plásticos, vidrios y rejillas con pinceles de detailing.</p>
+          <p class="svc-desc">Aspirado profundo detallado de todo el habitáculo. Limpieza de plásticos y rejillas con pinceles y aplicación de protector con filtro UV (no graso).</p>
         </div>
       </label>
 
-      <label class="svc" for="check-full" style="border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.03);">
-        <input type="checkbox" class="svc-check" id="check-full" data-base="45000" data-scale="true">
+      <label class="svc" for="check-caja" id="svc-caja">
+        <input type="checkbox" class="svc-check" id="check-caja" data-base="5000" data-scale="false">
         <div class="svc-info">
           <div class="svc-head">
-            <span class="svc-title">Lavado FULL (Integral)</span>
-            <span class="price-pill" id="p-full">$45.000</span>
+            <span class="svc-title">Limpieza de Caja de Carga</span>
+            <span class="price-pill">$5.000</span>
           </div>
-          <p class="svc-desc">
-            <b>Incluye Interior + Exterior</b>, sumando limpieza de <b>caja de carga</b>, protectores de plásticos con <b>filtro UV</b> y productos de base acuosa de larga duración.
-          </p>
+          <p class="svc-desc">Retiro de tierra, barro y residuos acumulados en la caja. Ideal para camionetas de uso mixto o trabajo.</p>
         </div>
       </label>
 
@@ -126,40 +125,58 @@
         <input type="checkbox" class="svc-check" id="check-butacas" data-base="35000" data-scale="true">
         <div class="svc-info">
           <div class="svc-head">
-            <span class="svc-title">Limpieza de Tapizados</span>
+            <span class="svc-title">Tapizados (Vapor)</span>
             <span class="price-pill" id="p-butacas">$35.000</span>
           </div>
-          <p class="svc-desc">Eliminación de manchas y olores mediante vapor termo-desinfectante y extracción profunda. Ideal para renovar telas y cueros.</p>
+          <p class="svc-desc">Desinfección térmica y extracción de manchas profundas con máquina inyectora-extractora. Resultados garantizados sin mojar de más.</p>
         </div>
       </label>
 
+      <label class="svc" for="check-techo">
+        <input type="checkbox" class="svc-check" id="check-techo" data-base="20000" data-scale="false">
+        <div class="svc-info">
+          <div class="svc-head">
+            <span class="svc-title">Limpieza de Techo</span>
+            <span class="price-pill">$20.000</span>
+          </div>
+          <p class="svc-desc">Técnica manual con microfibras y productos específicos para remover suciedad sin comprometer el pegamento del techo.</p>
+        </div>
+      </label>
     </div>
   </section>
 </main>
 
 <div class="total-bar">
-  <div class="total-text" style="font-size: 14px; color: var(--muted); margin-bottom: -5px;">Presupuesto Estimado:</div>
+  <div class="total-text" style="font-size: 13px; color: var(--muted);">Total Presupuestado:</div>
   <div class="total-amount" id="total-val">$0</div>
-  <a href="#" class="cta-whatsapp" id="btn-ws">Reservar este combo</a>
+  <a href="#" class="cta-whatsapp" id="btn-ws">Confirmar Turno</a>
 </div>
 
 <script>
-  const TYPE_EXTRA = { auto: 0, suv: 5000, truck: 15000 };
+  const TYPE_EXTRA = { auto: 0, suv: 5000, pickup: 15000 };
   let currentType = 'auto';
 
   const vehButtons = document.querySelectorAll('.veh-btn');
   const checkboxes = document.querySelectorAll('.svc-check');
   const totalVal = document.getElementById('total-val');
   const btnWs = document.getElementById('btn-ws');
+  const cajaSvc = document.getElementById('svc-caja');
 
-  function updatePrices() {
+  function update() {
     let total = 0;
-    let selectedSvc = [];
+    let selectedNames = [];
     const extra = TYPE_EXTRA[currentType];
 
-    // Actualizar labels de precios visuales
+    // Mostrar/Ocultar Caja de Carga
+    if (currentType === 'pickup') {
+      cajaSvc.style.display = 'flex';
+    } else {
+      cajaSvc.style.display = 'none';
+      document.getElementById('check-caja').checked = false; // Destilda si cambia a auto
+    }
+
+    // Actualizar visual de precios que escalan
     document.getElementById('p-ext').textContent = '$' + (15000 + extra).toLocaleString('es-AR');
-    document.getElementById('p-full').textContent = '$' + (45000 + extra).toLocaleString('es-AR');
     document.getElementById('p-butacas').textContent = '$' + (35000 + extra).toLocaleString('es-AR');
 
     checkboxes.forEach(cb => {
@@ -167,16 +184,17 @@
         const base = parseInt(cb.dataset.base);
         const scales = cb.dataset.scale === "true";
         total += scales ? (base + extra) : base;
-        selectedSvc.push(cb.parentElement.querySelector('.svc-title').textContent);
+        selectedNames.push(cb.parentElement.querySelector('.svc-title').textContent);
       }
     });
 
     totalVal.textContent = '$' + total.toLocaleString('es-AR');
 
+    // Link WhatsApp
     const msg = encodeURIComponent(
-      `¡Hola! 👋 Consulto por un turno para un ${currentType.toUpperCase()}.\n\n` +
-      `Servicios:\n- ${selectedSvc.join('\n- ')}\n\n` +
-      `Total estimado: $${total.toLocaleString('es-AR')}`
+      `¡Hola LyS Works! 👋 Cotización para mi ${currentType.toUpperCase()}:\n\n` +
+      `Servicios:\n- ${selectedNames.join('\n- ')}\n\n` +
+      `Presupuesto: $${total.toLocaleString('es-AR')}`
     );
     btnWs.href = `https://wa.me/2995760611?text=${msg}`;
   }
@@ -186,12 +204,12 @@
       vehButtons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentType = btn.dataset.type;
-      updatePrices();
+      update();
     });
   });
 
-  checkboxes.forEach(cb => cb.addEventListener('change', updatePrices));
-  updatePrices();
+  checkboxes.forEach(cb => cb.addEventListener('change', update));
+  update();
 </script>
 
 </body>
