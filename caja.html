@@ -86,8 +86,19 @@
     }
 
     /* Modal simple */
-    .modal{ position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; padding:20px }
+    .modal{ position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; padding:20px; z-index: 1000; }
     .modal .panel{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; max-width:420px; width:100% }
+    
+    /* Panel de Alta Rápida Destacado */
+    .alta-panel {
+      background: #0f172a;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
   </style>
 </head>
 <body>
@@ -95,10 +106,8 @@
     <div class="box">
       <h1>Gestión — Caja (Ingresos / Gastos)</h1>
 
-      <!-- FILTROS -->
       <div class="section">
         <div class="toolbar" style="flex-direction:column; align-items:stretch; gap:12px">
-          <!-- Fila 1: Fechas + Tipo + Estado -->
           <div class="grid cols-4" style="min-width:280px">
             <div>
               <label for="f_from">Desde</label>
@@ -118,7 +127,6 @@
             </div>
           </div>
 
-          <!-- Fila 2: Medio + Categoría -->
           <div class="grid cols-2" style="min-width:280px">
             <div>
               <label for="f_medio">Medio</label>
@@ -130,7 +138,6 @@
             </div>
           </div>
 
-          <!-- Fila 3: Rango rápido + Acciones -->
           <div class="row" style="justify-content:space-between; gap:10px">
             <div class="quickbar" id="quickbar">
               <button type="button" class="btn-filter" data-range="hoy"  id="btn_period_hoy">Hoy</button>
@@ -148,42 +155,14 @@
         <div id="list_msg" class="msg"></div>
       </div>
 
-      <!-- CARDS TOTALES -->
       <div class="cards3">
         <div class="card"><h3>Ingresos</h3><div class="num" id="k_ingresos">$ 0</div></div>
         <div class="card"><h3>Gastos</h3><div class="num" id="k_gastos">$ 0</div></div>
         <div class="card"><h3>Neto</h3><div class="num" id="k_neto">$ 0</div></div>
       </div>
 
-      <!-- TABLA (desktop) -->
-      <div class="section">
-        <div class="box" style="background:#0f172a; border-radius:12px">
-          <table id="tabla">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Tipo</th>
-                <th>Categoría</th>
-                <th>Concepto</th>
-                <th class="right">Monto</th>
-                <th>Medio</th>
-                <th>Estado</th>
-                <th>Factura</th>
-                <th>Cliente</th>
-                <th>Notas</th> <!-- tooltip -->
-                <th class="right"></th>
-              </tr>
-            </thead>
-            <tbody id="tbody"></tbody>
-          </table>
-          <!-- Cards (mobile) -->
-          <div id="cards_list" class="cards-list"></div>
-        </div>
-      </div>
-
-      <!-- ALTA RÁPIDA -->
-      <div class="section">
-        <h2>Agregar movimiento</h2>
+      <div class="alta-panel">
+        <h2 style="color: var(--ok); margin-bottom: 16px;">➕ Agregar movimiento</h2>
         <div class="grid cols-4">
           <div>
             <label for="a_fecha">Fecha</label>
@@ -231,15 +210,37 @@
             <input id="a_notas" placeholder="Observaciones" />
           </div>
         </div>
-        <div class="row" style="margin-top:10px">
-          <button class="primary" id="btn_agregar">Agregar</button>
-          <div id="alta_msg" class="msg"></div>
+        <div class="row" style="margin-top:16px; justify-content: flex-end;">
+          <div id="alta_msg" class="msg" style="margin-top:0; margin-right: 12px;"></div>
+          <button class="primary" id="btn_agregar" style="padding: 12px 24px;">Agregar Movimiento</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="box" style="background:#0f172a; border-radius:12px">
+          <table id="tabla">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Categoría</th>
+                <th>Concepto</th>
+                <th class="right">Monto</th>
+                <th>Medio</th>
+                <th>Estado</th>
+                <th>Factura</th>
+                <th>Cliente</th>
+                <th>Notas</th> <th class="right"></th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+          <div id="cards_list" class="cards-list"></div>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- Modal borrar -->
   <div class="modal" id="modal_del">
     <div class="panel">
       <h3 style="margin:0 0 8px">Confirmar borrado</h3>
@@ -629,7 +630,7 @@ document.getElementById('btn_agregar').onclick = async ()=>{
     $a_concepto.value=''; $a_monto.value=''; $a_factura.value=''; $a_notas.value='';
     await cargarLista();
   }catch(e){ $altaMsg.textContent = '⚠️ '+e.message; }
-  finally{ $btnAgregar.disabled=false; $btnAgregar.textContent='Agregar'; }
+  finally{ $btnAgregar.disabled=false; $btnAgregar.textContent='Agregar Movimiento'; }
 };
 
 /* ========================
@@ -668,4 +669,4 @@ function exportCSV(){
 })();
 </script>
 </body>
-</html> 
+</html>
