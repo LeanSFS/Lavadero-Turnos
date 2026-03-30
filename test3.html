@@ -1,366 +1,334 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<title>LyS Works • Lavado a Domicilio</title>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <title>LyS Works • Lavado a Domicilio</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
 
-<style>
-:root {
---bg: #020617;
---card: rgba(15, 23, 42, 0.7);
---line: rgba(255, 255, 255, 0.08);
---muted: #94a3b8;
---title: #f8fafc;
---cta: #22c55e;
---cta-ink: #020617;
-}
+  <style>
+    :root {
+      --bg: #020617;
+      --card: rgba(15, 23, 42, 0.7);
+      --line: rgba(255, 255, 255, 0.08);
+      --muted: #94a3b8;
+      --title: #f8fafc;
+      --cta: #22c55e;
+      --cta-ink: #020617;
+    }
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-body {
-font-family: "Inter", sans-serif;
-color: #fff;
-min-height: 100vh;
-padding: 20px 16px 100px;
-background: 
-radial-gradient(circle at 0% 0%, rgba(34, 197, 94, 0.12) 0%, transparent 40%),
-#020617;
-font-size: 15px;
-}
+    body {
+      font-family: "Inter", sans-serif;
+      color: #fff;
+      min-height: 100vh;
+      padding: 20px 16px 100px;
+      background: 
+        radial-gradient(circle at 0% 0%, rgba(34, 197, 94, 0.12) 0%, transparent 40%),
+        #020617;
+      font-size: 15px;
+    }
 
-.wrap { max-width: 480px; margin: 0 auto; }
+    .wrap { max-width: 480px; margin: 0 auto; }
 
-.card {
-background: var(--card);
-backdrop-filter: blur(12px);
--webkit-backdrop-filter: blur(12px);
-border-radius: 24px;
-padding: 24px 20px;
-border: 1px solid var(--line);
-box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-animation: fadeIn 0.6s ease-out;
-}
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 24px;
+      padding: 24px 20px;
+      border: 1px solid var(--line);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.6s ease-out;
+    }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-.brand-logo { display: block; height: 86px; margin: 0 auto 12px auto; }
-.tagline { text-align: center; font-size: 11px; color: var(--cta); letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
-h1 { font-size: 24px; text-align: center; font-weight: 900; color: var(--title); margin-bottom: 6px; }
-.hero-lead { font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 20px; }
+    .brand-logo { display: block; height: 86px; margin: 0 auto 12px auto; }
+    .tagline { text-align: center; font-size: 11px; color: var(--cta); letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+    h1 { font-size: 24px; text-align: center; font-weight: 900; color: var(--title); margin-bottom: 6px; }
+    .hero-lead { font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 20px; }
 
-.chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 24px; }
-.chip { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); font-size: 11px; color: #e2e8f0; background: rgba(255,255,255,0.03); }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 24px; }
+    .chip { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); font-size: 11px; color: #e2e8f0; background: rgba(255,255,255,0.03); }
 
-.veh-toggle { 
-margin-bottom: 20px; padding: 16px; border-radius: 20px; 
-background: rgba(0,0,0,0.3); border: 1px solid rgba(34,197,94,0.3);
-}
-.veh-label { font-size: 14px; font-weight: 700; color: var(--cta); margin-bottom: 12px; text-align: center; }
-.veh-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .veh-toggle { 
+      margin-bottom: 20px; padding: 16px; border-radius: 20px; 
+      background: rgba(0,0,0,0.3); border: 1px solid rgba(34,197,94,0.3);
+    }
+    .veh-label { font-size: 14px; font-weight: 700; color: var(--cta); margin-bottom: 12px; text-align: center; }
+    .veh-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    
+    .veh-btn { 
+      padding: 14px 4px; border-radius: 16px; border: 1px solid var(--line); 
+      background: rgba(255,255,255,0.05); color: #94a3b8; font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .veh-btn span.icon { font-size: 22px; margin-bottom: 2px; }
+    .veh-btn small { font-size: 8.5px; font-weight: 400; line-height: 1.2; color: #64748b; text-align: center; display: block; margin-top: 4px; }
+    
+    .veh-btn.active { 
+      background: var(--cta); color: var(--cta-ink); border-color: var(--cta);
+      transform: scale(1.05); font-weight: 800;
+    }
+    .veh-btn.active small { color: rgba(2, 6, 23, 0.7); font-weight: 600; }
 
-.veh-btn { 
-padding: 14px 4px; border-radius: 16px; border: 1px solid var(--line); 
-background: rgba(255,255,255,0.05); color: #94a3b8; font-size: 13px; font-weight: 700;
-cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 4px;
-}
-.veh-btn span.icon { font-size: 22px; margin-bottom: 2px; }
-.veh-btn small { font-size: 8.5px; font-weight: 400; line-height: 1.2; color: #64748b; text-align: center; display: block; margin-top: 4px; }
-
-.veh-btn.active { 
-background: var(--cta); color: var(--cta-ink); border-color: var(--cta);
-transform: scale(1.05); font-weight: 800;
-}
-.veh-btn.active small { color: rgba(2, 6, 23, 0.7); font-weight: 600; }
-
-#servicios-container, .sticky-cta { display: none; }
-.svc-title-label { font-size: 12px; color: var(--muted); margin: 24px 0 12px; text-transform: uppercase; font-weight: 700; text-align: center; }
-
+    #servicios-container, .sticky-cta { display: none; }
+    .svc-title-label { font-size: 12px; color: var(--muted); margin: 24px 0 12px; text-transform: uppercase; font-weight: 700; text-align: center; }
+    
     /* ESTILOS DEL COMBO FULL */
-.combo-full {
-background: rgba(34, 197, 94, 0.04);
-border: 1px solid rgba(34, 197, 94, 0.4);
-border-radius: 20px;
+    .combo-full {
+      background: rgba(34, 197, 94, 0.04);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      border-radius: 20px;
       padding: 20px 14px 14px;
-      padding: 24px 14px 14px;
-margin-bottom: 14px;
-position: relative;
-animation: slideIn 0.4s ease forwards; opacity: 0;
-}
-.combo-badge {
-position: absolute;
-top: -12px;
-left: 50%;
-transform: translateX(-50%);
-background: var(--cta);
-color: var(--cta-ink);
+      margin-bottom: 14px;
+      position: relative;
+      animation: slideIn 0.4s ease forwards; opacity: 0;
+    }
+    .combo-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--cta);
+      color: var(--cta-ink);
       font-size: 11px;
-      font-size: 12px;
-font-weight: 900;
+      font-weight: 900;
       padding: 6px 16px;
-      padding: 6px 18px;
-border-radius: 999px;
-text-transform: uppercase;
-letter-spacing: 0.5px;
-box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
-white-space: nowrap;
-      display: flex;
-      gap: 8px;
-}
-.combo-full .svc { margin-bottom: 10px; background: rgba(2, 6, 23, 0.6); animation: none; opacity: 1; border-color: rgba(255,255,255,0.05); }
-.combo-full .svc:last-child { margin-bottom: 0; }
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+      white-space: nowrap;
+    }
+    .combo-full .svc { margin-bottom: 10px; background: rgba(2, 6, 23, 0.6); animation: none; opacity: 1; border-color: rgba(255,255,255,0.05); }
+    .combo-full .svc:last-child { margin-bottom: 0; }
 
-.svc { 
-border: 1px solid var(--line); background: rgba(255,255,255,0.02); 
-border-radius: 16px; padding: 14px; margin-bottom: 10px;
-animation: slideIn 0.4s ease forwards; opacity: 0;
-}
-@keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+    .svc { 
+      border: 1px solid var(--line); background: rgba(255,255,255,0.02); 
+      border-radius: 16px; padding: 14px; margin-bottom: 10px;
+      animation: slideIn 0.4s ease forwards; opacity: 0;
+    }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
 
-.svc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-.svc-title { font-weight: 700; color: var(--title); font-size: 15px; }
-.pill { font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 999px; background: var(--cta); color: var(--cta-ink); }
-.svc-desc { color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .svc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .svc-title { font-weight: 700; color: var(--title); font-size: 15px; }
+    .pill { font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 999px; background: var(--cta); color: var(--cta-ink); }
+    .svc-desc { color: var(--muted); font-size: 12px; line-height: 1.5; }
 
-.socials { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 20px; }
-.social-btn { 
-padding: 10px; border-radius: 12px; border: 1px solid var(--line); 
-background: rgba(255,255,255,0.05); color: #fff; font-size: 11px; 
-display: flex; flex-direction: column; align-items: center; gap: 4px; 
-text-decoration: none; font-weight: 600; transition: 0.3s;
-}
-.social-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--cta); }
+    .socials { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 20px; }
+    .social-btn { 
+      padding: 10px; border-radius: 12px; border: 1px solid var(--line); 
+      background: rgba(255,255,255,0.05); color: #fff; font-size: 11px; 
+      display: flex; flex-direction: column; align-items: center; gap: 4px; 
+      text-decoration: none; font-weight: 600; transition: 0.3s;
+    }
+    .social-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--cta); }
 
-.sticky-cta { 
-position: fixed; left: 0; right: 0; bottom: 0; padding: 20px 16px; 
-background: linear-gradient(to top, var(--bg) 70%, transparent);
-justify-content: center; z-index: 50;
-}
-.cta-main { 
-width: 100%; max-width: 440px; background: var(--cta); color: var(--cta-ink); 
-text-align: center; padding: 15px; border-radius: 16px; text-decoration: none; 
-font-weight: 800; font-size: 16px; box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4);
-transition: 0.2s;
-}
-.cta-main:active { transform: scale(0.98); }
+    .sticky-cta { 
+      position: fixed; left: 0; right: 0; bottom: 0; padding: 20px 16px; 
+      background: linear-gradient(to top, var(--bg) 70%, transparent);
+      justify-content: center; z-index: 50;
+    }
+    .cta-main { 
+      width: 100%; max-width: 440px; background: var(--cta); color: var(--cta-ink); 
+      text-align: center; padding: 15px; border-radius: 16px; text-decoration: none; 
+      font-weight: 800; font-size: 16px; box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4);
+      transition: 0.2s;
+    }
+    .cta-main:active { transform: scale(0.98); }
 
-footer { margin-top: 24px; text-align: center; color: var(--muted); font-size: 10px; }
-.mate-link { cursor: pointer; color: transparent; }
-</style>
+    footer { margin-top: 24px; text-align: center; color: var(--muted); font-size: 10px; }
+    .mate-link { cursor: pointer; color: transparent; }
+  </style>
 </head>
 <body>
 
 <main class="wrap">
-<section class="card">
-<img src="logo-lys.png" alt="LyS Works" class="brand-logo">
-<div class="tagline">Servicio a Domicilio</div>
-<h1>Lavado de Autos</h1>
-<p class="hero-lead">Elegí tu vehículo para ver los precios:</p>
+  <section class="card">
+    <img src="logo-lys.png" alt="LyS Works" class="brand-logo">
+    <div class="tagline">Servicio a Domicilio</div>
+    <h1>Lavado de Autos</h1>
+    <p class="hero-lead">Elegí tu vehículo para ver los precios:</p>
 
-<div class="chips">
-<div class="chip">📍 Cipolletti</div>
-<div class="chip">🧽 Detailing Real</div>
-<div class="chip">🚿 Sin moverte</div>
-</div>
+    <div class="chips">
+      <div class="chip">📍 Cipolletti</div>
+      <div class="chip">🧽 Detailing Real</div>
+      <div class="chip">🚿 Sin moverte</div>
+    </div>
 
-<div class="veh-toggle">
-<p class="veh-label">¿Qué vehículo limpiamos?</p>
-<div class="veh-buttons">
-<button class="veh-btn" data-type="auto">
-<span class="icon">🚗</span>Auto
+    <div class="veh-toggle">
+      <p class="veh-label">¿Qué vehículo limpiamos?</p>
+      <div class="veh-buttons">
+        <button class="veh-btn" data-type="auto">
+          <span class="icon">🚗</span>Auto
           <small>Cronos, Etios, Corolla, Gol</small>
-          <small>Cronos, Etios, Corolla</small>
-</button>
-<button class="veh-btn" data-type="suv">
-<span class="icon">🚙</span>SUV / Util.
+        </button>
+        <button class="veh-btn" data-type="suv">
+          <span class="icon">🚙</span>SUV / Util.
           <small>EcoSport, Kangoo, Zafira, Strada</small>
-          <small>EcoSport, Kangoo, Strada</small>
-</button>
-<button class="veh-btn" data-type="pickup">
-<span class="icon">🛻</span>Pickup
+        </button>
+        <button class="veh-btn" data-type="pickup">
+          <span class="icon">🛻</span>Pickup
           <small>Hilux, Amarok, Ranger, Toro</small>
-          <small>Hilux, Amarok, Ranger</small>
-</button>
-</div>
-</div>
+        </button>
+      </div>
+    </div>
 
-<div id="servicios-container">
-<div class="svc-title-label">Nuestros Trabajos</div>
+    <div id="servicios-container">
+        <div class="svc-title-label">Nuestros Trabajos</div>
 
-<div class="combo-full" style="animation-delay: 0.1s">
+        <div class="combo-full" style="animation-delay: 0.1s">
           <div class="combo-badge">✨ Pack Lavado Full</div>
-          <div class="combo-badge">
-            <span>✨ Pack Lavado Full</span>
-            <span id="p-full">--</span>
+          
+          <div class="svc">
+            <div class="svc-head">
+              <span class="svc-title">Exterior Detallado</span>
+              <span class="pill" id="p-ext">--</span>
+            </div>
+            <p class="svc-desc" id="desc-ext"></p>
           </div>
 
-<div class="svc">
-<div class="svc-head">
-<span class="svc-title">Exterior Detallado</span>
-<span class="pill" id="p-ext">--</span>
-</div>
-<p class="svc-desc" id="desc-ext"></p>
-</div>
-
-<div class="svc">
-<div class="svc-head">
-<span class="svc-title">Interior Profundo</span>
-<span class="pill" id="p-int">--</span>
-</div>
-<p class="svc-desc" id="desc-int"></p>
-</div>
-</div>
-
-<div class="svc" style="animation-delay: 0.3s">
-<div class="svc-head">
-<span class="svc-title">Limpieza de Suelo</span>
-<span class="pill" id="p-suelo">--</span>
-</div>
+          <div class="svc">
+            <div class="svc-head">
+              <span class="svc-title">Interior Profundo</span>
+              <span class="pill" id="p-int">--</span>
+            </div>
+            <p class="svc-desc" id="desc-int"></p>
+          </div>
+        </div>
+        <div class="svc" style="animation-delay: 0.3s">
+          <div class="svc-head">
+            <span class="svc-title">Limpieza de Suelo</span>
+            <span class="pill" id="p-suelo">--</span>
+          </div>
           <p class="svc-desc">Extracción profunda de tierra, manchas y mugre de la alfombra principal del habitáculo.</p>
-          <p class="svc-desc">Extracción profunda de tierra y mugre de la alfombra principal del habitáculo.</p>
-</div>
+        </div>
 
-<div class="svc" style="animation-delay: 0.4s">
-<div class="svc-head">
-<span class="svc-title">Sanitizado a Vapor</span>
-<span class="pill" id="p-steam">--</span>
-</div>
+        <div class="svc" style="animation-delay: 0.4s">
+          <div class="svc-head">
+            <span class="svc-title">Sanitizado a Vapor</span>
+            <span class="pill" id="p-steam">--</span>
+          </div>
           <p class="svc-desc">Desinfección a 105°C en conductos de aire y superficies. Chau bacterias y olores.</p>
-          <p class="svc-desc">Desinfección a 105°C en conductos de aire. Chau bacterias y olores.</p>
-</div>
+        </div>
 
-<div class="svc" style="animation-delay: 0.5s">
-<div class="svc-head">
-<span class="svc-title">Limpieza de Techos</span>
-<span class="pill">$10.000</span>
-</div>
-<p class="svc-desc">Técnica manual con microfibras. Sacamos manchas de roce cuidando el pegamento original.</p>
-</div>
+        <div class="svc" style="animation-delay: 0.5s">
+          <div class="svc-head">
+            <span class="svc-title">Limpieza de Techos</span>
+            <span class="pill">$10.000</span>
+          </div>
+          <p class="svc-desc">Técnica manual con microfibras. Sacamos manchas de roce cuidando el pegamento original.</p>
+        </div>
 
-<div class="svc" style="animation-delay: 0.6s">
-<div class="svc-head">
-<span class="svc-title">Tapizados de Tela</span>
-<span class="pill" id="p-tela">--</span>
-</div>
-<p class="svc-desc" id="desc-tela"></p>
-</div>
+        <div class="svc" style="animation-delay: 0.6s">
+          <div class="svc-head">
+            <span class="svc-title">Tapizados de Tela</span>
+            <span class="pill" id="p-tela">--</span>
+          </div>
+          <p class="svc-desc" id="desc-tela"></p>
+        </div>
 
-<div class="svc" style="animation-delay: 0.7s">
-<div class="svc-head">
-<span class="svc-title">Tapizados de Cuero</span>
-<span class="pill" id="p-cuero">--</span>
-</div>
-<p class="svc-desc" id="desc-cuero"></p>
-</div>
+        <div class="svc" style="animation-delay: 0.7s">
+          <div class="svc-head">
+            <span class="svc-title">Tapizados de Cuero</span>
+            <span class="pill" id="p-cuero">--</span>
+          </div>
+          <p class="svc-desc" id="desc-cuero"></p>
+        </div>
 
-<div class="socials">
-<a class="social-btn" href="https://wa.me/2995760611" target="_blank"><span class="icon">💬</span> WhatsApp</a>
-<a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank"><span class="icon">📸</span> Instagram</a>
-<a class="social-btn" href="https://facebook.com/lys.lavados" target="_blank"><span class="icon">📘</span> Facebook</a>
-</div>
-</div>
-</section>
+        <div class="socials">
+          <a class="social-btn" href="https://wa.me/2995760611" target="_blank"><span class="icon">💬</span> WhatsApp</a>
+          <a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank"><span class="icon">📸</span> Instagram</a>
+          <a class="social-btn" href="https://facebook.com/lys.lavados" target="_blank"><span class="icon">📘</span> Facebook</a>
+        </div>
+    </div>
+  </section>
 
-<footer>
-© <span id="y"></span> LyS Works — Hecho con sudor y <span id="mateLink" class="mate-link">mate</span>.
-</footer>
+  <footer>
+    © <span id="y"></span> LyS Works — Hecho con sudor y <span id="mateLink" class="mate-link">mate</span>.
+  </footer>
 </main>
 
 <div class="sticky-cta" id="floating-cta">
-<a class="cta-main" href="test2.html">🗓️ Reservar mi turno</a>
+  <a class="cta-main" href="test2.html">🗓️ Reservar mi turno</a>
 </div>
 
 <script>
-document.getElementById('y').textContent = new Date().getFullYear();
-
-const PRECIOS = {
-auto:   { ext: 15000, int: 20000, suelo: 15000, steam: 15000, tela: 40000, cuero: 15000 },
-suv:    { ext: 20000, int: 20000, suelo: 20000, steam: 20000, tela: 40000, cuero: 20000 },
-pickup: { ext: 25000, int: 25000, suelo: 20000, steam: 20000, tela: 45000, cuero: 20000 }
-};
-
-const DESCRIPCIONES = {
-auto: {
-ext: "Lavado completo de carrocería con detallado de ruedas, llantas y pasaruedas. Aplicamos cera rápida para brillo y protección, más revividor en cubiertas.",
+  document.getElementById('y').textContent = new Date().getFullYear();
+  
+  const PRECIOS = {
+    auto:   { ext: 15000, int: 20000, suelo: 15000, steam: 15000, tela: 40000, cuero: 15000 },
+    suv:    { ext: 20000, int: 20000, suelo: 20000, steam: 20000, tela: 40000, cuero: 20000 },
+    pickup: { ext: 25000, int: 25000, suelo: 20000, steam: 20000, tela: 45000, cuero: 20000 }
+  };
+  
+  const DESCRIPCIONES = {
+    auto: {
+      ext: "Lavado completo de carrocería con detallado de ruedas, llantas y pasaruedas. Aplicamos cera rápida para brillo y protección, más revividor en cubiertas.",
       int: "Aspirado profundo para extraer polvo en juntas y rincones. Limpieza detallada de consola, torpedo, rejillas y paneles. Finalizamos con acondicionador y filtro UV de terminación mate original; sin residuos grasosos, recuperando el aspecto de un 0km.",
       tela: "Limpieza por inyección y extracción profunda en butacas. Eliminamos manchas y olores con químicos específicos que cuidan las fibras.",
       cuero: "Limpieza profunda y nutrición con cremas premium para mantener la flexibilidad y evitar grietas por el sol."
-      int: "Aspirado profundo para extraer polvo en juntas y rincones. Limpieza detallada de consola, torpedo, rejillas y paneles. Finalizamos con acondicionador y filtro UV de terminación mate original.",
-      tela: "Inyección y extracción profunda en butacas. Eliminamos manchas y olores con químicos específicos.",
-      cuero: "Limpieza profunda y nutrición con cremas premium para evitar grietas por el sol."
-},
-suv: {
+    },
+    suv: {
       ext: "Tratamiento exterior integral: limpieza de pasaruedas grandes y llantas. Lavado de carrocería con terminación en cera rápida protectora y revividor de cauchos.",
       int: "Limpieza pensada para el uso familiar. Desinfección de cada superficie, desde el baúl hasta las plazas delanteras. Detallado con pinceles en comandos y pantallas. Protección UV de base acuosa en todos los polímeros.",
       tela: "Desinfección total de plazas familiares. Remoción de manchas rebeldes mediante succión de alta potencia para un secado más rápido.",
       cuero: "Limpieza y acondicionamiento especializado para proteger el cuero del desgaste diario y mantener su textura original."
-      ext: "Tratamiento exterior integral: limpieza de pasaruedas grandes y llantas. Lavado con terminación en cera rápida protectora y revividor de cauchos.",
-      int: "Limpieza pensada para el uso familiar. Desinfección de superficies, detallado con pinceles en comandos y protección UV de base acuosa en polímeros.",
-      tela: "Desinfección total de plazas familiares y remoción de manchas rebeldes con succión de alta potencia.",
-      cuero: "Acondicionamiento especializado para proteger el cuero del desgaste diario y mantener su textura."
-},
-pickup: {
+    },
+    pickup: {
       ext: "Lavado reforzado para eliminar barro y suciedad del Valle. Limpieza a fondo de llantas y pasaruedas. Aplicación de cera rápida y revividor para un acabado impecable.",
       int: "Tratamiento intensivo contra la tierra y el polvillo de la barda. Barrido minucioso en correderas, sellos de puertas y juntas. Detallado de plásticos de alto tránsito con protector UV premium que previene la degradación por el clima seco.",
       tela: "Extracción profunda de tierra incrustada y arena en tapizados. Limpieza de fibras para devolver el color y la higiene original a las plazas.",
       cuero: "Nutrición profunda para proteger el cuero de la sequedad extrema del clima local, evitando que el material se reseque o pierda color."
-      ext: "Lavado reforzado para eliminar tierra del Valle. Limpieza a fondo de llantas y pasaruedas. Cera rápida y revividor para un acabado impecable.",
-      int: "Tratamiento intensivo contra el polvillo de la barda. Barrido minucioso en correderas y sellos. Protector UV premium contra el clima seco.",
-      tela: "Extracción profunda de tierra incrustada en tapizados. Devolvemos la higiene original a las fibras.",
-      cuero: "Nutrición profunda para proteger el cuero de la sequedad extrema del clima local, evitando grietas."
-}
-};
+    }
+  };
 
-const buttons = document.querySelectorAll('.veh-btn');
-const container = document.getElementById('servicios-container');
-const cta = document.getElementById('floating-cta');
+  const buttons = document.querySelectorAll('.veh-btn');
+  const container = document.getElementById('servicios-container');
+  const cta = document.getElementById('floating-cta');
+  
+  const pExt = document.getElementById('p-ext');
+  const pInt = document.getElementById('p-int');
+  const pSuelo = document.getElementById('p-suelo');
+  const pSteam = document.getElementById('p-steam');
+  const pTela = document.getElementById('p-tela');
+  const pCuero = document.getElementById('p-cuero');
 
-  // Referencias de precios
-  const pFull = document.getElementById('p-full');
-const pExt = document.getElementById('p-ext');
-const pInt = document.getElementById('p-int');
-const pSuelo = document.getElementById('p-suelo');
-const pSteam = document.getElementById('p-steam');
-const pTela = document.getElementById('p-tela');
-const pCuero = document.getElementById('p-cuero');
+  const descExt = document.getElementById('desc-ext');
+  const descInt = document.getElementById('desc-int');
+  const descTela = document.getElementById('desc-tela');
+  const descCuero = document.getElementById('desc-cuero');
 
-const descExt = document.getElementById('desc-ext');
-const descInt = document.getElementById('desc-int');
-const descTela = document.getElementById('desc-tela');
-const descCuero = document.getElementById('desc-cuero');
-
-buttons.forEach(btn => {
-btn.addEventListener('click', () => {
-const type = btn.dataset.type;
-container.style.display = 'block';
-cta.style.display = 'flex';
-buttons.forEach(b => b.classList.remove('active'));
-btn.classList.add('active');
-
-      // Cálculo del Pack Full
-      const totalFull = PRECIOS[type].ext + PRECIOS[type].int;
-      pFull.textContent = '$' + totalFull.toLocaleString('es-AR');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.dataset.type;
+      container.style.display = 'block';
+      cta.style.display = 'flex';
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
       
-pExt.textContent = '$' + PRECIOS[type].ext.toLocaleString('es-AR');
-pInt.textContent = '$' + PRECIOS[type].int.toLocaleString('es-AR');
-pSuelo.textContent = '$' + PRECIOS[type].suelo.toLocaleString('es-AR');
-pSteam.textContent = '$' + PRECIOS[type].steam.toLocaleString('es-AR');
-pTela.textContent = '$' + PRECIOS[type].tela.toLocaleString('es-AR');
-pCuero.textContent = '$' + PRECIOS[type].cuero.toLocaleString('es-AR');
+      pExt.textContent = '$' + PRECIOS[type].ext.toLocaleString('es-AR');
+      pInt.textContent = '$' + PRECIOS[type].int.toLocaleString('es-AR');
+      pSuelo.textContent = '$' + PRECIOS[type].suelo.toLocaleString('es-AR');
+      pSteam.textContent = '$' + PRECIOS[type].steam.toLocaleString('es-AR');
+      pTela.textContent = '$' + PRECIOS[type].tela.toLocaleString('es-AR');
+      pCuero.textContent = '$' + PRECIOS[type].cuero.toLocaleString('es-AR');
 
-descExt.textContent = DESCRIPCIONES[type].ext;
-descInt.textContent = DESCRIPCIONES[type].int;
-descTela.textContent = DESCRIPCIONES[type].tela;
-descCuero.textContent = DESCRIPCIONES[type].cuero;
-});
-});
+      descExt.textContent = DESCRIPCIONES[type].ext;
+      descInt.textContent = DESCRIPCIONES[type].int;
+      descTela.textContent = DESCRIPCIONES[type].tela;
+      descCuero.textContent = DESCRIPCIONES[type].cuero;
+    });
+  });
 
-document.getElementById('mateLink').addEventListener('click', () => {
-const clave = prompt('Acceso Admin:');
-if (clave === 'yerba') window.open('admin.html', '_blank');
-});
+  document.getElementById('mateLink').addEventListener('click', () => {
+    const clave = prompt('Acceso Admin:');
+    if (clave === 'yerba') window.open('admin.html', '_blank');
+  });
 </script>
 </body>
 </html>
