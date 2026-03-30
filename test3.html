@@ -54,7 +54,6 @@
     .chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 24px; }
     .chip { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); font-size: 11px; color: #e2e8f0; background: rgba(255,255,255,0.03); }
 
-    /* Selector de Vehículos Ajustado */
     .veh-toggle { 
       margin-bottom: 20px; padding: 16px; border-radius: 20px; 
       background: rgba(0,0,0,0.3); border: 1px solid rgba(34,197,94,0.3);
@@ -79,17 +78,46 @@
     #servicios-container, .sticky-cta { display: none; }
     .svc-title-label { font-size: 12px; color: var(--muted); margin: 24px 0 12px; text-transform: uppercase; font-weight: 700; text-align: center; }
     
+    /* ESTILOS DEL COMBO FULL */
+    .combo-full {
+      background: rgba(34, 197, 94, 0.04);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      border-radius: 20px;
+      padding: 20px 14px 14px;
+      margin-bottom: 14px;
+      position: relative;
+      animation: slideIn 0.4s ease forwards; opacity: 0;
+    }
+    .combo-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--cta);
+      color: var(--cta-ink);
+      font-size: 11px;
+      font-weight: 900;
+      padding: 6px 16px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+      white-space: nowrap;
+    }
+    .combo-full .svc { margin-bottom: 10px; background: rgba(2, 6, 23, 0.6); animation: none; opacity: 1; border-color: rgba(255,255,255,0.05); }
+    .combo-full .svc:last-child { margin-bottom: 0; }
+
     .svc { 
       border: 1px solid var(--line); background: rgba(255,255,255,0.02); 
-      border-radius: 18px; padding: 14px; margin-bottom: 10px;
+      border-radius: 16px; padding: 14px; margin-bottom: 10px;
       animation: slideIn 0.4s ease forwards; opacity: 0;
     }
     @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
 
-    .svc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+    .svc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
     .svc-title { font-weight: 700; color: var(--title); font-size: 15px; }
     .pill { font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 999px; background: var(--cta); color: var(--cta-ink); }
-    .svc-desc { color: var(--muted); font-size: 12.5px; line-height: 1.4; }
+    .svc-desc { color: var(--muted); font-size: 12px; line-height: 1.5; }
 
     .socials { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 20px; }
     .social-btn { 
@@ -153,22 +181,25 @@
     <div id="servicios-container">
         <div class="svc-title-label">Nuestros Trabajos</div>
 
-        <div class="svc" style="animation-delay: 0.1s">
-          <div class="svc-head">
-            <span class="svc-title">Lavado Exterior</span>
-            <span class="pill" id="p-ext">--</span>
+        <div class="combo-full" style="animation-delay: 0.1s">
+          <div class="combo-badge">✨ Pack Lavado Full</div>
+          
+          <div class="svc">
+            <div class="svc-head">
+              <span class="svc-title">Exterior Detallado</span>
+              <span class="pill" id="p-ext">--</span>
+            </div>
+            <p class="svc-desc" id="desc-ext"></p>
           </div>
-          <p class="svc-desc" id="desc-ext"></p>
-        </div>
 
-        <div class="svc" style="animation-delay: 0.2s">
-          <div class="svc-head">
-            <span class="svc-title">Limpieza Interior</span>
-            <span class="pill" id="p-int">--</span>
+          <div class="svc">
+            <div class="svc-head">
+              <span class="svc-title">Interior Profundo</span>
+              <span class="pill" id="p-int">--</span>
+            </div>
+            <p class="svc-desc" id="desc-int"></p>
           </div>
-          <p class="svc-desc" id="desc-int"></p>
         </div>
-
         <div class="svc" style="animation-delay: 0.3s">
           <div class="svc-head">
             <span class="svc-title">Limpieza de Suelo</span>
@@ -237,22 +268,22 @@
   
   const DESCRIPCIONES = {
     auto: {
-      ext: "Lavado artesanal con cera rápida. Realza el brillo y protege la pintura.",
-      int: "Aspirado detallado y restauración de plásticos. Terminación mate original.",
+      ext: "Limpieza profunda de ruedas, llantas y pasaruedas, más lavado completo de carrocería. Se aplica cera rápida para dar brillo y protección ligera, y revividor en cubiertas.",
+      int: "Aspirado profundo y detallado de plásticos, vidrios, rejillas y juntas para llegar a cada rincón. Protección con filtro UV de base acuosa: no deja sensación aceitosa ni residuos.",
       tela: "Inyección y extracción profunda en butacas. Chau manchas y olores.",
       cuero: "Limpieza profunda y nutrición para evitar grietas por el sol."
     },
     suv: {
-      ext: "Lavado completo de carrocería y llantas grandes con terminación premium.",
-      int: "Aspirado de habitáculo y baúl. Protección UV en todos los plásticos.",
+      ext: "Lavado completo de carrocería y detallado profundo en llantas y pasaruedas grandes. Terminación con cera rápida protectora y revividor de cubiertas.",
+      int: "Aspirado full de habitáculo y baúl. Detallado en rejillas y juntas, más protección UV en plásticos con productos de base acuosa para conservarlos perfectos.",
       tela: "Desinfección total de plazas familiares y remoción de manchas rebeldes.",
       cuero: "Hidratación técnica para proteger el cuero del uso diario."
     },
     pickup: {
-      ext: "Lavado técnico reforzado. Incluimos limpieza de caja y sacamos el barro del Valle.",
-      int: "Limpieza profunda de plásticos y alfombras de alto tránsito.",
+      ext: "Lavado técnico reforzado. Limpieza profunda de llantas, pasaruedas y exterior completo. Aplicamos cera rápida y revividor para un acabado impecable.",
+      int: "Aspirado profundo y detallado al milímetro en plásticos, vidrios y juntas. Aplicamos protección UV de base acuosa, ideal para nutrir sin dejar texturas pegajosas.",
       tela: "Extracción industrial de polvo y tierra incrustada en las plazas.",
-      cuero: "Nutrición premium para proteger de la sequedad del clima de barda."
+      cuero: "Nutrición premium para proteger de la sequedad del clima."
     }
   };
 
