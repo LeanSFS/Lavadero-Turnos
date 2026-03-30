@@ -24,7 +24,7 @@
       font-family: "Inter", sans-serif;
       color: #fff;
       min-height: 100vh;
-      padding: 20px 16px 160px;
+      padding: 20px 16px 180px;
       background: 
         radial-gradient(circle at 0% 0%, rgba(34, 197, 94, 0.12) 0%, transparent 40%),
         #020617;
@@ -51,22 +51,25 @@
       margin-bottom: 20px; padding: 16px; border-radius: 20px; 
       background: rgba(0,0,0,0.3); border: 1px solid rgba(34,197,94,0.3);
     }
-    .veh-label { font-size: 13px; font-weight: 700; color: var(--cta); margin-bottom: 12px; text-align: center; text-transform: uppercase; }
+    .veh-label { font-size: 12px; font-weight: 700; color: var(--cta); margin-bottom: 12px; text-align: center; text-transform: uppercase; }
     .veh-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .veh-btn { 
-      padding: 12px 6px; border-radius: 16px; border: 1px solid var(--line); 
-      background: rgba(255,255,255,0.05); color: #94a3b8; font-size: 12px; font-weight: 600;
+      padding: 14px 4px; border-radius: 16px; border: 1px solid var(--line); 
+      background: rgba(255,255,255,0.05); color: #94a3b8; font-size: 13px; font-weight: 700;
       cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 4px;
     }
-    .veh-btn span { font-size: 20px; }
+    .veh-btn span.icon { font-size: 22px; margin-bottom: 2px; }
+    .veh-btn small { font-size: 8.5px; font-weight: 400; line-height: 1.2; color: #64748b; text-align: center; display: block; margin-top: 4px; }
+    
     .veh-btn.active { 
       background: var(--cta); color: var(--cta-ink); border-color: var(--cta);
       transform: scale(1.05); font-weight: 800;
     }
+    .veh-btn.active small { color: rgba(2, 6, 23, 0.7); font-weight: 600; }
 
-    /* Contenedor de Servicios (Oculto al inicio) */
+    /* Contenedor de Servicios */
     #svc-container { display: none; margin-top: 20px; }
-    .svc-title-label { font-size: 12px; color: var(--muted); margin-bottom: 12px; text-transform: uppercase; font-weight: 700; text-align: center; }
+    .svc-title-label { font-size: 11px; color: var(--muted); margin-bottom: 12px; text-transform: uppercase; font-weight: 700; text-align: center; letter-spacing: 1px; }
 
     .svc { 
       border: 1px solid var(--line); background: rgba(255,255,255,0.02); 
@@ -87,16 +90,19 @@
     /* Barra Totalizadora */
     .total-bar {
       position: fixed; bottom: 0; left: 0; right: 0;
-      background: linear-gradient(to top, var(--bg) 80%, transparent);
+      background: linear-gradient(to top, var(--bg) 85%, transparent);
       padding: 20px 16px 30px;
-      display: none; flex-direction: column; align-items: center; gap: 10px; z-index: 100;
+      display: none; flex-direction: column; align-items: center; gap: 12px; z-index: 100;
     }
-    .total-amount { color: var(--cta); font-size: 32px; font-weight: 900; }
+    .total-amount { color: var(--cta); font-size: 34px; font-weight: 900; text-shadow: 0 0 20px rgba(34,197,94,0.2); }
     .cta-whatsapp {
       width: 100%; max-width: 440px; background: var(--cta); color: var(--cta-ink);
       text-align: center; padding: 16px; border-radius: 16px;
-      text-decoration: none; font-weight: 800; font-size: 16px;
+      text-decoration: none; font-weight: 900; font-size: 16px;
+      box-shadow: 0 10px 25px rgba(22, 163, 74, 0.3);
+      transition: 0.2s;
     }
+    .cta-whatsapp:active { transform: scale(0.98); }
   </style>
 </head>
 <body>
@@ -109,9 +115,18 @@
     <div class="veh-toggle">
       <p class="veh-label">1. Elegí tu vehículo</p>
       <div class="veh-buttons">
-        <button class="veh-btn" data-type="auto"><span>🚗</span>Auto</button>
-        <button class="veh-btn" data-type="suv"><span>🚙</span>SUV</button>
-        <button class="veh-btn" data-type="pickup"><span>🛻</span>Pickup</button>
+        <button class="veh-btn" data-type="auto">
+          <span class="icon">🚗</span>Auto
+          <small>Cronos, Etios, Corolla, Gol</small>
+        </button>
+        <button class="veh-btn" data-type="suv">
+          <span class="icon">🚙</span>SUV / Util.
+          <small>EcoSport, Kangoo, Zafira, Strada</small>
+        </button>
+        <button class="veh-btn" data-type="pickup">
+          <span class="icon">🛻</span>Pickup
+          <small>Hilux, Amarok, Ranger, Toro</small>
+        </button>
       </div>
     </div>
 
@@ -122,7 +137,7 @@
           <input type="checkbox" class="svc-check" id="check-ext">
           <div class="svc-info">
             <div class="svc-head"><span class="svc-title">Lavado Exterior</span><span class="price-pill" id="p-ext">--</span></div>
-            <p class="svc-desc">Detallado de llantas y cera de brillo.</p>
+            <p class="svc-desc">Detallado de llantas y cera de alto brillo.</p>
           </div>
         </label>
 
@@ -130,7 +145,7 @@
           <input type="checkbox" class="svc-check" id="check-int">
           <div class="svc-info">
             <div class="svc-head"><span class="svc-title">Limpieza Interior</span><span class="price-pill" id="p-int">--</span></div>
-            <p class="svc-desc">Aspirado full y restauración de plásticos.</p>
+            <p class="svc-desc">Aspirado full y restauración de plásticos mate.</p>
           </div>
         </label>
 
@@ -138,7 +153,7 @@
           <input type="checkbox" class="svc-check" id="check-suelo">
           <div class="svc-info">
             <div class="svc-head"><span class="svc-title">Limpieza de Suelo</span><span class="price-pill" id="p-suelo">--</span></div>
-            <p class="svc-desc">Extracción de tierra de la alfombra.</p>
+            <p class="svc-desc">Extracción de tierra y manchas de la alfombra base.</p>
           </div>
         </label>
 
@@ -146,7 +161,7 @@
           <input type="checkbox" class="svc-check" id="check-steam">
           <div class="svc-info">
             <div class="svc-head"><span class="svc-title">Sanitizado a Vapor</span><span class="price-pill" id="p-steam">--</span></div>
-            <p class="svc-desc">Elimina bacterias en aire y plásticos.</p>
+            <p class="svc-desc">Elimina bacterias en conductos de aire y habitáculo.</p>
           </div>
         </label>
 
@@ -154,7 +169,7 @@
           <input type="checkbox" class="svc-check" id="check-techo">
           <div class="svc-info">
             <div class="svc-head"><span class="svc-title">Limpieza de Techo</span><span class="price-pill">$10.000</span></div>
-            <p class="svc-desc">Manchas de roce y suciedad del cielo.</p>
+            <p class="svc-desc">Remoción manual de manchas de roce cuidando la tela.</p>
           </div>
         </label>
 
@@ -162,7 +177,7 @@
           <input type="checkbox" class="svc-check" id="check-tela">
           <div class="svc-info">
             <div class="svc-head"><span class="svc-title">Tapizados de Tela</span><span class="price-pill" id="p-tela">--</span></div>
-            <p class="svc-desc">Lavado profundo con extractor.</p>
+            <p class="svc-desc">Lavado profundo con extractor de suciedad.</p>
           </div>
         </label>
 
@@ -170,7 +185,7 @@
           <input type="checkbox" class="svc-check" id="check-cuero">
           <div class="svc-info">
             <div class="svc-head"><span class="svc-title">Tapizados de Cuero</span><span class="price-pill" id="p-cuero">--</span></div>
-            <p class="svc-desc">Limpieza técnica y nutrición.</p>
+            <p class="svc-desc">Limpieza técnica y nutrición para evitar grietas.</p>
           </div>
         </label>
     </div>
@@ -179,10 +194,11 @@
 
 <div class="total-bar" id="bar">
   <div class="total-amount" id="total-val">$0</div>
-  <a href="#" class="cta-whatsapp" id="btn-ws">Pedir Turno por WhatsApp</a>
+  <a href="#" class="cta-whatsapp" id="btn-ws">Confirmar Turno por WhatsApp</a>
 </div>
 
 <script>
+  // Base de Precios actualizada según tus pedidos
   const PRECIOS = {
     auto:   { ext: 15000, int: 20000, suelo: 15000, steam: 15000, tela: 40000, cuero: 15000, techo: 10000 },
     suv:    { ext: 20000, int: 20000, suelo: 20000, steam: 20000, tela: 40000, cuero: 20000, techo: 10000 },
@@ -193,13 +209,21 @@
   const buttons = document.querySelectorAll('.veh-btn');
   const container = document.getElementById('svc-container');
   const bar = document.getElementById('bar');
+  const checkTela = document.getElementById('check-tela');
+  const checkCuero = document.getElementById('check-cuero');
+  const checkInt = document.getElementById('check-int');
+  const checkSteam = document.getElementById('check-steam');
 
   function update() {
     if (!currentType) return;
     let total = 0;
     let selected = [];
 
-    // Precios visuales
+    // Lógica excluyente: Tela o Cuero
+    if (event && event.target === checkTela && checkTela.checked) checkCuero.checked = false;
+    if (event && event.target === checkCuero && checkCuero.checked) checkTela.checked = false;
+
+    // Actualizar Precios Visuales en las etiquetas
     document.getElementById('p-ext').textContent = '$' + PRECIOS[currentType].ext.toLocaleString('es-AR');
     document.getElementById('p-int').textContent = '$' + PRECIOS[currentType].int.toLocaleString('es-AR');
     document.getElementById('p-suelo').textContent = '$' + PRECIOS[currentType].suelo.toLocaleString('es-AR');
@@ -209,27 +233,31 @@
 
     const checks = {
       ext: document.getElementById('check-ext'),
-      int: document.getElementById('check-int'),
+      int: checkInt,
       suelo: document.getElementById('check-suelo'),
-      steam: document.getElementById('check-steam'),
+      steam: checkSteam,
       techo: document.getElementById('check-techo'),
-      tela: document.getElementById('check-tela'),
-      cuero: document.getElementById('check-cuero')
+      tela: checkTela,
+      cuero: checkCuero
     };
 
-    // Auto-check Interior si elige Vapor
+    // Auto-check Interior si elige Sanitizado
     if(checks.steam.checked && !checks.int.checked) checks.int.checked = true;
 
     for (let key in checks) {
       if (checks[key].checked) {
         total += PRECIOS[currentType][key];
-        selected.push(key.toUpperCase());
+        selected.push(checks[key].parentElement.querySelector('.svc-title').textContent);
       }
     }
 
     document.getElementById('total-val').textContent = '$' + total.toLocaleString('es-AR');
     
-    const msg = encodeURIComponent(`¡Hola LyS Works! 🧼 Consulto por mi ${currentType.toUpperCase()}:\n\nServicios:\n- ${selected.join('\n- ')}\n\nTotal: $${total.toLocaleString('es-AR')}`);
+    const msg = encodeURIComponent(
+      `¡Hola LyS Works! 🧼 Consulto presupuesto para mi ${currentType.toUpperCase()}:\n\n` +
+      `Servicios:\n- ${selected.join('\n- ')}\n\n` +
+      `Total estimado: $${total.toLocaleString('es-AR')}`
+    );
     document.getElementById('btn-ws').href = `https://wa.me/2995760611?text=${msg}`;
     bar.style.display = total > 0 ? 'flex' : 'none';
   }
