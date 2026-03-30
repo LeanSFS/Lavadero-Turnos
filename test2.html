@@ -35,6 +35,7 @@
     .card {
       background: var(--card);
       backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-radius: 24px;
       padding: 24px 20px;
       border: 1px solid var(--line);
@@ -46,6 +47,7 @@
     .brand-logo { display: block; height: 60px; margin: 0 auto 12px auto; }
     h1 { font-size: 20px; text-align: center; font-weight: 900; color: var(--title); margin-bottom: 20px; }
 
+    /* VEHICLE TOGGLE */
     .veh-toggle { 
       margin-bottom: 20px; padding: 16px; border-radius: 20px; 
       background: rgba(0,0,0,0.3); border: 1px solid rgba(34,197,94,0.3);
@@ -59,47 +61,87 @@
     }
     .veh-btn span.icon { font-size: 22px; margin-bottom: 2px; }
     .veh-btn small { font-size: 8.5px; font-weight: 400; line-height: 1.2; color: #64748b; text-align: center; display: block; margin-top: 4px; }
-    
-    .veh-btn.active { 
-      background: var(--cta); color: var(--cta-ink); border-color: var(--cta);
-      transform: scale(1.05); font-weight: 800;
-    }
-    .veh-btn.active small { color: rgba(2, 6, 23, 0.7); font-weight: 600; }
+    .veh-btn.active { background: var(--cta); color: var(--cta-ink); border-color: var(--cta); transform: scale(1.05); }
 
+    /* SERVICES CONTAINER */
     #svc-container { display: none; margin-top: 20px; }
-    .svc-title-label { font-size: 11px; color: var(--muted); margin-bottom: 12px; text-transform: uppercase; font-weight: 700; text-align: center; letter-spacing: 1px; }
+    .svc-title-label { font-size: 11px; color: var(--muted); margin-bottom: 16px; text-transform: uppercase; font-weight: 700; text-align: center; letter-spacing: 1.5px; }
 
+    /* --- ESTILO PACK FULL (REACTIVO) --- */
+    .combo-full {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 22px;
+      padding: 26px 12px 12px;
+      margin-bottom: 14px;
+      position: relative;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .combo-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      background: #1e293b;
+      color: #64748b;
+      font-size: 10px;
+      font-weight: 900;
+      padding: 6px 16px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: 0.5s;
+      opacity: 0.6;
+    }
+
+    /* ESTADO ACTIVO PACK FULL */
+    .combo-full.active {
+      border-color: rgba(34, 197, 94, 0.5);
+      background: rgba(34, 197, 94, 0.04);
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.1);
+    }
+    .combo-badge.active {
+      background: var(--cta);
+      color: var(--cta-ink);
+      transform: translateX(-50%) scale(1);
+      opacity: 1;
+      box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+    }
+
+    /* SERVICIO INDIVIDUAL */
     .svc { 
-      border: 1px solid var(--line); background: rgba(255,255,255,0.02); 
-      border-radius: 18px; padding: 14px; display: flex; align-items: flex-start; gap: 14px;
+      border: 1px solid var(--line); background: rgba(255,255,255,0.03); 
+      border-radius: 16px; padding: 14px; display: flex; align-items: flex-start; gap: 14px;
       cursor: pointer; margin-bottom: 10px; transition: 0.3s; 
       animation: slideIn 0.4s ease forwards;
     }
     @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
     
-    .svc:hover { border-color: rgba(34, 197, 94, 0.4); }
+    .combo-full .svc { background: rgba(2, 6, 23, 0.5); border-color: rgba(255,255,255,0.03); margin-bottom: 8px; }
+    .combo-full .svc:last-child { margin-bottom: 0; }
+
     .svc-check { width: 20px; height: 20px; accent-color: var(--cta); margin-top: 2px; }
     .svc-info { flex: 1; }
-    .svc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+    .svc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
     .svc-title { font-weight: 700; font-size: 14.5px; color: var(--title); }
     .price-pill { font-size: 11px; font-weight: 800; color: var(--cta); background: rgba(34,197,94,0.1); padding: 2px 8px; border-radius: 6px; }
-    .svc-desc { color: var(--muted); font-size: 11.5px; line-height: 1.4; }
+    .svc-desc { color: var(--muted); font-size: 11px; line-height: 1.4; }
 
+    /* TOTAL BAR */
     .total-bar {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: linear-gradient(to top, var(--bg) 85%, transparent);
       padding: 20px 16px 30px;
       display: none; flex-direction: column; align-items: center; gap: 12px; z-index: 100;
     }
-    .total-amount { color: var(--cta); font-size: 34px; font-weight: 900; text-shadow: 0 0 20px rgba(34,197,94,0.2); }
+    .total-amount { color: var(--cta); font-size: 36px; font-weight: 900; }
     .cta-whatsapp {
       width: 100%; max-width: 440px; background: var(--cta); color: var(--cta-ink);
-      text-align: center; padding: 16px; border-radius: 16px;
+      text-align: center; padding: 18px; border-radius: 18px;
       text-decoration: none; font-weight: 900; font-size: 16px;
       box-shadow: 0 10px 25px rgba(22, 163, 74, 0.3);
-      transition: 0.2s;
     }
-    .cta-whatsapp:active { transform: scale(0.98); }
   </style>
 </head>
 <body>
@@ -114,15 +156,15 @@
       <div class="veh-buttons">
         <button class="veh-btn" data-type="auto">
           <span class="icon">🚗</span>Auto
-          <small>Cronos, Etios, Corolla</small>
+          <small>Cronos, Etios</small>
         </button>
         <button class="veh-btn" data-type="suv">
-          <span class="icon">🚙</span>SUV / Util.
-          <small>EcoSport, Kangoo, Strada</small>
+          <span class="icon">🚙</span>SUV
+          <small>Ecosport, Kangoo</small>
         </button>
         <button class="veh-btn" data-type="pickup">
           <span class="icon">🛻</span>Pickup
-          <small>Hilux, Amarok, Ranger</small>
+          <small>Hilux, Amarok</small>
         </button>
       </div>
     </div>
@@ -130,23 +172,27 @@
     <div id="svc-container">
         <div class="svc-title-label">2. Seleccioná los servicios</div>
 
-        <label class="svc" for="check-ext" style="animation-delay: 0.1s">
-          <input type="checkbox" class="svc-check" id="check-ext">
-          <div class="svc-info">
-            <div class="svc-head"><span class="svc-title">Lavado Exterior</span><span class="price-pill" id="p-ext">--</span></div>
-            <p class="svc-desc" id="desc-ext">Detallado de llantas y cera de alto brillo.</p>
-          </div>
-        </label>
+        <div class="combo-full" id="full-wrap">
+          <div class="combo-badge" id="full-badge">✨ PACK FULL</div>
 
-        <label class="svc" for="check-int" style="animation-delay: 0.2s">
-          <input type="checkbox" class="svc-check" id="check-int">
-          <div class="svc-info">
-            <div class="svc-head"><span class="svc-title">Limpieza Interior</span><span class="price-pill" id="p-int">--</span></div>
-            <p class="svc-desc" id="desc-int">Aspirado full y restauración de plásticos mate.</p>
-          </div>
-        </label>
+          <label class="svc" for="check-ext">
+            <input type="checkbox" class="svc-check" id="check-ext">
+            <div class="svc-info">
+              <div class="svc-head"><span class="svc-title">Lavado Exterior</span><span class="price-pill" id="p-ext">--</span></div>
+              <p class="svc-desc" id="desc-ext"></p>
+            </div>
+          </label>
 
-        <label class="svc" for="check-suelo" style="animation-delay: 0.3s">
+          <label class="svc" for="check-int">
+            <input type="checkbox" class="svc-check" id="check-int">
+            <div class="svc-info">
+              <div class="svc-head"><span class="svc-title">Limpieza Interior</span><span class="price-pill" id="p-int">--</span></div>
+              <p class="svc-desc" id="desc-int"></p>
+            </div>
+          </label>
+        </div>
+
+        <label class="svc" for="check-suelo">
           <input type="checkbox" class="svc-check" id="check-suelo">
           <div class="svc-info">
             <div class="svc-head"><span class="svc-title">Limpieza de Suelo</span><span class="price-pill" id="p-suelo">--</span></div>
@@ -154,15 +200,15 @@
           </div>
         </label>
 
-        <label class="svc" for="check-steam" style="animation-delay: 0.4s">
+        <label class="svc" for="check-steam">
           <input type="checkbox" class="svc-check" id="check-steam">
           <div class="svc-info">
             <div class="svc-head"><span class="svc-title">Sanitizado a Vapor</span><span class="price-pill" id="p-steam">--</span></div>
-            <p class="svc-desc">Elimina bacterias en conductos de aire y habitáculo a 105°C.</p>
+            <p class="svc-desc">Desinfección a 105°C en conductos y habitáculo. Chau bacterias.</p>
           </div>
         </label>
 
-        <label class="svc" for="check-techo" style="animation-delay: 0.5s">
+        <label class="svc" for="check-techo">
           <input type="checkbox" class="svc-check" id="check-techo">
           <div class="svc-info">
             <div class="svc-head"><span class="svc-title">Limpieza de Techo</span><span class="price-pill">$10.000</span></div>
@@ -170,19 +216,19 @@
           </div>
         </label>
 
-        <label class="svc" for="check-tela" style="animation-delay: 0.6s">
+        <label class="svc" for="check-tela">
           <input type="checkbox" class="svc-check" id="check-tela">
           <div class="svc-info">
             <div class="svc-head"><span class="svc-title">Tapizados de Tela</span><span class="price-pill" id="p-tela">--</span></div>
-            <p class="svc-desc" id="desc-tela">Lavado profundo con extractor de suciedad.</p>
+            <p class="svc-desc" id="desc-tela"></p>
           </div>
         </label>
 
-        <label class="svc" for="check-cuero" style="animation-delay: 0.7s">
+        <label class="svc" for="check-cuero">
           <input type="checkbox" class="svc-check" id="check-cuero">
           <div class="svc-info">
             <div class="svc-head"><span class="svc-title">Tapizados de Cuero</span><span class="price-pill" id="p-cuero">--</span></div>
-            <p class="svc-desc" id="desc-cuero">Limpieza profunda y nutrición para evitar grietas.</p>
+            <p class="svc-desc" id="desc-cuero"></p>
           </div>
         </label>
     </div>
@@ -191,7 +237,7 @@
 
 <div class="total-bar" id="bar">
   <div class="total-amount" id="total-val">$0</div>
-  <a href="#" class="cta-whatsapp" id="btn-ws">Confirmar Turno por WhatsApp</a>
+  <a href="#" class="cta-whatsapp" id="btn-ws">Confirmar por WhatsApp</a>
 </div>
 
 <script>
@@ -203,22 +249,22 @@
 
   const DESCRIPCIONES = {
     auto: {
-      ext: "Lavado completo de carrocería con detallado de llantas y cera rápida.",
-      int: "Aspirado en juntas, limpieza de consola y paneles con filtro UV mate.",
-      tela: "Inyección y extracción profunda. Chau manchas y olores en butacas.",
-      cuero: "Limpieza profunda y nutrición para evitar grietas por el sol."
+      ext: "Lavado completo con cera de brillo y detallado de llantas.",
+      int: "Aspirado profundo, limpieza de consola y protector UV mate.",
+      tela: "Inyección y extracción profunda en butacas.",
+      cuero: "Limpieza técnica y nutrición para evitar grietas."
     },
     suv: {
-      ext: "Tratamiento exterior integral: detallado de pasaruedas y cera protectora.",
-      int: "Desinfección de superficies y protección UV de base acuosa en polímeros.",
-      tela: "Desinfección total y remoción de manchas con succión de alta potencia.",
-      cuero: "Hidratación técnica para proteger el cuero del desgaste diario."
+      ext: "Limpieza de pasaruedas grandes y cera rápida protectora.",
+      int: "Desinfección de superficies y protección UV para uso familiar.",
+      tela: "Remoción de manchas con succión de alta potencia.",
+      cuero: "Acondicionamiento para proteger del desgaste diario."
     },
     pickup: {
-      ext: "Lavado reforzado para eliminar tierra del Valle y cera de alto brillo.",
-      int: "Barrido minucioso en correderas y sellos. Protector UV contra clima seco.",
-      tela: "Extracción profunda de tierra incrustada. Higiene total de fibras.",
-      cuero: "Nutrición premium para proteger de la sequedad extrema del clima local."
+      ext: "Lavado reforzado para barro y cera de alto brillo.",
+      int: "Barrido en correderas y sellos. Protección contra clima seco.",
+      tela: "Extracción profunda de tierra del Valle incrustada.",
+      cuero: "Nutrición intensa para evitar daños por sequedad extrema."
     }
   };
 
@@ -226,6 +272,8 @@
   const buttons = document.querySelectorAll('.veh-btn');
   const container = document.getElementById('svc-container');
   const bar = document.getElementById('bar');
+  const fullWrap = document.getElementById('full-wrap');
+  const fullBadge = document.getElementById('full-badge');
   
   const checks = {
     ext: document.getElementById('check-ext'),
@@ -244,8 +292,14 @@
     if (e && e.target === checks.tela && checks.tela.checked) checks.cuero.checked = false;
     if (e && e.target === checks.cuero && checks.cuero.checked) checks.tela.checked = false;
 
-    // Auto-check Interior si elige Sanitizado
-    if(checks.steam.checked && !checks.int.checked) checks.int.checked = true;
+    // ILUMINACIÓN DEL PACK FULL
+    if (checks.ext.checked && checks.int.checked) {
+      fullWrap.classList.add('active');
+      fullBadge.classList.add('active');
+    } else {
+      fullWrap.classList.remove('active');
+      fullBadge.classList.remove('active');
+    }
 
     let total = 0;
     let selected = [];
@@ -253,16 +307,24 @@
     for (let key in checks) {
       if (checks[key].checked) {
         total += PRECIOS[currentType][key];
-        selected.push(checks[key].parentElement.querySelector('.svc-title').textContent);
+        let title = checks[key].parentElement.querySelector('.svc-title').textContent;
+        selected.push(title);
       }
+    }
+
+    // Si ambos están marcados, personalizamos el mensaje de WhatsApp
+    let displaySelected = [...selected];
+    if (checks.ext.checked && checks.int.checked) {
+      displaySelected = displaySelected.filter(i => i !== "Lavado Exterior" && i !== "Limpieza Interior");
+      displaySelected.unshift("✨ PACK FULL (Ext + Int)");
     }
 
     document.getElementById('total-val').textContent = '$' + total.toLocaleString('es-AR');
     
     const msg = encodeURIComponent(
-      `¡Hola LyS Works! 🧼 Consulto presupuesto para mi ${currentType.toUpperCase()}:\n\n` +
-      `Servicios:\n- ${selected.join('\n- ')}\n\n` +
-      `Total estimado: $${total.toLocaleString('es-AR')}`
+      `¡Hola LyS Works! 🧼 Consulto por mi ${currentType.toUpperCase()}:\n\n` +
+      `Servicios:\n- ${displaySelected.join('\n- ')}\n\n` +
+      `Total: $${total.toLocaleString('es-AR')}`
     );
     document.getElementById('btn-ws').href = `https://wa.me/2995760611?text=${msg}`;
     bar.style.display = total > 0 ? 'flex' : 'none';
@@ -275,13 +337,11 @@
       btn.classList.add('active');
       container.style.display = 'block';
 
-      // Actualizar Precios Visuales y Descripciones
-      document.getElementById('p-ext').textContent = '$' + PRECIOS[currentType].ext.toLocaleString('es-AR');
-      document.getElementById('p-int').textContent = '$' + PRECIOS[currentType].int.toLocaleString('es-AR');
-      document.getElementById('p-suelo').textContent = '$' + PRECIOS[currentType].suelo.toLocaleString('es-AR');
-      document.getElementById('p-steam').textContent = '$' + PRECIOS[currentType].steam.toLocaleString('es-AR');
-      document.getElementById('p-tela').textContent = '$' + PRECIOS[currentType].tela.toLocaleString('es-AR');
-      document.getElementById('p-cuero').textContent = '$' + PRECIOS[currentType].cuero.toLocaleString('es-AR');
+      // Update Visual Prices & Descs
+      for (let k in checks) {
+        const pTag = document.getElementById('p-' + k);
+        if(pTag) pTag.textContent = '$' + PRECIOS[currentType][k].toLocaleString('es-AR');
+      }
 
       document.getElementById('desc-ext').textContent = DESCRIPCIONES[currentType].ext;
       document.getElementById('desc-int').textContent = DESCRIPCIONES[currentType].int;
