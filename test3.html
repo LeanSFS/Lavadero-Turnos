@@ -54,22 +54,27 @@
     .chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 24px; }
     .chip { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); font-size: 11px; color: #e2e8f0; background: rgba(255,255,255,0.03); }
 
+    /* Selector de Vehículos Ajustado */
     .veh-toggle { 
       margin-bottom: 20px; padding: 16px; border-radius: 20px; 
       background: rgba(0,0,0,0.3); border: 1px solid rgba(34,197,94,0.3);
     }
     .veh-label { font-size: 14px; font-weight: 700; color: var(--cta); margin-bottom: 12px; text-align: center; }
     .veh-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    
     .veh-btn { 
-      padding: 12px 6px; border-radius: 16px; border: 1px solid var(--line); 
-      background: rgba(255,255,255,0.05); color: #94a3b8; font-size: 12px; font-weight: 600;
+      padding: 14px 4px; border-radius: 16px; border: 1px solid var(--line); 
+      background: rgba(255,255,255,0.05); color: #94a3b8; font-size: 13px; font-weight: 700;
       cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 4px;
     }
-    .veh-btn span { font-size: 20px; }
+    .veh-btn span.icon { font-size: 22px; margin-bottom: 2px; }
+    .veh-btn small { font-size: 8.5px; font-weight: 400; line-height: 1.2; color: #64748b; text-align: center; display: block; margin-top: 4px; }
+    
     .veh-btn.active { 
       background: var(--cta); color: var(--cta-ink); border-color: var(--cta);
       transform: scale(1.05); font-weight: 800;
     }
+    .veh-btn.active small { color: rgba(2, 6, 23, 0.7); font-weight: 600; }
 
     #servicios-container, .sticky-cta { display: none; }
     .svc-title-label { font-size: 12px; color: var(--muted); margin: 24px 0 12px; text-transform: uppercase; font-weight: 700; text-align: center; }
@@ -93,6 +98,7 @@
       display: flex; flex-direction: column; align-items: center; gap: 4px; 
       text-decoration: none; font-weight: 600; transition: 0.3s;
     }
+    .social-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--cta); }
 
     .sticky-cta { 
       position: fixed; left: 0; right: 0; bottom: 0; padding: 20px 16px; 
@@ -103,7 +109,9 @@
       width: 100%; max-width: 440px; background: var(--cta); color: var(--cta-ink); 
       text-align: center; padding: 15px; border-radius: 16px; text-decoration: none; 
       font-weight: 800; font-size: 16px; box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4);
+      transition: 0.2s;
     }
+    .cta-main:active { transform: scale(0.98); }
 
     footer { margin-top: 24px; text-align: center; color: var(--muted); font-size: 10px; }
     .mate-link { cursor: pointer; color: transparent; }
@@ -127,9 +135,18 @@
     <div class="veh-toggle">
       <p class="veh-label">¿Qué vehículo limpiamos?</p>
       <div class="veh-buttons">
-        <button class="veh-btn" data-type="auto"><span>🚗</span>Auto</button>
-        <button class="veh-btn" data-type="suv"><span>🚙</span>SUV</button>
-        <button class="veh-btn" data-type="pickup"><span>🛻</span>Pickup</button>
+        <button class="veh-btn" data-type="auto">
+          <span class="icon">🚗</span>Auto
+          <small>Cronos, Etios, Corolla, Gol</small>
+        </button>
+        <button class="veh-btn" data-type="suv">
+          <span class="icon">🚙</span>SUV / Util.
+          <small>EcoSport, Kangoo, Zafira, Strada</small>
+        </button>
+        <button class="veh-btn" data-type="pickup">
+          <span class="icon">🛻</span>Pickup
+          <small>Hilux, Amarok, Ranger, Toro</small>
+        </button>
       </div>
     </div>
 
@@ -193,9 +210,9 @@
         </div>
 
         <div class="socials">
-          <a class="social-btn" href="https://wa.me/2995760611" target="_blank"><span>💬</span> WhatsApp</a>
-          <a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank"><span>📸</span> Instagram</a>
-          <a class="social-btn" href="https://facebook.com/lys.lavados" target="_blank"><span>📘</span> Facebook</a>
+          <a class="social-btn" href="https://wa.me/2995760611" target="_blank"><span class="icon">💬</span> WhatsApp</a>
+          <a class="social-btn" href="https://instagram.com/lys.lavados" target="_blank"><span class="icon">📸</span> Instagram</a>
+          <a class="social-btn" href="https://facebook.com/lys.lavados" target="_blank"><span class="icon">📘</span> Facebook</a>
         </div>
     </div>
   </section>
