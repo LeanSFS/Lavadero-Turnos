@@ -78,12 +78,11 @@
     #servicios-container, .sticky-cta { display: none; }
     .svc-title-label { font-size: 12px; color: var(--muted); margin: 24px 0 12px; text-transform: uppercase; font-weight: 700; text-align: center; }
     
-    /* ESTILOS DEL COMBO FULL */
     .combo-full {
       background: rgba(34, 197, 94, 0.04);
       border: 1px solid rgba(34, 197, 94, 0.4);
       border-radius: 20px;
-      padding: 20px 14px 14px;
+      padding: 24px 14px 14px;
       margin-bottom: 14px;
       position: relative;
       animation: slideIn 0.4s ease forwards; opacity: 0;
@@ -95,14 +94,16 @@
       transform: translateX(-50%);
       background: var(--cta);
       color: var(--cta-ink);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 900;
-      padding: 6px 16px;
+      padding: 6px 18px;
       border-radius: 999px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
       white-space: nowrap;
+      display: flex;
+      gap: 8px;
     }
     .combo-full .svc { margin-bottom: 10px; background: rgba(2, 6, 23, 0.6); animation: none; opacity: 1; border-color: rgba(255,255,255,0.05); }
     .combo-full .svc:last-child { margin-bottom: 0; }
@@ -165,15 +166,15 @@
       <div class="veh-buttons">
         <button class="veh-btn" data-type="auto">
           <span class="icon">🚗</span>Auto
-          <small>Cronos, Etios, Corolla, Gol</small>
+          <small>Cronos, Etios, Corolla</small>
         </button>
         <button class="veh-btn" data-type="suv">
           <span class="icon">🚙</span>SUV / Util.
-          <small>EcoSport, Kangoo, Zafira, Strada</small>
+          <small>EcoSport, Kangoo, Strada</small>
         </button>
         <button class="veh-btn" data-type="pickup">
           <span class="icon">🛻</span>Pickup
-          <small>Hilux, Amarok, Ranger, Toro</small>
+          <small>Hilux, Amarok, Ranger</small>
         </button>
       </div>
     </div>
@@ -182,7 +183,10 @@
         <div class="svc-title-label">Nuestros Trabajos</div>
 
         <div class="combo-full" style="animation-delay: 0.1s">
-          <div class="combo-badge">✨ Pack Lavado Full</div>
+          <div class="combo-badge">
+            <span>✨ Pack Lavado Full</span>
+            <span id="p-full">--</span>
+          </div>
           
           <div class="svc">
             <div class="svc-head">
@@ -200,12 +204,13 @@
             <p class="svc-desc" id="desc-int"></p>
           </div>
         </div>
+
         <div class="svc" style="animation-delay: 0.3s">
           <div class="svc-head">
             <span class="svc-title">Limpieza de Suelo</span>
             <span class="pill" id="p-suelo">--</span>
           </div>
-          <p class="svc-desc">Extracción profunda de tierra, manchas y mugre de la alfombra principal del habitáculo.</p>
+          <p class="svc-desc">Extracción profunda de tierra y mugre de la alfombra principal del habitáculo.</p>
         </div>
 
         <div class="svc" style="animation-delay: 0.4s">
@@ -213,7 +218,7 @@
             <span class="svc-title">Sanitizado a Vapor</span>
             <span class="pill" id="p-steam">--</span>
           </div>
-          <p class="svc-desc">Desinfección a 105°C en conductos de aire y superficies. Chau bacterias y olores.</p>
+          <p class="svc-desc">Desinfección a 105°C en conductos de aire. Chau bacterias y olores.</p>
         </div>
 
         <div class="svc" style="animation-delay: 0.5s">
@@ -269,21 +274,21 @@
   const DESCRIPCIONES = {
     auto: {
       ext: "Lavado completo de carrocería con detallado de ruedas, llantas y pasaruedas. Aplicamos cera rápida para brillo y protección, más revividor en cubiertas.",
-      int: "Aspirado profundo para extraer polvo en juntas y rincones. Limpieza detallada de consola, torpedo, rejillas y paneles. Finalizamos con acondicionador y filtro UV de terminación mate original; sin residuos grasosos, recuperando el aspecto de un 0km.",
-      tela: "Limpieza por inyección y extracción profunda en butacas. Eliminamos manchas y olores con químicos específicos que cuidan las fibras.",
-      cuero: "Limpieza profunda y nutrición con cremas premium para mantener la flexibilidad y evitar grietas por el sol."
+      int: "Aspirado profundo para extraer polvo en juntas y rincones. Limpieza detallada de consola, torpedo, rejillas y paneles. Finalizamos con acondicionador y filtro UV de terminación mate original.",
+      tela: "Inyección y extracción profunda en butacas. Eliminamos manchas y olores con químicos específicos.",
+      cuero: "Limpieza profunda y nutrición con cremas premium para evitar grietas por el sol."
     },
     suv: {
-      ext: "Tratamiento exterior integral: limpieza de pasaruedas grandes y llantas. Lavado de carrocería con terminación en cera rápida protectora y revividor de cauchos.",
-      int: "Limpieza pensada para el uso familiar. Desinfección de cada superficie, desde el baúl hasta las plazas delanteras. Detallado con pinceles en comandos y pantallas. Protección UV de base acuosa en todos los polímeros.",
-      tela: "Desinfección total de plazas familiares. Remoción de manchas rebeldes mediante succión de alta potencia para un secado más rápido.",
-      cuero: "Limpieza y acondicionamiento especializado para proteger el cuero del desgaste diario y mantener su textura original."
+      ext: "Tratamiento exterior integral: limpieza de pasaruedas grandes y llantas. Lavado con terminación en cera rápida protectora y revividor de cauchos.",
+      int: "Limpieza pensada para el uso familiar. Desinfección de superficies, detallado con pinceles en comandos y protección UV de base acuosa en polímeros.",
+      tela: "Desinfección total de plazas familiares y remoción de manchas rebeldes con succión de alta potencia.",
+      cuero: "Acondicionamiento especializado para proteger el cuero del desgaste diario y mantener su textura."
     },
     pickup: {
-      ext: "Lavado reforzado para eliminar barro y suciedad del Valle. Limpieza a fondo de llantas y pasaruedas. Aplicación de cera rápida y revividor para un acabado impecable.",
-      int: "Tratamiento intensivo contra la tierra y el polvillo de la barda. Barrido minucioso en correderas, sellos de puertas y juntas. Detallado de plásticos de alto tránsito con protector UV premium que previene la degradación por el clima seco.",
-      tela: "Extracción profunda de tierra incrustada y arena en tapizados. Limpieza de fibras para devolver el color y la higiene original a las plazas.",
-      cuero: "Nutrición profunda para proteger el cuero de la sequedad extrema del clima local, evitando que el material se reseque o pierda color."
+      ext: "Lavado reforzado para eliminar tierra del Valle. Limpieza a fondo de llantas y pasaruedas. Cera rápida y revividor para un acabado impecable.",
+      int: "Tratamiento intensivo contra el polvillo de la barda. Barrido minucioso en correderas y sellos. Protector UV premium contra el clima seco.",
+      tela: "Extracción profunda de tierra incrustada en tapizados. Devolvemos la higiene original a las fibras.",
+      cuero: "Nutrición profunda para proteger el cuero de la sequedad extrema del clima local, evitando grietas."
     }
   };
 
@@ -291,6 +296,8 @@
   const container = document.getElementById('servicios-container');
   const cta = document.getElementById('floating-cta');
   
+  // Referencias de precios
+  const pFull = document.getElementById('p-full');
   const pExt = document.getElementById('p-ext');
   const pInt = document.getElementById('p-int');
   const pSuelo = document.getElementById('p-suelo');
@@ -310,6 +317,10 @@
       cta.style.display = 'flex';
       buttons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      
+      // Cálculo del Pack Full
+      const totalFull = PRECIOS[type].ext + PRECIOS[type].int;
+      pFull.textContent = '$' + totalFull.toLocaleString('es-AR');
       
       pExt.textContent = '$' + PRECIOS[type].ext.toLocaleString('es-AR');
       pInt.textContent = '$' + PRECIOS[type].int.toLocaleString('es-AR');
