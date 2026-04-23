@@ -1,0 +1,1021 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>LyS Lavados • Lavado a domicilio en Cipolletti</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="LyS Lavados a domicilio en Cipolletti. Lavados Exterior, Interior, Completo y Full.">
+  <meta property="og:title" content="LyS Lavados • Lavado de autos a domicilio en Cipolletti">
+  <meta property="og:url" content="https://lyslavados.com">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://lyslavados.com/logo-lys.png">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:       #060d18;
+      --green:    #22c55e;
+      --green-lo: rgba(34,197,94,0.08);
+      --green-md: rgba(34,197,94,0.18);
+      --green-hi: rgba(34,197,94,0.35);
+      --white:    #f0f4f8;
+      --soft:     #8899aa;
+      --muted:    #445566;
+      --line:     rgba(255,255,255,0.07);
+      --f-serif:  'Playfair Display', Georgia, serif;
+      --f-sans:   'Outfit', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--f-sans);
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100dvh;
+      overflow-x: hidden;
+      padding-bottom: 110px;
+    }
+
+    /* ── FONDO VIVO ── */
+    .bg-fx {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      overflow: hidden;
+    }
+    .bg-fx::before {
+      content: '';
+      position: absolute;
+      width: 140vw; height: 140vw;
+      top: -60vw; left: -30vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(34,197,94,0.07) 0%, transparent 65%);
+      animation: orbFloat 14s ease-in-out infinite;
+    }
+    .bg-fx::after {
+      content: '';
+      position: absolute;
+      width: 100vw; height: 100vw;
+      bottom: -40vw; right: -20vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(34,197,94,0.05) 0%, transparent 65%);
+      animation: orbFloat 18s ease-in-out infinite reverse;
+    }
+    @keyframes orbFloat {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33%     { transform: translate(3%,4%) scale(1.04); }
+      66%     { transform: translate(-2%,2%) scale(0.97); }
+    }
+
+    /* líneas de scanline muy sutiles */
+    .bg-fx .scan {
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        180deg,
+        transparent,
+        transparent 3px,
+        rgba(0,0,0,0.04) 3px,
+        rgba(0,0,0,0.04) 4px
+      );
+    }
+
+    /* ── BARRA SUPERIOR ── */
+    .topbar {
+      position: relative; z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--line);
+      animation: fadeIn .5s ease both;
+    }
+    .topbar-logo { height: 38px; }
+    .topbar-badge {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+    .live-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    /* ── HERO EDITORIAL ── */
+    .hero {
+      position: relative; z-index: 1;
+      padding: 56px 24px 48px;
+      border-bottom: 1px solid var(--line);
+      animation: fadeIn .6s .05s ease both;
+    }
+
+    .hero-number {
+      font-family: var(--f-serif);
+      font-size: clamp(120px, 38vw, 220px);
+      font-weight: 900;
+      font-style: italic;
+      line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(34,197,94,0.18);
+      position: absolute;
+      top: 20px; right: -10px;
+      user-select: none;
+      pointer-events: none;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-eyebrow::after {
+      content: '';
+      flex: 1;
+      max-width: 60px;
+      height: 1px;
+      background: var(--green);
+      opacity: 0.4;
+    }
+
+    .hero-title {
+      font-family: var(--f-serif);
+      font-size: clamp(38px, 10vw, 58px);
+      font-weight: 900;
+      font-style: italic;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      margin-bottom: 22px;
+      position: relative;
+      z-index: 1;
+      max-width: 340px;
+    }
+    .hero-title .hi {
+      color: var(--green);
+      -webkit-text-stroke: 0;
+    }
+
+    .hero-body {
+      font-size: 13.5px;
+      font-weight: 300;
+      color: var(--soft);
+      line-height: 1.75;
+      max-width: 320px;
+      margin-bottom: 28px;
+      position: relative; z-index: 1;
+    }
+
+    .hero-attrs {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative; z-index: 1;
+    }
+    .attr-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--soft);
+      font-weight: 400;
+    }
+    .attr-row::before {
+      content: '';
+      width: 18px; height: 1px;
+      background: var(--green);
+      flex-shrink: 0;
+    }
+
+    /* ── SELECTOR DE VEHÍCULO ── */
+    .veh-section {
+      position: relative; z-index: 1;
+      border-bottom: 1px solid var(--line);
+      animation: fadeIn .6s .12s ease both;
+    }
+
+    .section-intro {
+      padding: 32px 24px 20px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .section-kicker {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .section-heading {
+      font-family: var(--f-serif);
+      font-size: 26px;
+      font-style: italic;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.1;
+    }
+    .section-step {
+      font-family: var(--f-serif);
+      font-size: 48px;
+      font-weight: 900;
+      font-style: italic;
+      color: rgba(34,197,94,0.15);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .veh-tabs {
+      display: flex;
+      border-top: 1px solid var(--line);
+    }
+
+    .veh-tab {
+      flex: 1;
+      background: none;
+      border: none;
+      border-right: 1px solid var(--line);
+      padding: 22px 12px 18px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s ease;
+      position: relative;
+    }
+    .veh-tab:last-child { border-right: none; }
+
+    .veh-tab::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--green);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 0.25s cubic-bezier(0.22,1,0.36,1);
+    }
+    .veh-tab:hover { background: var(--green-lo); }
+    .veh-tab.active { background: var(--green-lo); }
+    .veh-tab.active::before { transform: scaleX(1); }
+
+    .tab-icon { font-size: 22px; line-height: 1; }
+    .tab-name {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--soft);
+      text-align: center;
+      line-height: 1.3;
+    }
+    .veh-tab.active .tab-name { color: var(--green); }
+    .tab-ex {
+      font-size: 8.5px;
+      font-weight: 300;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.35;
+    }
+
+    .veh-msg {
+      padding: 14px 24px;
+      font-size: 11px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      transition: color .2s;
+    }
+    .veh-msg.on { color: rgba(34,197,94,0.7); font-style: normal; }
+
+    /* ── SERVICIOS ── */
+    .svc-section {
+      position: relative; z-index: 1;
+      border-bottom: 1px solid var(--line);
+      animation: fadeIn .6s .2s ease both;
+    }
+
+    .svc-list { display: flex; flex-direction: column; }
+
+    .svc {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: start;
+      gap: 20px;
+      padding: 28px 24px;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s ease;
+    }
+    .svc:last-child { border-bottom: none; }
+    .svc::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--green);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+    }
+    .svc:hover { background: var(--green-lo); }
+    .svc:hover::after { transform: scaleY(1); }
+    .svc.featured::after { transform: scaleY(1); }
+    .svc.featured { background: var(--green-lo); }
+
+    .svc-label {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+    .svc.featured .svc-label { color: var(--green); }
+
+    .svc-title {
+      font-family: var(--f-serif);
+      font-size: 28px;
+      font-weight: 700;
+      font-style: italic;
+      color: var(--white);
+      line-height: 1.05;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+    .svc.featured .svc-title { color: var(--green); }
+
+    .svc-desc {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--soft);
+      line-height: 1.7;
+      max-width: 280px;
+    }
+
+    /* panel expandible */
+    .svc-extra {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.22,1,0.36,1);
+      grid-column: 1 / -1;
+    }
+    .svc-extra.open { max-height: 300px; }
+    .svc-extra-inner {
+      padding: 4px 0 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .svc-item-chip {
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--soft);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 4px 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .svc-item-chip::before {
+      content: '✓';
+      color: var(--green);
+      font-size: 9px;
+    }
+
+    /* precio */
+    .svc-price-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      padding-top: 22px;
+    }
+    .price-num {
+      font-family: var(--f-serif);
+      font-size: 30px;
+      font-weight: 900;
+      font-style: italic;
+      color: var(--muted);
+      transition: color 0.3s ease;
+      white-space: nowrap;
+      line-height: 1;
+    }
+    .price-num.lit { color: var(--white); }
+    .svc.featured .price-num.lit { color: var(--green); }
+
+    .price-pending {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:.9} }
+
+    .expand-tog {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .svc:hover .expand-tog,
+    .svc.open .expand-tog {
+      border-color: var(--green-hi);
+      background: var(--green-lo);
+    }
+    .expand-tog svg {
+      width: 12px; height: 12px;
+      stroke: var(--soft);
+      transition: transform 0.25s ease, stroke 0.2s;
+    }
+    .svc.open .expand-tog svg { transform: rotate(180deg); stroke: var(--green); }
+
+    /* ── NOTA DE PRECIOS ── */
+    .price-note {
+      position: relative; z-index: 1;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      animation: fadeIn .6s .28s ease both;
+    }
+    .price-note-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--green-lo);
+      border: 1px solid var(--green-hi);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+    .price-note-text {
+      font-size: 11.5px;
+      font-weight: 300;
+      color: var(--soft);
+      line-height: 1.75;
+    }
+    .price-note-text strong { color: var(--white); font-weight: 500; }
+
+    /* ── CONTACTO ── */
+    .contact-section {
+      position: relative; z-index: 1;
+      animation: fadeIn .6s .34s ease both;
+    }
+
+    .contact-wa {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 26px 24px;
+      border-bottom: 1px solid var(--line);
+      text-decoration: none;
+      background: rgba(37,211,102,0.04);
+      transition: background .2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-wa::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(37,211,102,0.07), transparent);
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .contact-wa:hover { background: rgba(37,211,102,0.07); }
+    .contact-wa:hover::before { opacity: 1; }
+    .wa-icon-wrap {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: rgba(37,211,102,0.12);
+      border: 1px solid rgba(37,211,102,0.25);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .wa-icon-wrap svg { width: 20px; height: 20px; }
+    .wa-text { flex: 1; }
+    .wa-title {
+      font-family: var(--f-serif);
+      font-size: 18px;
+      font-style: italic;
+      font-weight: 700;
+      color: #4ade80;
+      line-height: 1.1;
+      margin-bottom: 3px;
+    }
+    .wa-sub {
+      font-size: 11px;
+      font-weight: 300;
+      color: rgba(74,222,128,0.55);
+      letter-spacing: 0.06em;
+    }
+    .wa-arrow {
+      font-size: 18px;
+      color: rgba(74,222,128,0.4);
+      transition: transform .2s, color .2s;
+    }
+    .contact-wa:hover .wa-arrow { transform: translateX(5px); color: #4ade80; }
+
+    .socials-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--line);
+    }
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 24px;
+      text-decoration: none;
+      border-right: 1px solid var(--line);
+      transition: background .2s;
+      position: relative;
+    }
+    .social-link:last-child { border-right: none; }
+    .social-link:hover { background: var(--green-lo); }
+    .social-ico {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .social-ico svg { width: 14px; height: 14px; fill: var(--soft); }
+    .social-link:hover .social-ico { background: var(--green-lo); border-color: var(--green-hi); }
+    .social-link:hover .social-ico svg { fill: var(--green); }
+    .social-info { line-height: 1.2; }
+    .social-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--soft);
+    }
+    .social-handle {
+      font-size: 10px;
+      font-weight: 300;
+      color: var(--muted);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--line);
+      animation: fadeIn .6s .4s ease both;
+    }
+    .footer-brand {
+      font-family: var(--f-serif);
+      font-size: 13px;
+      font-style: italic;
+      color: var(--muted);
+    }
+    .footer-copy {
+      font-size: 10px;
+      font-weight: 300;
+      color: var(--muted);
+    }
+    .mate-link {
+      cursor: pointer;
+      color: inherit;
+      border-bottom: 1px dashed rgba(68,85,102,0.6);
+      transition: color .2s, border-color .2s;
+    }
+    .mate-link:hover { color: var(--soft); border-color: var(--soft); }
+
+    /* ── CTA STICKY ── */
+    .sticky-cta {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 14px 20px 20px;
+      background: linear-gradient(to top, rgba(6,13,24,1) 50%, transparent);
+      display: flex;
+      justify-content: center;
+    }
+    .cta-btn {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 17px 32px;
+      background: var(--green);
+      color: #06100c;
+      font-family: var(--f-serif);
+      font-size: 17px;
+      font-style: italic;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      text-decoration: none;
+      border-radius: 10px;
+      border: 1px solid rgba(34,197,94,0.5);
+      box-shadow: 0 8px 32px rgba(34,197,94,0.28), 0 2px 4px rgba(0,0,0,0.5);
+      transition: all .18s ease;
+    }
+    .cta-btn:hover {
+      background: #2dde6c;
+      transform: translateY(-2px);
+      box-shadow: 0 14px 40px rgba(34,197,94,0.38), 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .cta-btn:active { transform: translateY(1px); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 380px) {
+      .hero-title { font-size: 34px; }
+      .hero-number { display: none; }
+      .tab-ex { display: none; }
+      footer { flex-direction: column; gap: 6px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-fx" aria-hidden="true">
+  <div class="scan"></div>
+</div>
+
+<!-- ── TOP BAR ── -->
+<header class="topbar">
+  <img src="logo-lys.png" alt="LyS Lavados" class="topbar-logo">
+  <div class="topbar-badge">
+    <span class="live-dot"></span>
+    Tomando turnos
+  </div>
+</header>
+
+<main>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-number" aria-hidden="true">L</div>
+    <div class="hero-eyebrow">Lavado a domicilio · Cipolletti</div>
+    <h1 class="hero-title">
+      Tu auto<br>
+      <span class="hi">limpio,</span><br>
+      sin moverte.
+    </h1>
+    <p class="hero-body">
+      Llegamos con todo el equipo. Snow foam, microfibra, productos premium.
+      Solo necesitás una canilla y un enchufe.
+    </p>
+    <div class="hero-attrs">
+      <div class="attr-row">🧽 Detailing responsable con productos neutros</div>
+      <div class="attr-row">📍 Cipolletti y alrededores</div>
+      <div class="attr-row">⏱️ Turnos puntuales — llegamos cuando decís</div>
+      <div class="attr-row">🚿🔌 Sin llevar el auto a ningún lado</div>
+    </div>
+  </section>
+
+  <!-- ── VEHÍCULO ── -->
+  <section class="veh-section">
+    <div class="section-intro">
+      <div>
+        <div class="section-kicker">Paso 01</div>
+        <div class="section-heading">¿Qué<br>vehículo tenés?</div>
+      </div>
+      <div class="section-step" aria-hidden="true">01</div>
+    </div>
+    <div class="veh-tabs">
+      <button class="veh-tab" data-type="auto" type="button">
+        <span class="tab-icon">🚗</span>
+        <span class="tab-name">Auto<br>Chico/Med.</span>
+        <span class="tab-ex">Clio, Gol, 208,<br>Cronos, Corolla…</span>
+      </button>
+      <button class="veh-tab" data-type="suv" type="button">
+        <span class="tab-icon">🚙</span>
+        <span class="tab-name">SUV /<br>Utilitario</span>
+        <span class="tab-ex">Duster, Tracker,<br>Strada, Kangoo…</span>
+      </button>
+      <button class="veh-tab" data-type="pickup" type="button">
+        <span class="tab-icon">🛻</span>
+        <span class="tab-name">Pickup /<br>Cam. Grande</span>
+        <span class="tab-ex">Hilux, Amarok,<br>Ranger, Toro…</span>
+      </button>
+    </div>
+    <div class="veh-msg" id="vehMsg">↑ Elegí tu vehículo para revelar los precios</div>
+  </section>
+
+  <!-- ── SERVICIOS ── -->
+  <section class="svc-section">
+    <div class="section-intro">
+      <div>
+        <div class="section-kicker">Paso 02</div>
+        <div class="section-heading">Elegí tu<br>servicio</div>
+      </div>
+      <div class="section-step" aria-hidden="true">02</div>
+    </div>
+
+    <div class="svc-list">
+
+      <!-- EXTERIOR -->
+      <div class="svc" data-svc="ext">
+        <div>
+          <div class="svc-label">Servicio</div>
+          <div class="svc-title">Exterior</div>
+          <div class="svc-desc" id="desc-ext">
+            Lavado completo de carrocería con detallado de ruedas, llantas y pasaruedas. Cera rápida para brillo y protección, más revividor en cubiertas.
+          </div>
+          <div class="svc-extra" id="extra-ext">
+            <div class="svc-extra-inner">
+              <span class="svc-item-chip">Prelavado snow foam</span>
+              <span class="svc-item-chip">Guantes de microfibra</span>
+              <span class="svc-item-chip">Llantas y cubiertas</span>
+              <span class="svc-item-chip">Negro de caucho</span>
+              <span class="svc-item-chip">Secado microfibra</span>
+              <span class="svc-item-chip">Vidrios exteriores</span>
+            </div>
+          </div>
+        </div>
+        <div class="svc-price-col">
+          <div class="price-num" id="price-ext"><span class="price-pending">—</span></div>
+          <div class="expand-tog">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERIOR -->
+      <div class="svc" data-svc="int">
+        <div>
+          <div class="svc-label">Servicio · Precio único</div>
+          <div class="svc-title">Interior</div>
+          <div class="svc-desc" id="desc-int">
+            Aspirado profundo para extraer polvo en juntas y rincones. Limpieza detallada de consola, torpedo, rejillas y paneles. Acondicionador con filtro UV de terminación mate original.
+          </div>
+          <div class="svc-extra" id="extra-int">
+            <div class="svc-extra-inner">
+              <span class="svc-item-chip">Aspirado completo</span>
+              <span class="svc-item-chip">Tablero y consola</span>
+              <span class="svc-item-chip">Plásticos y rejillas</span>
+              <span class="svc-item-chip">Vidrios interiores</span>
+              <span class="svc-item-chip">Protector UV</span>
+            </div>
+          </div>
+        </div>
+        <div class="svc-price-col">
+          <div class="price-num" id="price-int"><span class="price-pending">—</span></div>
+          <div class="expand-tog">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPLETO -->
+      <div class="svc featured" data-svc="comp">
+        <div>
+          <div class="svc-label">✦ El más elegido</div>
+          <div class="svc-title">Completo</div>
+          <div class="svc-desc">
+            La combinación ideal. Todo el exterior más todo el interior en una sola visita. Sin idas y vueltas.
+          </div>
+          <div class="svc-extra" id="extra-comp">
+            <div class="svc-extra-inner">
+              <span class="svc-item-chip">Todo el Exterior</span>
+              <span class="svc-item-chip">Todo el Interior</span>
+              <span class="svc-item-chip">Cera rápida</span>
+              <span class="svc-item-chip">Vidrios int. y ext.</span>
+            </div>
+          </div>
+        </div>
+        <div class="svc-price-col">
+          <div class="price-num" id="price-comp"><span class="price-pending">—</span></div>
+          <div class="expand-tog">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- FULL -->
+      <div class="svc featured" data-svc="full">
+        <div>
+          <div class="svc-label">✦ Detailing ligero</div>
+          <div class="svc-title">Full</div>
+          <div class="svc-desc" id="desc-full">
+            El servicio más completo. Interior extra detallado, cera o sellador de carrocería de aplicación manual y trabajo fino en emblemas y juntas.
+          </div>
+          <div class="svc-extra" id="extra-full">
+            <div class="svc-extra-inner">
+              <span class="svc-item-chip">Todo el Completo</span>
+              <span class="svc-item-chip">Interior extra detallado</span>
+              <span class="svc-item-chip">Cera / sellador manual</span>
+              <span class="svc-item-chip">Emblemas y juntas</span>
+              <span class="svc-item-chip">Protector UV premium</span>
+            </div>
+          </div>
+        </div>
+        <div class="svc-price-col">
+          <div class="price-num" id="price-full"><span class="price-pending">—</span></div>
+          <div class="expand-tog">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── NOTA PRECIOS ── -->
+  <div class="price-note">
+    <div class="price-note-icon">💡</div>
+    <p class="price-note-text">
+      <strong>Ajuste por tamaño:</strong> SUV / Utilitario suma <strong>+$5.000</strong> en servicios con exterior.
+      Pickup / Camioneta grande suma <strong>+$15.000</strong>.
+      El Interior tiene precio único. El monto final aparece antes de confirmar la reserva.
+    </p>
+  </div>
+
+  <!-- ── CONTACTO ── -->
+  <section class="contact-section">
+    <a class="contact-wa" href="https://wa.me/2995760611" target="_blank" rel="noopener">
+      <div class="wa-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="#4ade80">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+      </div>
+      <div class="wa-text">
+        <div class="wa-title">Escribinos por WhatsApp</div>
+        <div class="wa-sub">+299 576-0611 · Respondemos rápido</div>
+      </div>
+      <div class="wa-arrow">→</div>
+    </a>
+
+    <div class="socials-row">
+      <a class="social-link" href="https://instagram.com/lys.lavados" target="_blank" rel="noopener">
+        <div class="social-ico">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </div>
+        <div class="social-info">
+          <div class="social-name">Instagram</div>
+          <div class="social-handle">@lys.lavados</div>
+        </div>
+      </a>
+      <a class="social-link" href="https://www.facebook.com/profile.php?id=61580252349290" target="_blank" rel="noopener">
+        <div class="social-ico">
+          <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </div>
+        <div class="social-info">
+          <div class="social-name">Facebook</div>
+          <div class="social-handle">LyS Lavados</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <span class="footer-brand">LyS Lavados</span>
+    <span class="footer-copy">
+      © <span id="yr"></span> — Con mate y
+      <span id="mateLink" class="mate-link" tabindex="0" role="button">dedicación</span>.
+    </span>
+  </footer>
+
+</main>
+
+<!-- ── CTA STICKY ── -->
+<div class="sticky-cta">
+  <a class="cta-btn" href="reserva.html">
+    🗓️ Reservar turno online
+  </a>
+</div>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  const PRICES = {
+    auto:   { ext: 15000, int: 20000, comp: 25000, full: 35000 },
+    suv:    { ext: 20000, int: 20000, comp: 30000, full: 40000 },
+    pickup: { ext: 30000, int: 20000, comp: 45000, full: 50000 }
+  };
+
+  const DESCS = {
+    auto: {
+      ext:  'Lavado completo de carrocería con detallado de ruedas, llantas y pasaruedas. Cera rápida para brillo y protección, más revividor en cubiertas.',
+      int:  'Aspirado profundo para extraer polvo en juntas y rincones. Limpieza detallada de consola, torpedo, rejillas y paneles. Acondicionador con filtro UV de terminación mate original.',
+    },
+    suv: {
+      ext:  'Tratamiento exterior integral: limpieza de pasaruedas grandes y llantas. Lavado con terminación en cera rápida protectora y revividor de cauchos.',
+      int:  'Limpieza pensada para el uso familiar. Desinfección de superficies, detallado con pinceles en comandos y protección UV de base acuosa en polímeros.',
+    },
+    pickup: {
+      ext:  'Lavado reforzado para eliminar tierra del Valle. Limpieza a fondo de llantas y pasaruedas. Cera rápida y revividor para un acabado impecable.',
+      int:  'Tratamiento intensivo contra el polvillo de la barda. Barrido minucioso en correderas y sellos. Protector UV premium contra el clima seco.',
+    }
+  };
+
+  const HINTS = {
+    auto:   'Precios para auto chico / mediano.',
+    suv:    'Precios para SUV / utilitario / camioneta chica. (+$5.000 en exterior)',
+    pickup: 'Precios para pickup / camioneta grande. (+$15.000 en exterior)',
+  };
+
+  const fmt = n => '$' + n.toLocaleString('es-AR');
+  const vehBtns = document.querySelectorAll('.veh-tab');
+  const msgEl   = document.getElementById('vehMsg');
+
+  vehBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tipo = btn.dataset.type;
+      vehBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      msgEl.textContent = HINTS[tipo];
+      msgEl.className = 'veh-msg on';
+
+      const p = PRICES[tipo];
+      ['ext','int','comp','full'].forEach(k => {
+        const el = document.getElementById('price-' + k);
+        el.innerHTML = '';
+        el.textContent = fmt(p[k]);
+        el.classList.add('lit');
+      });
+
+      if (DESCS[tipo]?.ext)  document.getElementById('desc-ext').textContent = DESCS[tipo].ext;
+      if (DESCS[tipo]?.int)  document.getElementById('desc-int').textContent = DESCS[tipo].int;
+    });
+  });
+
+  /* Accordion de servicios */
+  document.querySelectorAll('.svc').forEach(card => {
+    card.addEventListener('click', () => {
+      const key    = card.dataset.svc;
+      const extra  = document.getElementById('extra-' + key);
+      const isOpen = card.classList.contains('open');
+
+      document.querySelectorAll('.svc').forEach(c => {
+        c.classList.remove('open');
+        const ex = document.getElementById('extra-' + c.dataset.svc);
+        if (ex) ex.classList.remove('open');
+      });
+
+      if (!isOpen) {
+        card.classList.add('open');
+        if (extra) extra.classList.add('open');
+      }
+    });
+  });
+
+  /* Admin oculto */
+  const mate = document.getElementById('mateLink');
+  function tryAdmin() {
+    const pw = prompt('Contraseña:');
+    if (pw === null) return;
+    if ((pw||'').trim() === 'yerba') {
+      const w = window.open('admin.html','_blank','noopener,noreferrer');
+      if (!w) alert('Habilitá las ventanas emergentes.');
+    } else { alert('Contraseña incorrecta.'); }
+  }
+  mate.addEventListener('click', tryAdmin);
+  mate.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' '){e.preventDefault();tryAdmin();} });
+</script>
+</body>
+</html>
